@@ -100,21 +100,21 @@
   
   /* Smooth scroll behavior for navigation anchors */
   h2[id], h1[id] {
-    scroll-margin-top: 120px;
+    scroll-margin-top: 180px;
   }
   
   /* Special scroll offset for KPI section */
   h2#kpis {
-    scroll-margin-top: 180px;
+    scroll-margin-top: 200px;
   }
   
   /* Mobile Responsive Styles */
   @media (max-width: 768px) {
-    body { margin: 10px; }
+    body { margin: 10px 0; padding: 0; margin-top: 152px; }
     h1 { font-size: 1.5rem; }
     h2 { font-size: 1.8rem; }
     h3 { font-size: 1.1rem; }
-    section { padding: 15px; margin-bottom: 15px; }
+    section { padding: 15px; margin-bottom: 15px; width: 100%; margin-left: 0; margin-right: 0; }
     table { font-size: 0.8rem; }
     th, td { padding: 6px; }
     #splash { font-size: 2rem; }
@@ -150,6 +150,10 @@
     border-radius: 8px;
     margin-bottom: 25px;
     border-left: 5px solid #DAA520;
+    color: #F5E6D3;
+  }
+  .kpis-intro .brand-name {
+    color: #F5E6D3;
   }
   .kpis-grid {
     display: grid;
@@ -477,29 +481,25 @@
   }
   .partnership-summary {
     background: linear-gradient(135deg, #2c5530, #4a7c59);
-    color: white;
+    color: #F5E6D3;
     padding: 25px;
     border-radius: 15px;
     margin-top: 30px;
   }
   .partnership-summary h3 {
-    color: white;
+    color: #F5E6D3;
     margin-bottom: 15px;
     font-size: 1.3rem;
     border-left: none;
     padding-left: 0;
   }
+  .partnership-summary .brand-name,
+  .partnership-summary .partner-name {
+    color: #F5E6D3;
+  }
   
-  /* Mobile Responsive Styles */
+  /* Additional Mobile Responsive Styles for sections */
   @media (max-width: 768px) {
-    body { margin: 10px; margin-top: 152px; }
-    h1 { font-size: 1.5rem; }
-    h2 { font-size: 1.8rem; }
-    h3 { font-size: 1.1rem; }
-    section { padding: 15px; margin-bottom: 15px; }
-    table { font-size: 0.8rem; }
-    th, td { padding: 6px; }
-    #splash { font-size: 2rem; }
     .kpis-section h2 { font-size: 1.7rem; }
     .kpis-grid { grid-template-columns: 1fr; gap: 15px; }
     .kpi-category h3 { font-size: 1.2rem; }
@@ -512,11 +512,11 @@
   }
   
   @media (max-width: 480px) {
-    body { margin: 5px; margin-top: 152px; }
+    body { margin: 5px 0; padding: 0; margin-top: 152px; }
     h1 { font-size: 1.3rem; }
     h2 { font-size: 1.6rem; }
     h3 { font-size: 1rem; }
-    section { padding: 10px; margin-bottom: 10px; }
+    section { padding: 10px; margin-bottom: 10px; width: 100%; margin-left: 0; margin-right: 0; }
     table { font-size: 0.7rem; }
     th, td { padding: 4px; }
     ul { margin-left: 15px; }
