@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flybox Partnership Opportunity</title>
+<style>
+  body { 
+    font-family: Arial, sans-serif; 
+    line-height: 1.6; 
+    margin: 20px; 
+    background: #D9CBB6; 
+    color: #333; 
+  }
+  h1, h2 { color: #2c3e50; }
+  h1 { font-size: 2rem; margin-bottom: 1rem; }
+  h2 { 
+    font-size: 2.2rem; 
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 3px solid #DAA520;
+    padding-bottom: 15px;
+  }
+  h3 { font-size: 1.2rem; margin-bottom: 0.6rem; }
+  .highlight { background-color: #ffff99; font-weight: bold; }
+  section { 
+    background: #fff; 
+    padding: 20px; 
+    margin-bottom: 20px; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+  }
+  ul { margin-left: 20px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #4a5568;
+    color: white;
+  }
+  .brand-name {
+    color: #3C2415;
+    font-weight: bold;
+    font-style: normal;
+    text-decoration: none;
+    cursor: default;
+    position: relative;
+  }
+  .partner-name {
+    color: #DAA520;
+    font-weight: 600;
+    font-style: normal;
+    border-bottom: 2px dashed #27ae60;
+    cursor: default;
+    position: relative;
+  }
+  .brand-name:hover::after,
+  .partner-name:hover::after {
+    content: attr(data-info);
+    position: absolute;
+    background: #333;
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    top: 100%;
+    left: 0;
+    margin-top: 5px;
+    z-index: 1000;
+  }
+  #splash {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: black;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: bold;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 1s ease;
+    text-align: center;
+    padding: 0 1rem;
+  }
+  
+  /* Navigation Section */
+  .nav-section {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    border-bottom: 3px solid #DAA520;
+  }
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+  }
+  .nav-link:hover {
+    background: rgba(218,165,32,0.3);
+    transform: translateY(-2px);
+  }
+  
+  /* Smooth scroll behavior for navigation anchors */
+  h2[id], h1[id] {
+    scroll-margin-top: 120px;
+  }
+  
+  /* Special scroll offset for KPI section */
+  h2#kpis {
+    scroll-margin-top: 180px;
+  }
+  
+  /* Mobile Responsive Styles */
+  @media (max-width: 768px) {
+    body { margin: 10px; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.8rem; }
+    h3 { font-size: 1.1rem; }
+    section { padding: 15px; margin-bottom: 15px; }
+    table { font-size: 0.8rem; }
+    th, td { padding: 6px; }
+    #splash { font-size: 2rem; }
+  }
+  
+  .kpis-section {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    border: 3px solid #DAA520;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpis-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #DAA520, #27ae60, #DAA520);
+  }
+  .kpis-section h2 {
+    color: #DAA520;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+  .kpis-intro {
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 5px solid #DAA520;
+  }
+  .kpis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .kpi-card {
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid rgba(218,165,32,0.3);
+    transition: all 0.3s ease;
+  }
+  .kpi-card:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: #DAA520;
+    transform: translateY(-2px);
+  }
+  .kpi-title {
+    color: #DAA520;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  .kpi-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #27ae60;
+    margin-bottom: 5px;
+  }
+  .kpi-description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  .kpi-category {
+    margin-bottom: 30px;
+  }
+  .kpi-category h3 {
+    color: #DAA520;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    border-bottom: 2px solid rgba(218,165,32,0.3);
+    padding-bottom: 8px;
+  }
+  .kpi-footer {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    border: 2px solid rgba(218,165,32,0.3);
+  }
+  .kpi-footer p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #DAA520;
+  }
+  
+  /* Office Concept Section Styles */
+  .office-concept-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #DAA520;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 30px 0;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  }
+  .office-concept-section h2 {
+    color: #2c3e50;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 3px solid #DAA520;
+    padding-bottom: 15px;
+  }
+  .office-concept-section h3 {
+    color: #2c3e50;
+    font-size: 1.4rem;
+    margin: 25px 0 15px 0;
+    border-left: 4px solid #DAA520;
+    padding-left: 15px;
+  }
+  .office-intro {
+    background: rgba(255,255,255,0.8);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 5px solid #DAA520;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .feature-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid rgba(218,165,32,0.3);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+  .feature-card:hover {
+    border-color: #DAA520;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  .feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  .feature-title {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+  .feature-description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #666;
+  }
+  .placement-options {
+    margin: 25px 0;
+  }
+  .placement-card {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border-left: 4px solid #27ae60;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .placement-card h4 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+  .placement-card ul {
+    margin: 10px 0;
+    padding-left: 20px;
+  }
+  .placement-card li {
+    margin: 8px 0;
+    line-height: 1.4;
+  }
+  .economic-impact {
+    margin: 25px 0;
+  }
+  .impact-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .impact-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+  }
+  .impact-row:last-child {
+    border-bottom: none;
+  }
+  .impact-row:nth-child(even) {
+    background: #f8f9fa;
+  }
+  .impact-metric {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  .impact-value {
+    font-weight: bold;
+    color: #27ae60;
+    font-size: 1.1rem;
+  }
+  .impact-description {
+    color: #666;
+    font-size: 0.9rem;
+  }
+  .implementation-timeline {
+    margin: 25px 0;
+  }
+  .timeline-steps {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .timeline-step {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border-top: 4px solid #DAA520;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  .step-number {
+    width: 40px;
+    height: 40px;
+    background: #DAA520;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0 auto 15px auto;
+  }
+  .step-content h4 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+  .step-content p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  .office-cta {
+    background: linear-gradient(135deg, #DAA520, #B8860B);
+    color: white;
+    padding: 25px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 25px;
+  }
+  .office-cta p {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+  
+  /* Partnership Model Section Styles */
+  .partnership-model-section {
+    background: rgba(255, 255, 255, 0.95);
+    margin: 30px 0;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  }
+  .partnership-intro {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border-left: 5px solid #DAA520;
+  }
+  .partnership-content {
+    margin-bottom: 30px;
+  }
+  .partnership-content h3 {
+    color: #2c5530;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    border-left: 4px solid #DAA520;
+    padding-left: 15px;
+  }
+  .partnership-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .partnership-card {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border-left: 4px solid #DAA520;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  .partnership-card h4 {
+    color: #2c5530;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+  }
+  .partnership-card ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .partnership-card li {
+    margin-bottom: 4px;
+    color: #555;
+    line-height: 1.3;
+    font-size: 0.9rem;
+  }
+  .risk-mitigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .risk-card {
+    background: #fff5f5;
+    border-left: 4px solid #e53e3e;
+    padding: 12px 15px;
+    border-radius: 10px;
+  }
+  .mitigation-card {
+    background: #f0fff4;
+    border-left: 4px solid #38a169;
+    padding: 12px 15px;
+    border-radius: 10px;
+  }
+  .risk-card h4 {
+    color: #e53e3e;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+  }
+  .mitigation-card h4 {
+    color: #38a169;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+  }
+  .risk-card p, .mitigation-card p {
+    font-size: 0.9rem;
+    line-height: 1.3;
+    margin: 0;
+  }
+  .partnership-summary {
+    background: linear-gradient(135deg, #2c5530, #4a7c59);
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 30px;
+  }
+  .partnership-summary h3 {
+    color: white;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    border-left: none;
+    padding-left: 0;
+  }
+  
+  /* Mobile Responsive Styles */
+  @media (max-width: 768px) {
+    body { margin: 10px; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.8rem; }
+    h3 { font-size: 1.1rem; }
+    section { padding: 15px; margin-bottom: 15px; }
+    table { font-size: 0.8rem; }
+    th, td { padding: 6px; }
+    #splash { font-size: 2rem; }
+    .kpis-section h2 { font-size: 1.7rem; }
+    .kpis-grid { grid-template-columns: 1fr; gap: 15px; }
+    .kpi-category h3 { font-size: 1.2rem; }
+    .office-concept-section h2 { font-size: 1.8rem; }
+    .features-grid { grid-template-columns: 1fr; gap: 15px; }
+    .timeline-steps { flex-direction: column; gap: 15px; }
+    .impact-row { grid-template-columns: 1fr; gap: 10px; text-align: center; }
+    .partnership-grid { grid-template-columns: 1fr; gap: 15px; }
+    .risk-mitigation { grid-template-columns: 1fr; gap: 15px; }
+    .nav-section { flex-wrap: wrap; gap: 15px; padding: 12px 20px; }
+    .nav-link { font-size: 0.9rem; padding: 6px 15px; }
+  }
+  
+  @media (max-width: 480px) {
+    body { margin: 5px; }
+    h1 { font-size: 1.3rem; }
+    h2 { font-size: 1.6rem; }
+    h3 { font-size: 1rem; }
+    section { padding: 10px; margin-bottom: 10px; }
+    table { font-size: 0.7rem; }
+    th, td { padding: 4px; }
+    ul { margin-left: 15px; }
+    #splash { font-size: 1.5rem; }
+    .kpis-section h2 { font-size: 1.5rem; }
+    .kpis-grid { grid-template-columns: 1fr; gap: 15px; }
+    .kpi-card { padding: 15px; }
+    .kpi-value { font-size: 1.5rem; }
+    .kpi-category h3 { font-size: 1.1rem; }
+    .office-concept-section { padding: 20px; }
+    .office-concept-section h2 { font-size: 1.6rem; }
+    .feature-card { padding: 15px; }
+    .placement-card { padding: 15px; }
+    .timeline-step { padding: 15px; }
+    .partnership-model-section { padding: 20px; }
+    .partnership-card { padding: 15px; }
+    .risk-card, .mitigation-card { padding: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="splash">Houston, we have a (waste) problem.</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const splash = document.getElementById('splash');
+    setTimeout(() => {
+      splash.style.opacity = '0';
+      splash.addEventListener('transitionend', () => {
+        splash.style.display = 'none';
+      }, {once: true});
+    }, 3000);
+  });
+</script>
+
+<div class="nav-section">
+  <a href="#overview" class="nav-link">Overview</a>
+  <a href="#waste-crisis" class="nav-link">Waste Solution</a>
+  <a href="#ranch" class="nav-link">Nellie's BSFL Ranch</a>
+  <a href="#office-solutions" class="nav-link">Innovations</a>
+  <a href="#kpis" class="nav-link">KPIs</a>
+  <a href="#model" class="nav-link">Partnership Model</a>
+</div>
+
+<h1 id="overview">Compelling Partnership Opportunity to Open the Houston Market for Modular Insect Technology Waste Conversion</span></h1>
+
+<section>
+<h2>Our Business: <span class="brand-name" data-info="Our local business brand">Nellie’s BSFL</span> — *powered by <span class="partner-name" data-info="*powered by Flybox® modular technology">Flybox</span></h2>
+<p>
+<span class="brand-name">Nellie’s BSFL</span> is a dedicated venture focused on producing high-quality <span class="[translate:Black Soldier Fly Larvae]"></span> for sustainable waste management and agricultural use. This operation is <strong>*powered by</strong> <span class="partner-name">Flybox</span> technology, which provides the scalable, modular hardware platform for efficient bioconversion processes.
+</p>
+<p>
+While <span class="partner-name">Flybox</span> develops the innovative systems, <span class="brand-name">Nellie’s BSFL</span> applies these to local waste streams, creating a distinct brand and operation specializing in BSFL production and related products. The mutually beneficial relationship enables Nellie's BSFL</span> to benefit from <span class="partner-name">Flybox</span>’s proven process while <span class="partner-name">Flybox</span> takes advantage of  the local network, knowledge and operational leverage developed and managed by <span class="brand-name">Nellie’s BSFL</span> .
+</p>
+<p>
+This differentiation ensures clarity in branding and emphasizes how the technology supports our business goals in Houston and beyond.
+</p>
+<p>
+The team behind <span class="brand-name">Nellie’s BSFL</span> has extensive experience working on agricultural greenfield projects in Colombia, where we developed sustainable farming methods in a challenging environment. We are deeply integrated into Houston’s food, medical, and educational communities, providing us strong local partnerships and trust. We also have an extensive business, financial and operational track record. This uniquely positions us to open the market for <span class="partner-name">Flybox</span> in a low-risk, on-the-ground manner.
+</p>
+</section>
+
+<section>
+<h2 id="partnership">Why We Would Like to Partner with <span class="partner-name" data-info="Leader in scalable insect waste management">Flybox</span></h2>
+<p>
+<span class="partner-name">Flybox®</span> is a pioneering leader in <span class="highlight">insect waste management</span>, leveraging modular, scalable insect farming systems to convert organic waste into sustainable protein and fertiliser. Their innovative approach uses Black Soldier Fly larvae for transforming waste streams at or near the source, supporting circular economy goals and dramatically reducing landfill and greenhouse gas emissions.
+</p>
+</section>
+
+<section>
+<h2>Product Market Fit</h2>
+<p>
+The increasing global demand for sustainable waste management and alternative protein sources has positioned <span class="partner-name">Flybox</span>’s modular insect farming technology at the intersection of two booming markets. Key aspects of the product market fit include:
+</p>
+<ul>
+<li><span class="highlight">Waste Diversion:</span> <span class="partner-name">Flybox</span> addresses mass organic waste streams from food manufacturers, retailers, and agricultural operations, reducing landfill dependency.</li>
+<li><span class="highlight">Sustainable Protein Supply:</span> The system produces high-value insect protein for animal feed and related markets, solving supply shortages in a growing sector.</li>
+<li><span class="highlight">Circular Economy:</span> <span class="partner-name">Flybox</span> closes the loop by converting waste to products such as protein and fertiliser, creating value from waste.</li>
+</ul>
+</p>
+</section>
+
+<section>
+<h2>Deploying Small Modular Units Near Waste Sites</h2>
+<p>
+To maximize impact and operational efficiency, deployment of <span class="partner-name">Flybox</span>’s small modular units directly close to waste generation locations is essential. Benefits include:
+</p>
+<ul>
+<li><span class="highlight">Reduced Transport Costs and Emissions:</span> Processing waste nearby reduces the need to transport bulky organic waste to distant central facilities.</li>
+<li><span class="highlight">Scalable and Flexible:</span> Modular units can be added or relocated in response to changing waste volumes or new sites.</li>
+<li><span class="highlight">Operational Resilience:</span> Multiple decentralized units create redundancy, reducing risk of downtime and increasing reliability.</li>
+<li><span class="highlight">Local Economic and Environmental Benefits:</span> Hands-on community engagement and local circular economy production.</li>
+</ul>
+<p>
+Decentralized deployment aligns with modern trends in [translate:gestión de residuos modular] and sustainable protein production.
+</p>
+</section>
+
+<section>
+<h2 id="waste-crisis">Houston's Food Waste Crisis – A Call for Modular Innovation</h2>
+<p>
+Houston generates more than <strong>6.7 million tons of waste every year</strong>, projected to surpass <strong>7.1 million tons by 2030</strong>. 
+Despite producing roughly <strong>250,000 tons</strong> of organic waste that could be diverted, much continues to end up in landfills.  
+The city’s diversion rate is just <strong>38%</strong>, which remains below leading U.S. benchmarks for sustainable urban waste management.
+</p>
+<p>
+Current inefficiencies, including widespread delays in garbage and recycling pickup, cost the city and residents 
+millions annually in operational inefficiencies and landfill tipping fees. Unlike other Texas cities such as 
+Austin and Dallas, Houston lacks a <strong>dedicated solid waste fee</strong>, forcing the general fund to cover these rising expenses.
+</p>
+<p>
+Food waste accounts for over <strong>20% of Houston’s municipal solid waste</strong>—more than 1.3 million pounds every day—and is largely generated by restaurants, groceries, and industrial kitchens. Centralized processing is both logistically and financially inefficient, highlighting the need for localized solutions.
+</p>
+<h3>Your Modular Solution for Houston</h3>
+<ul>
+<li><strong>Localized Conversion:</strong> On-site or near-site waste processing cuts transportation emissions and costs.</li>
+<li><strong>Scalable Deployment:</strong> Mid-size modular units can adapt to clusters of local producers, campuses, or small municipalities.</li>
+<li><strong>Operational Efficiency:</strong> Reduces load on the city’s centralized systems, increasing resilience and redundancy.</li>
+<li><strong>Economic Savings:</strong> Potential to save millions annually in disposal and transport costs.</li>
+<li><strong>Community and Environmental Impact:</strong> Supports local circular economies by transforming food waste into usable outputs such as protein or compost.</li>
+</ul>
+<p>
+Through targeted deployment across Houston’s waste hotspots, this approach could divert up to <strong>40% of the city’s food waste stream</strong>, transforming inefficiency into opportunity and positioning the partnership as a central force in Houston’s sustainability efforts.
+</p>
+</section>
+
+<h2>Who Pays for the Diversion Benefit</h2>
+<p>Funding sources include:</p>
+<ul>
+<li><strong>Commercial and Not-for-Profit Customers:</strong> Businesses and institutions, particularly schools, colleges, healthcare facilities who generate food waste.</li>
+<li><strong>City Grants:</strong> Federal, state, and local grants including USDA, EPA, and TCEQ programs.</li>
+<li><strong>Waste Fees:</strong> Proposed or existing city waste collection fees or surcharges.</li>
+<li><strong>Public-Private Partnerships:</strong> Mission-driven co-investment by local businesses, nonprofits, or private investors.</li>
+<li><strong>Incentive Programs:</strong> Federal & state subsidies for green infrastructure, composting, and waste reduction.</li>
+</ul>
+<p>This diversified funding approach supports rapid deployment of modular units without heavy upfront costs to taxpayers.</p>
+
+<section>
+  <h2>Why Commercial Businesses Will Pay for Nellie’s BSFL Service</h2>
+  <p>
+    Commercial businesses, ranging from small local shops to large corporations, have strong incentives to invest in the <span class="brand-name">Nellie’s BSFL</span> service *powered by <span class="partner-name">Flybox</span> technology due to clear financial and operational benefits.
+  </p>
+  <h3>Waste Disposal Cost Savings</h3>
+  <p>
+    With Houston landfill tipping fees averaging around <strong>$80 per ton</strong> plus transport and container costs, reducing food and organic waste volume through on-site or near-site processing can cut hauling costs by up to <strong>30%</strong>. This offers businesses significant monthly savings by limiting expensive waste hauling and avoiding long-distance transport.
+  </p>
+  <h3>Potential Revenue Stream Participation</h3>
+  <p>
+    Beyond cost savings, businesses can realize new revenue opportunities by participating in the circular economy. The <span class="brand-name">Nellie’s BSFL</span> modular system produces valuable outputs such as insect protein and fertiliser, allowing businesses to either use these products or share in associated revenues, transforming waste from a cost center into a feedstock commodity.
+  </p>
+  <h3>Operational Excellence and Sustainability</h3>
+  <p>
+    On-site modular processing reduces dependence on municipal waste services and mitigates risks from missed pickups or penalties. It enhances sustainability credentials by lowering carbon footprint and improving waste compliance, helping businesses meet increasing regulatory and consumer demands.
+  </p>
+  <p>
+    Additionally, participating businesses may qualify for grants or incentives supporting green waste reduction, further improving the economics of modular insect farming solutions.
+  </p>
+  <p>
+    In summary, commercial entities will pay for <span class="brand-name">Nellie’s BSFL</span> service because it delivers direct waste disposal savings, opens a path to revenue sharing through sustainable product outputs, and supports operational resilience and environmental stewardship—all critical to modern business success.
+  </p>
+</section>
+
+<h2>Prospect List & Market Sizing</h2>
+<p>
+Here's a targeted list of Houston’s major prospects, broken down by category, with an estimate of the required number of units and revenue potential.
+</p>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse; width:100%;">
+<thead>
+<tr style="background:#ececec;">
+<th>Category</th>
+<th>Prospects</th>
+<th>Waste Volume Potential</th>
+<th>Estimated Units Needed</th>
+<th>Revenue Potential</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Food & Grocery</td>
+<td>H-E-B, Kroger, Whole Foods, Sysco, Walmart, Fiesta, Aldi, Restaurant Depot</td>
+<td>High - Logistics hubs and large stores</td>
+<td>15 units</td>
+<td>$1.8M</td>
+</tr>
+<tr>
+<td>Universities & Schools</td>
+<td>University of Houston, Rice, Texas Southern, Houston Community College, Baylor, Lone Star, UTHealth</td>
+<td>Moderate - Cafeterias and labs</td>
+<td>10 units</td>
+<td>$1.1M</td>
+</tr>
+<tr>
+<td>Healthcare & Hospitals</td>
+<td>Texas Medical Center, Memorial Hermann, MD Anderson, St. Luke's, VA Hospital</td>
+<td>High - Cafeterias & labs</td>
+<td>10 units</td>
+<td>$1.5M</td>
+</tr>
+<tr>
+<td>Hospitality & Events</td>
+<td>George R. Brown, NRG Park, Marriott Marquis, Hilton, Hyatt</td>
+<td>High - Events and conferences</td>
+<td>6 units</td>
+<td>$720K</td>
+</tr>
+<tr>
+<td>Corporate & Industry</td>
+<td>ExxonMobil, CenterPoint, Sysco, Eli Lilly, Coca-Cola, Amazon</td>
+<td>High - Manufacturing & offices</td>
+<td>9 units</td>
+<td>$1.3M</td>
+</tr>
+<tr>
+<td>Community/Nonprofit</td>
+<td>Houston Food Bank, YMCA, Second Servings, Star of Hope, BakerRipley</td>
+<td>Moderate - Food redistribution and community gardens</td>
+<td>5 units</td>
+<td>$550K</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Unit Sizing & Deployment Strategy</h2>
+<p>Most prospects will prefer smaller Modular units (100-400 lbs/day capacity). Based on prospects’ waste volume, deploy the appropriate unit size – from mini units for small sites, to larger for hubs.</p>
+
+<h2>Space Requirements and Deployment Sites</h2>
+<p>
+Facilities typically need a 10x20 ft space for mini units or a 40 ft container for larger setups. They often have utility connections, service yards, or parking lots where units can be colocated. The key is proximity to waste sources for maximum efficiency.
+</p>
+<p>
+In dense urban areas, urban farms or shared lots near waste hubs are common solutions. Many cities use temporary leasing, modular trailer setups, or rooftop installations to optimize space.
+</p>
+<p>
+Supporting community gardens, for example, might leverage small units placed onsite or on leased lots, with funding from grants, nonprofits, or local government programs.
+</p>
+
+<h2>Testing for Contaminants (PFAS)</h2>
+<p>
+Ensuring products are free of harmful contaminants like PFAS is critical. Testing includes laboratory analysis using LC-MS/MS at parts-per-trillion levels, and sourcing low-PFAS feedstock sources. Regular testing guarantees safety, builds trust, and compliance.
+</p>
+<p>
+Mitigation strategies include feedstock screening and biological reduction of contaminants, with ongoing quality controls embedded into operations.
+</p>
+
+<section>
+  <h2 id="ranch">Nellie's BSFL Ranch Operation: Bleiblerville, TX</h2>
+  <p>
+    To stay connected to the rural community and ensure the highest operational standards, <span class="brand-name">Nellie’s BSFL</span> operates a ranch facility in Bleiblerville, Texas. This site serves as a key assembly location and test farm for our modular Flybox units.
+  </p>
+  <p>
+    The ranch showcases different modular units in live operation, allowing direct observation and demonstration of efficiency across diverse waste streams. It also provides an environment to test the <span class="[translate:feed]"></span> and fertiliser outputs on livestock — including cattle, poultry, and various fowl — as well as aquaculture systems in a dedicated pond.
+  </p>
+  <p>
+    This test farm strengthens our feedback loop, supporting continuous improvement of our processes while fostering collaboration with local agricultural stakeholders. It anchors our commitment to environmental sustainability rooted in real-world, replicable outcomes.
+  </p>
+</section>
+
+<!-- Biosolids case study -->
+<section>
+  <h2>Lessons from A Cautionary Tale:  Case Study on The Biosolids Crisis — Forever Chemicals on America’s Farmland</h2>
+  <p>
+    The United States produces over <strong>8 million dry tons</strong> of biosolids annually, with approximately <strong>60%</strong> applied to agricultural lands as fertilizer to recycle nutrients. However, extensive testing has revealed that nearly <strong>100%</strong> of biosolid samples contain <strong>PFAS compounds</strong>—persistent “forever chemicals” that resist natural breakdown and accumulate in soil and water [EPA 2024][Environmental Working Group, 2023].
+  </p>
+  <p>
+    PFAS contamination has been detected on farmland in at least <strong>22 states</strong>, including critical agricultural regions, resulting in water supply closures and crop market disruptions. Groundwater measurements have found PFAS concentrations as high as <strong>1,200 parts per trillion (ppt)</strong>, greatly exceeding EPA health advisory levels [EPA 2023]. Such exposure is linked to increased risks of cancer, thyroid disease, immune dysfunction, and other serious health issues.
+  </p>
+  <h3>Pitfalls and the Moral Hazard</h3>
+  <p>
+    The biosolids land application practice shifted the burden of toxic waste from urban wastewater systems to rural and farming communities, illustrating a clear <em>moral hazard</em>: one community’s waste becoming another’s problem without adequate accountability. The assumption that dilution in soils would mitigate harm fails against the persistence of PFAS, leading to irreversible environmental contamination.
+  </p>
+  <h3>Our Mission and Approach</h3>
+  <p>
+    Learning from this legacy of failure, <span class="brand-name">Nellie’s BSFL</span> *powered by <span class="partner-name">Flybox</span> is committed to <strong>local, transparent, and responsible waste processing</strong>. By treating waste nearest its source, we avoid exporting problems and ensure rigorous contaminant testing, building a closed-loop system that safeguards <span>[translate:nuestro propio ecosistema]</span>. Our mission embraces environmental justice, accountability, and innovation to protect communities for generations to come.
+  </p>
+</section>
+
+<section class="office-concept-section">
+  <h2 id="office-solutions">Innovation Opportunity:  Urban Office Building BSFL Solutions</h2>
+  
+  <div class="office-intro">
+    <p>
+      <span class="brand-name">Nellie's BSFL</span> *powered by <span class="partner-name">Flybox</span> technology offers innovative waste management solutions specifically designed for urban office buildings. Our modular systems transform office cafeterias, break rooms, and kitchen waste into valuable resources while dramatically reducing disposal costs and environmental impact.
+    </p>
+    <p>
+      With Houston's growing skyline and increasing focus on corporate sustainability, our office building solutions provide a competitive advantage for property managers and tenants seeking LEED certification and ESG compliance.
+    </p>
+  </div>
+
+  <div class="office-features">
+    <h3>Key Office Building Benefits</h3>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🏢</div>
+        <div class="feature-title">Scalable for Any Building Size</div>
+        <div class="feature-description">From 15-floor towers (1,000-5,000 employees) to smaller office complexes, our modular systems adapt to your building's specific needs and waste volume</div>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <div class="feature-title">40-70% Cost Savings</div>
+        <div class="feature-description">Reduce waste disposal costs by $4,000-$15,000 annually while generating revenue from larvae and frass sales</div>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🌱</div>
+        <div class="feature-title">LEED & ESG Compliance</div>
+        <div class="feature-description">Earn sustainability points and demonstrate environmental leadership to tenants and stakeholders</div>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Minimal Space Requirements</div>
+        <div class="feature-description">Compact 100-400 sq ft footprint in basements, mechanical rooms, or utility closets with vertical stacking</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="placement-options">
+    <h3>Strategic Placement Options</h3>
+    
+    <div class="placement-card">
+      <h4>Basement/Sub-Basement Mechanical Rooms (Recommended)</h4>
+      <ul>
+        <li><strong>Capacity:</strong> 500-2,000 kg organic waste per week</li>
+        <li><strong>Space:</strong> 100-400 sq ft with 10-15 ft height clearance</li>
+        <li><strong>Integration:</strong> Existing ventilation, drainage, and power infrastructure</li>
+        <li><strong>Collection:</strong> Pneumatic tubes or chutes from upper floors</li>
+      </ul>
+    </div>
+    
+    <div class="placement-card">
+      <h4>Distributed Utility Closets (Floors 1, 5, 10)</h4>
+      <ul>
+        <li><strong>Capacity:</strong> 1-2 mini-units per closet (1.5x1x2m each)</li>
+        <li><strong>Space:</strong> 10x10 ft closets common in high-rises</li>
+        <li><strong>Benefits:</strong> Reduces transport, one module per 3-5 floors</li>
+        <li><strong>Collection:</strong> Conveyor belts linking to central collection</li>
+      </ul>
+    </div>
+    
+    <div class="placement-card">
+      <h4>Rooftop Enclosures (Alternative)</h4>
+      <ul>
+        <li><strong>Capacity:</strong> Weatherproofed containers with vertical farms</li>
+        <li><strong>Space:</strong> 500 sq ft enclosed greenhouse</li>
+        <li><strong>Benefits:</strong> Natural light/shade for breeding</li>
+        <li><strong>Collection:</strong> Dumbwaiters from floors below</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="economic-impact">
+    <h3>Economic Impact for Office Buildings</h3>
+    <div class="impact-table">
+      <div class="impact-row">
+        <div class="impact-metric">Waste Volume Reduction</div>
+        <div class="impact-value">70-80%</div>
+        <div class="impact-description">From 50-100 tons/year to 10-30 tons of dried byproducts</div>
+      </div>
+      <div class="impact-row">
+        <div class="impact-metric">Annual Cost Savings</div>
+        <div class="impact-value">$3,500-$13,000</div>
+        <div class="impact-description">Reduced hauling fees from $80-150/ton to $50-70/ton</div>
+      </div>
+      <div class="impact-row">
+        <div class="impact-metric">Revenue Generation</div>
+        <div class="impact-value">$5,000-$20,000</div>
+        <div class="impact-description">From larvae ($2-5/kg) and frass ($0.50-1/kg) sales</div>
+      </div>
+      <div class="impact-row">
+        <div class="impact-metric">ROI Timeline</div>
+        <div class="impact-value">12-24 months</div>
+        <div class="impact-description">Break-even point for 500 kg/week capacity systems</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="implementation-timeline">
+    <h3>Implementation Timeline</h3>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Feasibility Assessment</h4>
+          <p>Waste audit, space evaluation, and custom system design (2-3 weeks)</p>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Installation & Setup</h4>
+          <p>Modular unit installation, HVAC integration, and system testing (4-8 weeks)</p>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Training & Launch</h4>
+          <p>Staff training, pilot operation, and full-scale deployment (2-4 weeks)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="office-cta">
+    <p>
+      <strong>Ready to transform your office building's waste management?</strong> 
+      Contact <span class="brand-name">Nellie's BSFL</span> for a customized feasibility assessment and discover how our modular systems can reduce costs, enhance sustainability, and generate revenue for your property.
+    </p>
+  </div>
+</section>
+
+<section class="kpis-section">
+  <h2 id="kpis">BSFL Performance & Quality Benchmarking</h2>
+  
+  <div class="kpis-intro">
+    <p>
+      <span class="brand-name">Nellie's BSFL</span> maintains a rigorous approach to performance and quality benchmarking to demonstrate the effectiveness of our program and hold all stakeholders to the highest standards. Our comprehensive KPI framework ensures transparency, accountability, and continuous improvement across all operations.
+    </p>
+    <p>
+      Through systematic measurement and reporting, we provide clear evidence of our environmental impact, operational efficiency, and product quality. This data-driven approach builds trust with partners, customers, and regulatory bodies while driving innovation and optimization throughout our supply chain.
+    </p>
+  </div>
+
+  <div class="kpi-category">
+    <h3>Waste Reduction and Diversion KPIs</h3>
+    <div class="kpis-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Organic Waste Diverted from Landfills</div>
+        <div class="kpi-value">5,000+ tons/year</div>
+        <div class="kpi-description">Total tons of organic waste processed annually, measuring reduction in landfill usage</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Waste Diversion Rate</div>
+        <div class="kpi-value">25%+</div>
+        <div class="kpi-description">Percentage of municipal organic waste successfully diverted to the BSFL program out of total generated</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Household/Business Participation Rate</div>
+        <div class="kpi-value">40%+</div>
+        <div class="kpi-description">Number of participating households or businesses submitting waste, as a percentage of eligible entities in Houston</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-category">
+    <h3>Production and Yield KPIs</h3>
+    <div class="kpis-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Larvae Biomass Yield</div>
+        <div class="kpi-value">150+ kg/ton</div>
+        <div class="kpi-description">Kilograms of harvested BSFL per ton of input waste, indicating conversion efficiency</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Protein Content in Larvae</div>
+        <div class="kpi-value">40%+</div>
+        <div class="kpi-description">Average percentage of crude protein in harvested larvae, ensuring quality for feed applications</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Frass Output</div>
+        <div class="kpi-value">400+ kg/ton</div>
+        <div class="kpi-description">Kilograms of frass fertilizer produced per ton of waste input</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Cycle Efficiency</div>
+        <div class="kpi-value">≤ 14 days</div>
+        <div class="kpi-description">Average time from waste input to larvae harvest, optimizing throughput</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-category">
+    <h3>Environmental Impact KPIs</h3>
+    <div class="kpis-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Greenhouse Gas Emissions Reduction</div>
+        <div class="kpi-value">1,200+ tCO2e/year</div>
+        <div class="kpi-description">Tons of CO2 equivalent avoided annually through waste processing instead of landfilling</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Water Usage Efficiency</div>
+        <div class="kpi-value">≤ 200 L/ton</div>
+        <div class="kpi-description">Liters of water consumed per ton of waste processed, tracking resource conservation in Houston's humid climate</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Energy Consumption per Ton</div>
+        <div class="kpi-value">≤ 50 kWh/ton</div>
+        <div class="kpi-description">Kilowatt-hours used per ton of waste, measuring sustainability of operations</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-category">
+    <h3>Economic and Financial KPIs</h3>
+    <div class="kpis-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Cost per Ton Processed</div>
+        <div class="kpi-value">≤ $80/ton</div>
+        <div class="kpi-description">Operational cost per ton of waste handling via BSFL versus traditional methods</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Revenue from Outputs</div>
+        <div class="kpi-value">$100,000+/year</div>
+        <div class="kpi-description">Annual revenue from selling larvae, frass, or derivatives, supporting program viability</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Return on Investment (ROI)</div>
+        <div class="kpi-value">12%+</div>
+        <div class="kpi-description">Percentage return on capital invested in BSFL facilities over a fiscal year</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Job Creation Impact</div>
+        <div class="kpi-value">15+ FTEs</div>
+        <div class="kpi-description">Number of full-time equivalent jobs supported by the program, boosting local economy</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-category">
+    <h3>Operational and Quality KPIs</h3>
+    <div class="kpis-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Larvae Survival Rate</div>
+        <div class="kpi-value">85%+</div>
+        <div class="kpi-description">Percentage of larvae reaching harvestable size, indicating system health and feed efficacy</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Contaminant Rejection Rate</div>
+        <div class="kpi-value">≤ 5%</div>
+        <div class="kpi-description">Percentage of input waste rejected due to contaminants, ensuring output safety</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Facility Utilization Rate</div>
+        <div class="kpi-value">75%+</div>
+        <div class="kpi-description">Percentage of BSFL facility capacity used monthly, gauging scalability</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-category">
+    <h3>Community and Social KPIs</h3>
+    <div class="kpis-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Community Engagement Score</div>
+        <div class="kpi-value">7.5+/10</div>
+        <div class="kpi-description">Average satisfaction rating from surveys on program awareness and participation</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Educational Outreach Reach</div>
+        <div class="kpi-value">10,000+ residents/year</div>
+        <div class="kpi-description">Number of residents reached through workshops or campaigns on sustainable waste practices</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-category">
+    <h3>Resource-Saving and Logistics KPIs (Houston Sprawl-Focused)</h3>
+    <div class="kpis-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Truck Mileage Reduction</div>
+        <div class="kpi-value">30%+</div>
+        <div class="kpi-description">Miles driven by collection vehicles annually, comparing pre- and post-BSFL routes. Houston's sprawl amplifies savings from reduced long-haul distances</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Collection Trips per Route</div>
+        <div class="kpi-value">≤ 2 trips/week</div>
+        <div class="kpi-description">Number of weekly pickups needed per area; fewer trips mean less fuel burn in traffic-heavy Houston</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Hauling Distance Reduction</div>
+        <div class="kpi-value">40+ km saved/route</div>
+        <div class="kpi-description">Kilometers saved per collection route, leveraging Houston's massive sprawl to minimize fuel and emissions from long hauls</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-category">
+    <h3>Nutrient Enrichment and Soil Health KPIs</h3>
+    <div class="kpis-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Crop Yield Increase</div>
+        <div class="kpi-value">20%+</div>
+        <div class="kpi-description">Pounds of produce per plot in Houston gardens using frass, versus standard soil—measuring direct agricultural benefits</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Soil Nutrient Boost</div>
+        <div class="kpi-value">+0.5% N, +0.3% P, +0.4% K</div>
+        <div class="kpi-description">Measured NPK rise after application, tracked monthly in urban sites</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Soil pH Stability</div>
+        <div class="kpi-value">pH 6.0–7.0</div>
+        <div class="kpi-description">How much less acidic Houston's clay-heavy soil becomes with regular BSFL frass fertilizer</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Microbial Diversity Index</div>
+        <div class="kpi-value">≥ 10^7 CFU/g</div>
+        <div class="kpi-description">Count of healthy bacteria and fungi per gram, showing enhanced soil life and root health</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-footer">
+    <p><strong>Total KPIs: 26</strong> | Comprehensive monitoring framework for Houston BSFL Program</p>
+  </div>
+</section>
+
+<h2 id="model">Partnership Model</h2>
+
+<section class="partnership-model-section">
+  <div class="partnership-content">
+    <h3>Economics of the Partnership</h3>
+    <div class="partnership-grid">
+      <div class="partnership-card">
+        <h4>Revenue Streams</h4>
+        <ul>
+          <li><strong>Licensing Fees:</strong> 5%-10% royalty based on sales volume</li>
+          <li><strong>Unit Sales:</strong> 25%-40% margin on customized units</li>
+          <li><strong>Subscription Services:</strong> Maintenance, training, larvae supply</li>
+          <li><strong>Consulting:</strong> Local expertise and support services</li>
+        </ul>
+      </div>
+      <div class="partnership-card">
+        <h4>Cost Advantages</h4>
+        <ul>
+          <li><strong>Local Assembly:</strong> Reduced production costs</li>
+          <li><strong>Component Substitution:</strong> Affordable alternatives</li>
+          <li><strong>Leveraged Technology:</strong> Flybox IP and expertise</li>
+          <li><strong>Market Access:</strong> Established local relationships</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="partnership-content">
+    <h3>Selling Points to Flybox</h3>
+    <div class="partnership-grid">
+      <div class="partnership-card">
+        <h4>Market Expansion</h4>
+        <ul>
+          <li>Access to budget-conscious market segments</li>
+          <li>Small farms, schools, and communities</li>
+          <li>Underserved regional markets</li>
+          <li>Scalable growth opportunities</li>
+        </ul>
+      </div>
+      <div class="partnership-card">
+        <h4>Strategic Benefits</h4>
+        <ul>
+          <li>Brand extension without dilution</li>
+          <li>Diversified revenue streams</li>
+          <li>Reduced investment risk</li>
+          <li>Customer feedback for innovation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="partnership-content">
+    <h3>Risk Analysis & Mitigation Strategies</h3>
+    
+    <div class="risk-mitigation">
+      <div class="risk-card">
+        <h4>Brand Dilution Risk</h4>
+        <p>Lower-cost variant could harm Flybox's premium image if quality declines.</p>
+      </div>
+      <div class="mitigation-card">
+        <h4>Brand Protection</h4>
+        <p>Implement strict quality control guidelines and brand standards through licensing agreements.</p>
+      </div>
+    </div>
+
+    <div class="risk-mitigation">
+      <div class="risk-card">
+        <h4>Intellectual Property Risk</h4>
+        <p>Safeguarding technology and design integrity against misuse or unauthorized replication.</p>
+      </div>
+      <div class="mitigation-card">
+        <h4>IP Protection</h4>
+        <p>Clear licensing terms, regular audits, and collaborative R&D to maintain technology standards.</p>
+      </div>
+    </div>
+
+    <div class="risk-mitigation">
+      <div class="risk-card">
+        <h4>Market Overlap Risk</h4>
+        <p>Possibility of cannibalizing higher-end Flybox sales if markets aren't properly segmented.</p>
+      </div>
+      <div class="mitigation-card">
+        <h4>Market Segmentation</h4>
+        <p>Clearly define target markets in contracts to prevent overlap with core commercial lines.</p>
+      </div>
+    </div>
+
+    <div class="risk-mitigation">
+      <div class="risk-card">
+        <h4>Quality Control Risk</h4>
+        <p>Ensuring consistent operational, regulatory, and sustainability standards across customized units.</p>
+      </div>
+      <div class="mitigation-card">
+        <h4>Quality Assurance</h4>
+        <p>Regular performance audits, joint reviews, and standardized operational procedures.</p>
+      </div>
+    </div>
+
+    <div class="risk-mitigation">
+      <div class="risk-card">
+        <h4>Support Burden Risk</h4>
+        <p>Managing expanded customer support for a more distributed and varied client base.</p>
+      </div>
+      <div class="mitigation-card">
+        <h4>Support Strategy</h4>
+        <p>Leverage Flybox's existing platforms supplemented by local support capabilities.</p>
+      </div>
+    </div>
+
+    <div class="risk-mitigation">
+      <div class="risk-card">
+        <h4>Financial Exposure Risk</h4>
+        <p>Dependence on successful execution and brand protection to avoid negative market impact.</p>
+      </div>
+      <div class="mitigation-card">
+        <h4>Risk Management</h4>
+        <p>Start with pilot projects to demonstrate success and refine operational parameters.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="partnership-content">
+    <h3>Alignment with Flybox's Partnership Model</h3>
+    <p>This proposal builds on Flybox's established approach of leveraging <span class="highlight">modular, scalable technology paired with strategic partnerships</span> to expand market reach efficiently.</p>
+    
+    <div class="partnership-grid">
+      <div class="partnership-card">
+        <h4>Partnership Philosophy</h4>
+        <ul>
+          <li>Decentralized deployment capabilities</li>
+          <li>Regional customization and delivery</li>
+          <li>Local market expertise</li>
+          <li>Scalable growth model</li>
+        </ul>
+      </div>
+      <div class="partnership-card">
+        <h4>Strategic Alignment</h4>
+        <ul>
+          <li>Technology development focus</li>
+          <li>Supply chain integrity</li>
+          <li>Field feedback integration</li>
+          <li>Capital expenditure reduction</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="partnership-summary">
+    <h3>Partnership Summary</h3>
+    <p>The <span class="brand-name">Nellie's BSFL</span> *powered by <span class="partner-name">Flybox</span> partnership complements Flybox's broader ecosystem by extending its technology into affordable market segments through an independent, co-branded licensee. This approach reflects Flybox's proven partnership philosophy—scalable, collaborative, and strategically segmented—to accelerate sustainable insect farming adoption while protecting brand and IP value.</p>
+  </div>
+</section>
+
+</body>
+</html>

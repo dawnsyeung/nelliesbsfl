@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected Page</title>
+    <style>
+        .password-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            z-index: 1000;
+        }
+        .password-input {
+            padding: 0.5rem;
+            margin: 1rem 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 200px;
+        }
+        .password-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .content {
+            display: none;
+        }
+        .content.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Password Form -->
+    <div class="password-form" id="passwordForm">
+        <h2>Enter Password</h2>
+        <input type="password" class="password-input" id="passwordInput" placeholder="Enter password">
+        <br>
+        <button class="password-btn" onclick="checkPassword()">Submit</button>
+        <p id="errorMsg" style="color: red; margin-top: 1rem;"></p>
+    </div>
+
+    <!-- Protected Content -->
+    <div class="content" id="content">
+        <h1>Welcome to Protected Content!</h1>
+        <p>This content is only visible after entering the correct password.</p>
+        <!-- Your actual page content goes here -->
+    </div>
+
+    <script>
+        // Set your password here
+        const CORRECT_PASSWORD = "yourpassword123";
+        
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const errorMsg = document.getElementById('errorMsg');
+            const passwordForm = document.getElementById('passwordForm');
+            const content = document.getElementById('content');
+            
+            if (input.value === CORRECT_PASSWORD) {
+                // Correct password - show content
+                passwordForm.style.display = 'none';
+                content.classList.add('show');
+                
+                // Store in session so they don't need to re-enter
+                sessionStorage.setItem('authenticated', 'true');
+            } else {
+                // Wrong password
+                errorMsg.textContent = 'Incorrect password. Please try again.';
+                input.value = '';
+                input.focus();
+            }
+        }
+        
+        // Check if already authenticated
+        window.onload = function() {
+            if (sessionStorage.getItem('authenticated') === 'true') {
+                document.getElementById('passwordForm').style.display = 'none';
+                document.getElementById('content').classList.add('show');
+            }
+        }
+        
+        // Allow Enter key to submit
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+</html>
+

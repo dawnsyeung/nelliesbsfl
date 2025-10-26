@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSFL Business Launch Plan - Bleiblerville, TX</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Data persistence for 12-week plan
+        const PLAN_DATA_FILE = 'plan_data.json';
+        
+        // Load saved data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPlanData();
+            
+            // Add event listeners to all dropdowns
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach((dropdown, index) => {
+                dropdown.addEventListener('change', function() {
+                    savePlanData();
+                });
+            });
+            
+            // Add event listeners to all responsible input fields
+            const responsibleInputs = document.querySelectorAll('.responsible-input');
+            responsibleInputs.forEach((input, index) => {
+                input.addEventListener('input', function() {
+                    savePlanData();
+                });
+            });
+        });
+        
+        // Load data from server
+        async function loadPlanData() {
+            try {
+                const response = await fetch(PLAN_DATA_FILE);
+                if (response.ok) {
+                    const data = await response.json();
+                    applySavedData(data);
+                }
+            } catch (error) {
+                console.log('No saved data found or error loading:', error);
+            }
+        }
+        
+        // Apply saved data to dropdowns and inputs
+        function applySavedData(data) {
+            // Handle old format (array) for backward compatibility
+            if (Array.isArray(data)) {
+                const dropdowns = document.querySelectorAll('.dropdown');
+                dropdowns.forEach((dropdown, index) => {
+                    if (data[index] !== undefined) {
+                        dropdown.value = data[index];
+                    }
+                });
+                return;
+            }
+            
+            // Handle new format (object with statuses and responsible)
+            if (data.statuses) {
+                const dropdowns = document.querySelectorAll('.dropdown');
+                dropdowns.forEach((dropdown, index) => {
+                    if (data.statuses[index] !== undefined) {
+                        dropdown.value = data.statuses[index];
+                    }
+                });
+            }
+            
+            if (data.responsible) {
+                const responsibleInputs = document.querySelectorAll('.responsible-input');
+                responsibleInputs.forEach((input, index) => {
+                    if (data.responsible[index] !== undefined) {
+                        input.value = data.responsible[index];
+                    }
+                });
+            }
+        }
+        
+        // Save current data
+        async function savePlanData() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            const responsibleInputs = document.querySelectorAll('.responsible-input');
+            const data = {
+                statuses: Array.from(dropdowns).map(dropdown => dropdown.value),
+                responsible: Array.from(responsibleInputs).map(input => input.value)
+            };
+            
+            // Show saving indicator
+            showSaveIndicator();
+            
+            try {
+                const response = await fetch('save_plan.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ planData: data })
+                });
+                
+                if (response.ok) {
+                    console.log('Plan data saved successfully');
+                    showSaveIndicator('saved');
+                } else {
+                    console.error('Error saving plan data');
+                    showSaveIndicator('error');
+                }
+            } catch (error) {
+                console.error('Error saving plan data:', error);
+                showSaveIndicator('error');
+            }
+        }
+        
+        // Show save indicator
+        function showSaveIndicator(status = 'saving') {
+            let indicator = document.getElementById('save-indicator');
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.id = 'save-indicator';
+                indicator.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 10px 15px;
+                    border-radius: 5px;
+                    color: white;
+                    font-weight: bold;
+                    z-index: 1000;
+                    transition: all 0.3s ease;
+                `;
+                document.body.appendChild(indicator);
+            }
+            
+            switch(status) {
+                case 'saving':
+                    indicator.textContent = 'Saving...';
+                    indicator.style.backgroundColor = '#3498db';
+                    break;
+                case 'saved':
+                    indicator.textContent = 'Saved ✓';
+                    indicator.style.backgroundColor = '#27ae60';
+                    setTimeout(() => indicator.remove(), 2000);
+                    break;
+                case 'error':
+                    indicator.textContent = 'Save Error ✗';
+                    indicator.style.backgroundColor = '#e74c3c';
+                    setTimeout(() => indicator.remove(), 3000);
+                    break;
+            }
+        }
+    </script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 2rem; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4a5568; color: white; }
+        th:nth-child(1), td:nth-child(1) { width: 8%; }
+        th:nth-child(2), td:nth-child(2) { width: 32%; }
+        th:nth-child(3), td:nth-child(3) { width: 20%; }
+        th:nth-child(4), td:nth-child(4) { width: 40%; }
+        .dropdown { width: 100%; padding: 5px; }
+        .responsible-input { width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; }
+        @media (max-width: 640px) {
+            table { font-size: 0.875rem; }
+            th, td { padding: 6px; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold text-center mb-6">12-Week BSFL Business Launch Plan - Bleiblerville, TX</h1>
+        <p class="mb-4">This plan outlines a day-by-day roadmap to start a black soldier fly larvae (BSFL) business in Bleiblerville, TX, targeting poultry, pet, and garden markets. Track task status using dropdowns.</p>
+
+        <!-- Week 1 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 1: Research and Legal Foundations</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Review Texas Business Licenses & Permits Guide; identify sales tax permit, assumed name certificate ($25), zoning needs.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Contact Austin County AgriLife Extension (979-865-2072) for BSFL intro call; attend virtual webinar.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Research local waste sources; visit 2-3 farms/dairies for feedstock partnerships.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Map buyers: List 10 poultry ops/pet stores in Bleiblerville/Brenham; confirm demand via calls.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Apply preliminarily for USDA UAIP grant ($250K max) via grants.gov.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>File assumed name with Austin County Clerk ($25); open business bank account.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: Compile notes into one-page summary.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 2 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 2: Business Planning and Market Fit</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Draft business plan (SBA template); project $1,000-5,000/month revenue from larvae/frass.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Calculate costs; budget $2,000 for starter larvae/eggs from Symton BSF (College Station).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Identify 5 pilot sites (e.g., Bleiblerville Community Garden, Hope Farms Houston).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Apply for sales tax permit (comptroller.texas.gov).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Join TX Backyard Chickens Facebook group; post query on BSFL interest.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Refine targets; focus on pet/reptile market (e.g., Gecko World Austin).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: Finalize 1-year projection (IRR 25-40%).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 3 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 3: Site and Equipment Setup</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Scout property; secure 500-1,000 sq ft (backyard/rented barn).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Order plastic bins ($200), substrate, climate tools ($300) from Amazon/Home Depot.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Build prototype bin (4x4 ft; Texas A&M guide).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Secure waste supply; sign MOUs with 2 local sources.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Install shade cloth, basic irrigation ($100).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Test setup; run water/ventilation dry run (target 60-75% humidity).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: Inventory checklist complete.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 4 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 4: Sourcing and Initial Stocking</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Order 1,000 BSFL eggs from Symton BSF ($50-100).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Source colony flies; buy 100 adults (e.g., Fluker Farms).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Prep feedstock; collect/test 100 lbs waste (scraps/manure).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Set up breeding chamber (dark, warm box; $50 DIY).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Apply for SARE On-Farm Research Grant ($30K max).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Train: Watch 3 YouTube tutorials on BSFL cycles.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: All materials arrived.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 5 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 5: Pilot Production Launch</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Introduce eggs/larvae to bins; monitor temp (77-95°F).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Feed initial batch (2x body weight daily); log weights.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Check for issues (e.g., moisture); adjust ventilation.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Visit local farm for feedback session on potential sales.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Document process: Photos/videos for grant apps.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Breed first flies (separate pupae).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: Week 1 cycle metrics.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 6 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 6: Testing and Iteration</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Harvest first larvae (Day 10-14); dry sample for feed test.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Produce frass batch; test soil amendment on garden plot.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Analyze costs/yields; tweak feed ratios.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Pitch to 3 buyers (e.g., pet store in Brenham); offer free samples.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Submit UAIP grant full app (include pilot data).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Scale breeding: Add second bin.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: ROI calc for pilot (target 50% margin).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 7 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 7: Marketing and Partnerships</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Create website (Wix, $15/month) with product photos/pricing.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>List on local marketplaces (Facebook, Craigslist); target Bleiblerville/Sealy.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Attend Austin County Farm Bureau meeting; network for off-take.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Secure first sale: Sell 20 lbs larvae to backyard group.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Partner with community garden (e.g., Urban Harvest affiliate).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Order modular container basics ($1,000 for small unit).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: 5 leads tracked.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 8 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 8: Scale Production</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Launch second cycle; add waste from new partner.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Install IoT sensors ($200) for remote monitoring.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Process first bulk frass (bag for sales).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Deliver samples to 2 farms; collect feedback.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>File for EIN (irs.gov; free).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Train family/helper on harvesting.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: Yield double check.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 9 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 9: Sales and Distribution</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Close 2 bulk deals (e.g., pet supplier for $200).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Set up delivery logistics (local truck/van).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Market frass to landscapers (e.g., via Houzz directory).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Track invoices; remit first sales tax (if applicable).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Expand to Austin market (reptile events).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Apply for TX Dept of Ag grant ($10K+).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: Cash flow summary.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 10 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 10: Operations Refinement</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Automate feeding schedule.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Audit waste supply; add 1 more source.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Test odor controls (ventilation tweaks).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Host demo at local garden.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Review grant statuses; follow up.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Scale to third bin.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: Monthly P&L.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 11 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 11: Expansion Prep</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Order full small modular unit ($8,000; assemble).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Pitch to 3 community sites for installs.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Secure insurance ($500/year for ag liability).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Build customer database (20+ contacts).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Optimize pricing based on sales data.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Plan Q2 goals (e.g., 1 ton/month).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: Risk assessment.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <!-- Week 12 -->
+        <h2 class="text-2xl font-semibold mt-6 mb-4">Week 12: Launch and Monitor</h2>
+        <table>
+            <tr>
+                <th>Day</th><th>Task</th><th>Responsible</th><th>Status</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Full production launch; harvest major batch.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Deliver first modular unit (if funded).</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Celebrate milestone: Invoice $1,000+.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Gather testimonials; update marketing.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Schedule quarterly AgriLife check-in.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Forecast next 3 months; adjust plan.</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Rest/review: 12-week retrospective; business live!</td>
+                <td><input type="text" class="responsible-input" placeholder="Enter responsible person"></td>
+                <td><select class="dropdown"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></td>
+            </tr>
+        </table>
+
+        <p class="mt-6 text-center">Track progress daily and adjust as needed. Contact Austin County AgriLife Extension or Symton BSF for support. Aim for 50% margins and 1-2 grant approvals by Week 12.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partnership Model - Nellie's BSFL</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2c1810 0%, #3e2723 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .section h2 {
+            color: #2c5530;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #a78b5b;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section h3 {
+            color: #4a7c59;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #a78b5b;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .card h4 {
+            color: #2c5530;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+        
+        .card li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+        
+        .risk-mitigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .risk-card {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+        
+        .mitigation-card {
+            background: #f0fff4;
+            border-left: 4px solid #38a169;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+        
+        .risk-card h4 {
+            color: #e53e3e;
+            margin-bottom: 1rem;
+        }
+        
+        .mitigation-card h4 {
+            color: #38a169;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #a78b5b, #8b5a2b);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .brand-name {
+            color: #3C2415;
+            font-weight: bold;
+            font-style: normal;
+        }
+        
+        .partner-name {
+            color: #DAA520;
+            font-weight: 600;
+            border-bottom: 2px dashed #27ae60;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, #2c5530, #4a7c59);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+        
+        .summary-box h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .larva-image {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 80px;
+            height: auto;
+            transform: rotate(20deg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0.8;
+        }
+        
+        .larva-image:hover {
+            transform: rotate(20deg) scale(1.1);
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2, .risk-mitigation {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .larva-image {
+                width: 60px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Partnership Proposal</h1>
+            <p><span class="brand-name">Nellie's BSFL</span> *powered by <span class="partner-name">Flybox</span></p>
+        </div>
+
+        <div class="section">
+            <h2>Economics of the Partnership</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Revenue Streams</h4>
+                    <ul>
+                        <li><strong>Licensing Fees:</strong> 5%-10% royalty based on sales volume</li>
+                        <li><strong>Unit Sales:</strong> 25%-40% margin on customized units</li>
+                        <li><strong>Subscription Services:</strong> Maintenance, training, larvae supply</li>
+                        <li><strong>Consulting:</strong> Local expertise and support services</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Cost Advantages</h4>
+                    <ul>
+                        <li><strong>Local Assembly:</strong> Reduced production costs</li>
+                        <li><strong>Component Substitution:</strong> Affordable alternatives</li>
+                        <li><strong>Leveraged Technology:</strong> Flybox IP and expertise</li>
+                        <li><strong>Market Access:</strong> Established local relationships</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Selling Points to Flybox</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Market Expansion</h4>
+                    <ul>
+                        <li>Access to budget-conscious market segments</li>
+                        <li>Small farms, schools, and communities</li>
+                        <li>Underserved regional markets</li>
+                        <li>Scalable growth opportunities</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Strategic Benefits</h4>
+                    <ul>
+                        <li>Brand extension without dilution</li>
+                        <li>Diversified revenue streams</li>
+                        <li>Reduced investment risk</li>
+                        <li>Customer feedback for innovation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Risk Analysis & Mitigation Strategies</h2>
+            
+            <div class="risk-mitigation">
+                <div class="risk-card">
+                    <h4>Brand Dilution Risk</h4>
+                    <p>Lower-cost variant could harm Flybox's premium image if quality declines.</p>
+                </div>
+                <div class="mitigation-card">
+                    <h4>Brand Protection</h4>
+                    <p>Implement strict quality control guidelines and brand standards through licensing agreements.</p>
+                </div>
+            </div>
+
+            <div class="risk-mitigation">
+                <div class="risk-card">
+                    <h4>Intellectual Property Risk</h4>
+                    <p>Safeguarding technology and design integrity against misuse or unauthorized replication.</p>
+                </div>
+                <div class="mitigation-card">
+                    <h4>IP Protection</h4>
+                    <p>Clear licensing terms, regular audits, and collaborative R&D to maintain technology standards.</p>
+                </div>
+            </div>
+
+            <div class="risk-mitigation">
+                <div class="risk-card">
+                    <h4>Market Overlap Risk</h4>
+                    <p>Possibility of cannibalizing higher-end Flybox sales if markets aren't properly segmented.</p>
+                </div>
+                <div class="mitigation-card">
+                    <h4>Market Segmentation</h4>
+                    <p>Clearly define target markets in contracts to prevent overlap with core commercial lines.</p>
+                </div>
+            </div>
+
+            <div class="risk-mitigation">
+                <div class="risk-card">
+                    <h4>Quality Control Risk</h4>
+                    <p>Ensuring consistent operational, regulatory, and sustainability standards across customized units.</p>
+                </div>
+                <div class="mitigation-card">
+                    <h4>Quality Assurance</h4>
+                    <p>Regular performance audits, joint reviews, and standardized operational procedures.</p>
+                </div>
+            </div>
+
+            <div class="risk-mitigation">
+                <div class="risk-card">
+                    <h4>Support Burden Risk</h4>
+                    <p>Managing expanded customer support for a more distributed and varied client base.</p>
+                </div>
+                <div class="mitigation-card">
+                    <h4>Support Strategy</h4>
+                    <p>Leverage Flybox's existing platforms supplemented by local support capabilities.</p>
+                </div>
+            </div>
+
+            <div class="risk-mitigation">
+                <div class="risk-card">
+                    <h4>Financial Exposure Risk</h4>
+                    <p>Dependence on successful execution and brand protection to avoid negative market impact.</p>
+                </div>
+                <div class="mitigation-card">
+                    <h4>Risk Management</h4>
+                    <p>Start with pilot projects to demonstrate success and refine operational parameters.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Alignment with Flybox's Partnership Model</h2>
+            <p>This proposal builds on Flybox's established approach of leveraging <span class="highlight">modular, scalable technology paired with strategic partnerships</span> to expand market reach efficiently.</p>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Partnership Philosophy</h4>
+                    <ul>
+                        <li>Decentralized deployment capabilities</li>
+                        <li>Regional customization and delivery</li>
+                        <li>Local market expertise</li>
+                        <li>Scalable growth model</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Strategic Alignment</h4>
+                    <ul>
+                        <li>Technology development focus</li>
+                        <li>Supply chain integrity</li>
+                        <li>Field feedback integration</li>
+                        <li>Capital expenditure reduction</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-box">
+            <h3>Partnership Summary</h3>
+            <p>The <span class="brand-name">Nellie's BSFL</span> *powered by <span class="partner-name">Flybox</span> partnership complements Flybox's broader ecosystem by extending its technology into affordable market segments through an independent, co-branded licensee. This approach reflects Flybox's proven partnership philosophy—scalable, collaborative, and strategically segmented—to accelerate sustainable insect farming adoption while protecting brand and IP value.</p>
+        </div>
+    </div>
+
+    <!-- Larva image positioned at bottom right -->
+    <img src="larva.png" alt="Black Soldier Fly Larvae" class="larva-image" onclick="window.location.href='index.html'">
+</body>
+</html>
