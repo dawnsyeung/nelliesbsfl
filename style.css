@@ -186,7 +186,7 @@ p {
 .hero__fly-image {
     position: absolute;
     top: 12%;
-    right: 90%;
+    right: 92%;
     width: 160px;
     height: auto;
     transform: rotate(40deg);
@@ -204,7 +204,7 @@ p {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #F5E6D3;
+    color: #FFFFFF;
     font-size: 3rem;
     font-weight: bold;
     text-align: center;
@@ -674,16 +674,18 @@ section {
     }
     
     .nav__menu .nav__item {
-        margin: 0.3rem 0;
+        margin: 0.1rem 0;
     }
     
     .nav__menu .nav__link {
-        padding: 0.5rem 1rem;
+        padding: 0.3rem 1rem;
         display: block;
+        line-height: 1.2;
     }
 
     .nav__menu.active {
         left: 0;
+        z-index: 1001;
     }
 
     .nav__toggle {
@@ -724,7 +726,7 @@ section {
     .hero__fly-image {
         width: 120px;
         top: 12%;
-        right: 90%;
+        right: 92%;
     }
     
     .hero__overlay-text {
@@ -790,7 +792,7 @@ section {
     .hero__fly-image {
         width: 100px;
         top: 12%;
-        right: 90%;
+        right: 92%;
     }
     
     .hero__overlay-text {
