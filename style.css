@@ -187,7 +187,7 @@ p {
     position: absolute;
     top: 12%;
     right: 90%;
-    width: 80px;
+    width: 160px;
     height: auto;
     transform: rotate(40deg);
     cursor: pointer;
@@ -670,10 +670,19 @@ section {
         text-align: center;
         transition: 0.3s;
         backdrop-filter: blur(10px);
-        padding: 2rem 0;
+        padding: 1rem 0;
+    }
+    
+    .nav__menu .nav__item {
+        margin: 0.3rem 0;
+    }
+    
+    .nav__menu .nav__link {
+        padding: 0.5rem 1rem;
+        display: block;
     }
 
-    .nav__menu.show-menu {
+    .nav__menu.active {
         left: 0;
     }
 
@@ -713,7 +722,7 @@ section {
     }
 
     .hero__fly-image {
-        width: 60px;
+        width: 120px;
         top: 12%;
         right: 90%;
     }
@@ -779,7 +788,7 @@ section {
     }
 
     .hero__fly-image {
-        width: 50px;
+        width: 100px;
         top: 12%;
         right: 90%;
     }

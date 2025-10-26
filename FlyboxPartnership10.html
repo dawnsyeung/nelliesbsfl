@@ -561,14 +561,14 @@
     
     if (navToggle && navMenu) {
       navToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('show-menu');
+        navMenu.classList.toggle('active');
         navToggle.classList.toggle('active');
       });
       
       // Close menu when clicking a link
       navLinks.forEach(link => {
         link.addEventListener('click', () => {
-          navMenu.classList.remove('show-menu');
+          navMenu.classList.remove('active');
           navToggle.classList.remove('active');
         });
       });
