@@ -74,7 +74,7 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 140px;
+    height: 152px;
 }
 
 .nav__logo {
@@ -83,7 +83,7 @@ p {
 }
 
 .nav__logo-img {
-    height: 120px;
+    height: 132px;
     width: auto;
     max-width: 400px;
     object-fit: contain;
@@ -151,7 +151,7 @@ p {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    margin-top: 140px;
+    margin-top: 152px;
 }
 
 .hero__container {
@@ -663,7 +663,7 @@ section {
     .nav__menu {
         position: fixed;
         left: -100%;
-        top: 140px;
+        top: 152px;
         flex-direction: column;
         background-color: rgba(62, 39, 35, 0.95);
         width: 100%;
@@ -673,7 +673,7 @@ section {
         padding: 2rem 0;
     }
 
-    .nav__menu.active {
+    .nav__menu.show-menu {
         left: 0;
     }
 

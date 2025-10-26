@@ -4,11 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Flybox Partnership Opportunity</title>
+<link rel="stylesheet" href="style.css">
 <style>
   body { 
     font-family: Arial, sans-serif; 
     line-height: 1.6; 
     margin: 20px; 
+    margin-top: 172px;
     background: #D9CBB6; 
     color: #333; 
   }
@@ -95,67 +97,6 @@
     padding: 0 1rem;
   }
   
-  /* Navigation toggle for mobile */
-  .nav-toggle {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 4px;
-  }
-  .nav-toggle span {
-    width: 25px;
-    height: 3px;
-    background: white;
-    transition: all 0.3s ease;
-    display: block;
-  }
-  .nav-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-  }
-  .nav-toggle.active span:nth-child(2) {
-    opacity: 0;
-  }
-  .nav-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -6px);
-  }
-  .nav-menu {
-    display: flex;
-    gap: 30px;
-  }
-  /* Mobile menu collapsed by default */
-  @media (max-width: 768px) {
-    .nav-section {
-      padding: 8px 20px;
-      justify-content: space-between;
-    }
-    .nav-toggle {
-      display: flex;
-    }
-    .nav-menu {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
-      flex-direction: column;
-      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-      gap: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-      border-bottom: 3px solid #DAA520;
-    }
-    .nav-menu.active {
-      max-height: 500px;
-    }
-    .nav-link {
-      padding: 12px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      font-size: 0.95rem;
-    }
-    .nav-link:last-child {
-      border-bottom: none;
-    }
-  }
   
   /* Smooth scroll behavior for navigation anchors */
   h2[id], h1[id] {
@@ -551,7 +492,7 @@
   
   /* Mobile Responsive Styles */
   @media (max-width: 768px) {
-    body { margin: 10px; }
+    body { margin: 10px; margin-top: 152px; }
     h1 { font-size: 1.5rem; }
     h2 { font-size: 1.8rem; }
     h3 { font-size: 1.1rem; }
@@ -568,12 +509,10 @@
     .impact-row { grid-template-columns: 1fr; gap: 10px; text-align: center; }
     .partnership-grid { grid-template-columns: 1fr; gap: 15px; }
     .risk-mitigation { grid-template-columns: 1fr; gap: 15px; }
-    .nav-section { flex-wrap: wrap; gap: 15px; padding: 12px 20px; }
-    .nav-link { font-size: 0.9rem; padding: 6px 15px; }
   }
   
   @media (max-width: 480px) {
-    body { margin: 5px; }
+    body { margin: 5px; margin-top: 152px; }
     h1 { font-size: 1.3rem; }
     h2 { font-size: 1.6rem; }
     h3 { font-size: 1rem; }
@@ -614,40 +553,60 @@
     
     // Mobile navigation toggle
     const navToggle = document.getElementById('nav-toggle');
-    const navMenu = document.getElementById('nav-menu');
+    const navMenu = document.querySelector('.nav__menu');
+    const navLinks = document.querySelectorAll('.nav__link');
+    
     if (navToggle && navMenu) {
       navToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('show-menu');
         navToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
       });
       
       // Close menu when clicking a link
-      const navLinks = navMenu.querySelectorAll('.nav-link');
       navLinks.forEach(link => {
         link.addEventListener('click', () => {
+          navMenu.classList.remove('show-menu');
           navToggle.classList.remove('active');
-          navMenu.classList.remove('active');
         });
       });
     }
   });
 </script>
 
-<div class="nav-section">
-  <div class="nav-toggle" id="nav-toggle">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-  <div class="nav-menu" id="nav-menu">
-    <a href="#overview" class="nav-link">Overview</a>
-    <a href="#waste-crisis" class="nav-link">Waste Solution</a>
-    <a href="#ranch" class="nav-link">Nellie's BSFL Ranch</a>
-    <a href="#office-solutions" class="nav-link">Innovations</a>
-    <a href="#kpis" class="nav-link">KPIs</a>
-    <a href="#model" class="nav-link">Partnership Model</a>
-  </div>
-</div>
+<header class="header">
+  <nav class="nav">
+    <div class="nav__container">
+      <div class="nav__logo">
+        <img src="nbsfllogo.PNG" alt="Nellie's Black Soldier Fly Larvae Logo" class="nav__logo-img">
+      </div>
+      <ul class="nav__menu">
+        <li class="nav__item">
+          <a href="#overview" class="nav__link">Overview</a>
+        </li>
+        <li class="nav__item">
+          <a href="#waste-crisis" class="nav__link">Waste Solution</a>
+        </li>
+        <li class="nav__item">
+          <a href="#ranch" class="nav__link">Ranch</a>
+        </li>
+        <li class="nav__item">
+          <a href="#office-solutions" class="nav__link">Innovations</a>
+        </li>
+        <li class="nav__item">
+          <a href="#kpis" class="nav__link">KPIs</a>
+        </li>
+        <li class="nav__item">
+          <a href="#model" class="nav__link">Partnership Model</a>
+        </li>
+      </ul>
+      <div class="nav__toggle" id="nav-toggle">
+        <span class="nav__bar"></span>
+        <span class="nav__bar"></span>
+        <span class="nav__bar"></span>
+      </div>
+    </div>
+  </nav>
+</header>
 
 <h1 id="overview">Compelling Partnership Opportunity to Open the Houston Market for Modular Insect Technology Waste Conversion</span></h1>
 
