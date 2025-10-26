@@ -95,31 +95,66 @@
     padding: 0 1rem;
   }
   
-  /* Navigation Section */
-  .nav-section {
-    position: sticky;
-    top: 0;
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    padding: 15px 30px;
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    z-index: 1000;
-    border-bottom: 3px solid #DAA520;
+  /* Navigation toggle for mobile */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 4px;
   }
-  .nav-link {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    padding: 8px 20px;
-    border-radius: 5px;
+  .nav-toggle span {
+    width: 25px;
+    height: 3px;
+    background: white;
     transition: all 0.3s ease;
-    font-size: 1rem;
+    display: block;
   }
-  .nav-link:hover {
-    background: rgba(218,165,32,0.3);
-    transform: translateY(-2px);
+  .nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+  .nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+  }
+  .nav-menu {
+    display: flex;
+    gap: 30px;
+  }
+  /* Mobile menu collapsed by default */
+  @media (max-width: 768px) {
+    .nav-section {
+      padding: 8px 20px;
+      justify-content: space-between;
+    }
+    .nav-toggle {
+      display: flex;
+    }
+    .nav-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      flex-direction: column;
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      gap: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      border-bottom: 3px solid #DAA520;
+    }
+    .nav-menu.active {
+      max-height: 500px;
+    }
+    .nav-link {
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.95rem;
+    }
+    .nav-link:last-child {
+      border-bottom: none;
+    }
   }
   
   /* Smooth scroll behavior for navigation anchors */
@@ -576,16 +611,42 @@
         splash.style.display = 'none';
       }, {once: true});
     }, 3000);
+    
+    // Mobile navigation toggle
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
+      });
+      
+      // Close menu when clicking a link
+      const navLinks = navMenu.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          navToggle.classList.remove('active');
+          navMenu.classList.remove('active');
+        });
+      });
+    }
   });
 </script>
 
 <div class="nav-section">
-  <a href="#overview" class="nav-link">Overview</a>
-  <a href="#waste-crisis" class="nav-link">Waste Solution</a>
-  <a href="#ranch" class="nav-link">Nellie's BSFL Ranch</a>
-  <a href="#office-solutions" class="nav-link">Innovations</a>
-  <a href="#kpis" class="nav-link">KPIs</a>
-  <a href="#model" class="nav-link">Partnership Model</a>
+  <div class="nav-toggle" id="nav-toggle">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <div class="nav-menu" id="nav-menu">
+    <a href="#overview" class="nav-link">Overview</a>
+    <a href="#waste-crisis" class="nav-link">Waste Solution</a>
+    <a href="#ranch" class="nav-link">Nellie's BSFL Ranch</a>
+    <a href="#office-solutions" class="nav-link">Innovations</a>
+    <a href="#kpis" class="nav-link">KPIs</a>
+    <a href="#model" class="nav-link">Partnership Model</a>
+  </div>
 </div>
 
 <h1 id="overview">Compelling Partnership Opportunity to Open the Houston Market for Modular Insect Technology Waste Conversion</span></h1>

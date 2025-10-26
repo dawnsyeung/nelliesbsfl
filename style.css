@@ -714,8 +714,8 @@ section {
 
     .hero__fly-image {
         width: 60px;
-        top: 25%;
-        right: 25%;
+        top: 12%;
+        right: 90%;
     }
     
     .hero__overlay-text {
@@ -780,8 +780,8 @@ section {
 
     .hero__fly-image {
         width: 50px;
-        top: 20%;
-        right: 20%;
+        top: 12%;
+        right: 90%;
     }
     
     .hero__overlay-text {
