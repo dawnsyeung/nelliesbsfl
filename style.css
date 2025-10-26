@@ -185,18 +185,18 @@ p {
 
 .hero__fly-image {
     position: absolute;
-    top: 12%;
-    right: 92%;
+    top: 38.25%;
+    left: 35%;
+    transform: translate(-100%, -100%) rotate(40deg);
     width: 160px;
     height: auto;
-    transform: rotate(40deg);
     cursor: pointer;
     transition: var(--transition);
     z-index: 10;
 }
 
 .hero__fly-image:hover {
-    transform: rotate(40deg) scale(1.1);
+    transform: translate(-100%, -100%) rotate(40deg) scale(1.1);
 }
 
 .hero__overlay-text {
@@ -665,11 +665,11 @@ section {
         left: -100%;
         top: 152px;
         flex-direction: column;
-        background-color: rgba(62, 39, 35, 0.95);
+        background-color: transparent;
         width: 100%;
         text-align: center;
-        transition: 0.3s;
-        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        backdrop-filter: none;
         padding: 1rem 0;
     }
     
@@ -681,11 +681,21 @@ section {
         padding: 0.3rem 1rem;
         display: block;
         line-height: 1.2;
+        opacity: 0;
+        color: transparent;
+        transition: opacity 0.3s ease;
     }
 
     .nav__menu.active {
         left: 0;
         z-index: 1001;
+        background-color: rgba(62, 39, 35, 0.95);
+        backdrop-filter: blur(10px);
+    }
+    
+    .nav__menu.active .nav__link {
+        opacity: 1;
+        color: white;
     }
 
     .nav__toggle {
@@ -725,8 +735,13 @@ section {
 
     .hero__fly-image {
         width: 120px;
-        top: 12%;
-        right: 92%;
+        top: 38.25%;
+        left: 35%;
+        transform: translate(-100%, -100%) rotate(40deg);
+    }
+    
+    .hero__fly-image:hover {
+        transform: translate(-100%, -100%) rotate(40deg) scale(1.1);
     }
     
     .hero__overlay-text {
@@ -791,8 +806,13 @@ section {
 
     .hero__fly-image {
         width: 100px;
-        top: 12%;
-        right: 92%;
+        top: 38.25%;
+        left: 35%;
+        transform: translate(-100%, -100%) rotate(40deg);
+    }
+    
+    .hero__fly-image:hover {
+        transform: translate(-100%, -100%) rotate(40deg) scale(1.1);
     }
     
     .hero__overlay-text {
