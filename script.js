@@ -57,9 +57,9 @@ function isHashLink(href) {
 // Header scroll effect
 function handleHeaderScroll() {
     if (window.scrollY > 100) {
-        header.style.backgroundColor = 'rgba(62, 39, 35, 0.98)';
+        header.style.backgroundColor = 'rgba(28, 19, 16, 0.94)';
     } else {
-        header.style.backgroundColor = 'rgba(62, 39, 35, 0.95)';
+        header.style.backgroundColor = 'rgba(28, 19, 16, 0.82)';
     }
 }
 
