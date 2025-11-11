@@ -41,6 +41,19 @@ function smoothScroll(target) {
     }
 }
 
+function isHashLink(href) {
+    if (!href) return false;
+    if (href.startsWith('#')) return true;
+    try {
+        const url = new URL(href, window.location.href);
+        const currentPath = window.location.pathname.replace(/\/+$/, '');
+        const targetPath = url.pathname.replace(/\/+$/, '');
+        return Boolean(url.hash) && targetPath === currentPath;
+    } catch (error) {
+        return false;
+    }
+}
+
 // Header scroll effect
 function handleHeaderScroll() {
     if (window.scrollY > 100) {
@@ -275,10 +288,15 @@ function init() {
     
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = link.getAttribute('href');
-            smoothScroll(target);
-            closeMobileMenu();
+            const href = link.getAttribute('href') || '';
+            if (isHashLink(href)) {
+                e.preventDefault();
+                const target = href.startsWith('#') ? href : new URL(href, window.location.href).hash;
+                smoothScroll(target);
+                closeMobileMenu();
+            } else {
+                closeMobileMenu();
+            }
         });
     });
     
