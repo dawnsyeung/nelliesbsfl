@@ -14,10 +14,47 @@ body {
     font-size: var(--font-size-base);
     line-height: 1.65;
     color: var(--text-light);
-    background: radial-gradient(circle at top left, rgba(215, 161, 90, 0.14), transparent 44%), radial-gradient(circle at bottom right, rgba(79, 158, 92, 0.1), transparent 52%), #241712;
+    background: #241712;
     background-attachment: fixed;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+}
+
+/* Home Page Desktop Typography Adjustments */
+@media (min-width: 1024px) {
+    body.home {
+        --font-size-base: 0.95rem;
+        --font-size-lg: 1.18rem;
+        --font-size-xl: 1.95rem;
+        --font-size-xxl: 2.45rem;
+    }
+
+    body.home .hero__overlay {
+        max-width: min(560px, 72%);
+        padding: 2.2rem 2.4rem;
+        gap: 1.1rem;
+    }
+
+    body.home .hero__headline {
+        font-size: 2.45rem;
+    }
+
+    body.home .hero__subheadline {
+        font-size: 1.05rem;
+        line-height: 1.6;
+    }
+
+    body.home .section__title {
+        font-size: 2rem;
+    }
+
+    body.home .overview__title {
+        font-size: 1.2rem;
+    }
+
+    body.home .stat__number {
+        font-size: 2.2rem;
+    }
 }
 
 /* CSS Custom Properties */
@@ -501,16 +538,20 @@ section {
 }
 
 .step__number {
-    width: 44px;
-    height: 44px;
-    background: linear-gradient(135deg, #a78b5b, #8b5a2b);
-    color: white;
-    border-radius: 50%;
+    min-width: 48px;
+    min-height: 32px;
+    padding: 0.25rem 0.75rem;
+    background: rgba(215, 161, 90, 0.12);
+    color: #d7a15a;
+    border: 1px solid rgba(215, 161, 90, 0.45);
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 1.1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     flex-shrink: 0;
 }
 
