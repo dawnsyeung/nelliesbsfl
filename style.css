@@ -1433,6 +1433,102 @@ area[href] {
     top: -0.2rem;
 }
 
+.research-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.research-card {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(167, 139, 91, 0.35);
+    border-radius: 16px;
+    padding: clamp(1.85rem, 3.8vw, 2.5rem);
+    display: grid;
+    gap: 1.2rem;
+    box-shadow: 0 18px 32px rgba(12, 8, 6, 0.28);
+}
+
+.research-card__title {
+    margin-bottom: 0.2rem;
+    color: white;
+}
+
+.research-card__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.7;
+}
+
+.research-card__list li {
+    position: relative;
+    padding-left: 1.6rem;
+}
+
+.research-card__list li::before {
+    content: '↳';
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    color: #a78b5b;
+    font-size: 1rem;
+}
+
+.research-card__note {
+    color: rgba(255, 255, 255, 0.78);
+    font-style: italic;
+    line-height: 1.6;
+}
+
+.research-card__references {
+    margin-top: clamp(2.5rem, 5vw, 3rem);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(167, 139, 91, 0.28);
+    border-radius: 14px;
+    padding: clamp(1.75rem, 3vw, 2.25rem);
+    display: grid;
+    gap: 1rem;
+}
+
+.research-card__references-title {
+    color: white;
+    font-size: 1.1rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.research-card__references-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+}
+
+.research-card__references-list a {
+    color: #d7a15a;
+    text-decoration: none;
+}
+
+.research-card__references-list a:hover,
+.research-card__references-list a:focus-visible {
+    text-decoration: underline;
+}
+
+.research-card sup a {
+    color: #d7a15a;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.research-card sup a:hover,
+.research-card sup a:focus-visible {
+    text-decoration: underline;
+}
+
 .timeline {
     display: grid;
     gap: 1.5rem;
@@ -1760,6 +1856,14 @@ area[href] {
 
     .page-card {
         padding: 1.75rem;
+    }
+
+    .research-card {
+        padding: clamp(1.5rem, 5vw, 2rem);
+    }
+
+    .research-card__references {
+        padding: clamp(1.4rem, 4.5vw, 2rem);
     }
 }
 
