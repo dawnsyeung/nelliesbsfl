@@ -185,8 +185,8 @@ p {
     text-decoration: none;
     color: rgba(255, 248, 235, 0.82);
     font-weight: 600;
-    font-size: clamp(0.95rem, 0.5vw + 0.85rem, 1.05rem);
-    letter-spacing: 0.06em;
+    font-size: clamp(0.82rem, 0.35vw + 0.78rem, 0.92rem);
+    letter-spacing: 0.045em;
     text-transform: uppercase;
     transition: color 0.25s ease, transform 0.25s ease;
     position: relative;
@@ -880,6 +880,8 @@ section {
     .nav__menu-list .nav__link {
         width: 100%;
         padding: 0.85rem 1.5rem;
+        font-size: 0.92rem;
+        letter-spacing: 0.05em;
         line-height: 1.25;
         border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.12);
