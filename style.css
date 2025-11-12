@@ -161,6 +161,12 @@ p {
     position: relative;
 }
 
+.nav__actions {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.65rem, 2vw, 1rem);
+}
+
 .nav__menu-list {
     display: flex;
     align-items: center;
@@ -868,6 +874,17 @@ section {
         flex-direction: column;
         gap: 0.75rem;
         align-items: center;
+    }
+
+    .nav__actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .nav__actions .nav__link {
+        width: 100%;
     }
 
     .nav__item {
