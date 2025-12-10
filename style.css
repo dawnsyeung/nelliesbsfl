@@ -1188,6 +1188,110 @@ area[href] {
     opacity: 1;
 }
 
+.wholesale {
+    background: linear-gradient(145deg, rgba(32, 20, 15, 0.95), rgba(58, 36, 31, 0.85));
+    padding: var(--section-spacing) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.wholesale::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 20%, rgba(79, 158, 92, 0.18), transparent 55%);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.wholesale__container {
+    width: var(--container-width);
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.wholesale__content {
+    display: grid;
+    gap: 1rem;
+    max-width: 760px;
+}
+
+.wholesale__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.85rem;
+}
+
+.wholesale__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.65rem;
+}
+
+.wholesale__list li {
+    padding-left: 1.8rem;
+    position: relative;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.wholesale__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    box-shadow: 0 0 12px rgba(215, 161, 90, 0.45);
+}
+
+.wholesale__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.wholesale__btn {
+    flex: 1 1 240px;
+    justify-content: center;
+}
+
+.wholesale__note {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    max-width: 640px;
+}
+
+.wholesale__note a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.wholesale__note a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .wholesale__actions {
+        flex-direction: column;
+    }
+
+    .wholesale__btn {
+        width: 100%;
+    }
+}
+
 /* Overview Section */
 .overview {
     background-color: #24140f;
