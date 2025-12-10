@@ -712,6 +712,24 @@ section {
     line-height: 1.5;
 }
 
+.contact--wholesale {
+    background-color: #24140f;
+    padding: calc(var(--section-spacing) * 0.75) 0;
+}
+
+.contact--wholesale + .contact--wholesale {
+    padding-top: calc(var(--section-spacing) * 0.35);
+}
+
+.contact__container--wholesale {
+    width: min(600px, 90vw);
+}
+
+#wholesale-quote-form,
+#onsite-consultation-form {
+    scroll-margin-top: calc(var(--header-height) + 32px);
+}
+
 /* Buttons */
 .btn {
     display: inline-block;

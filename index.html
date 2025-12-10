@@ -104,16 +104,79 @@
                     </ul>
                 </div>
                 <div class="wholesale__actions">
-                    <a class="btn btn--primary wholesale__btn" href="mailto:dawn@nelliesbsfl.com?subject=BSFL%20Wholesale%20Quote%20Request&body=Hi%20Nellie%E2%80%99s%20team%2C%0A%0AI%E2%80%99d%20like%20pricing%20and%20availability%20for%20a%20BSFL%20wholesale%20order%20or%20blend.%20Here%20are%20my%20volume%20details%3A%0A" aria-label="Request a quote for BSFL wholesale blends">
+                    <a class="btn btn--primary wholesale__btn" href="#wholesale-quote-form" aria-label="Open the BSFL wholesale quote form">
                         Request BSFL Wholesale Quote
                     </a>
-                    <a class="btn btn--secondary wholesale__btn" href="mailto:dawn@nelliesbsfl.com?subject=Onsite%20BSFL%20Unit%20Consultation&body=Hi%20Nellie%E2%80%99s%20team%2C%0A%0AI%E2%80%99d%20like%20to%20schedule%20an%20on-site%20consultation%20to%20place%20a%20BSFL%20unit%20at%20our%20agriculture%20or%20waste%20location.%20Key%20details%3A%0A" aria-label="Request an onsite BSFL unit consultation">
+                    <a class="btn btn--secondary wholesale__btn" href="#onsite-consultation-form" aria-label="Open the BSFL on-site consultation form">
                         Request On-Site Consultation
                     </a>
                 </div>
-                <p class="wholesale__note">
-                    Every wholesale inquiry routes directly to <a href="mailto:dawn@nelliesbsfl.com">dawn@nelliesbsfl.com</a>, the same inbox that powers our main inquiry form, so you get a rapid response on pricing or deployments.
-                </p>
+            </div>
+        </section>
+
+        <section id="wholesale-quote-form" class="contact contact--wholesale" aria-label="Request a BSFL wholesale quote">
+            <div class="contact__container contact__container--wholesale">
+                <h2 class="contact__title">Request BSFL Wholesale Quote</h2>
+                <div class="contact__divider"></div>
+                <h3 class="contact__subtitle">Match the bottom-of-page inquiry form while routing straight to dawn@nelliesbsfl.com.</h3>
+                
+                <form class="contact__form" action="https://formspree.io/f/xjkeljzv" method="POST">
+                    <input type="hidden" name="request_type" value="BSFL Wholesale Quote">
+                    <div class="form__group">
+                        <input type="text" id="wholesale-name" name="name" class="form__input" placeholder="Name" required>
+                    </div>
+                    <div class="form__group">
+                        <input type="email" id="wholesale-email" name="email" class="form__input" placeholder="Email*" required>
+                    </div>
+                    <div class="form__group">
+                        <textarea id="wholesale-message" name="message" class="form__textarea" placeholder="Share volumes, blends, or timelines*" rows="5" required></textarea>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__checkbox">
+                            <input type="checkbox" name="newsletter">
+                            <span class="checkmark"></span>
+                            Sign up for our email list for updates, promotions, and more.
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn--primary">Send Quote Request</button>
+                </form>
+                
+                <div class="contact__footer">
+                    <p class="contact__disclaimer">This request is delivered via Formspree directly to dawn@nelliesbsfl.com.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="onsite-consultation-form" class="contact contact--wholesale" aria-label="Request an on-site BSFL consultation">
+            <div class="contact__container contact__container--wholesale">
+                <h2 class="contact__title">Request On-Site Consultation</h2>
+                <div class="contact__divider"></div>
+                <h3 class="contact__subtitle">This form mirrors the main Contact Us experience and submits to dawn@nelliesbsfl.com.</h3>
+                
+                <form class="contact__form" action="https://formspree.io/f/xjkeljzv" method="POST">
+                    <input type="hidden" name="request_type" value="On-Site Consultation">
+                    <div class="form__group">
+                        <input type="text" id="consult-name" name="name" class="form__input" placeholder="Name" required>
+                    </div>
+                    <div class="form__group">
+                        <input type="email" id="consult-email" name="email" class="form__input" placeholder="Email*" required>
+                    </div>
+                    <div class="form__group">
+                        <textarea id="consult-message" name="message" class="form__textarea" placeholder="Share site info, deployment goals, or timelines*" rows="5" required></textarea>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__checkbox">
+                            <input type="checkbox" name="newsletter">
+                            <span class="checkmark"></span>
+                            Sign up for our email list for updates, promotions, and more.
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn--primary">Send Consultation Request</button>
+                </form>
+                
+                <div class="contact__footer">
+                    <p class="contact__disclaimer">Form submissions are routed by Formspree to dawn@nelliesbsfl.com for scheduling.</p>
+                </div>
             </div>
         </section>
 
