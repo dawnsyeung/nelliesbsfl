@@ -2,10 +2,48 @@
 const navToggle = document.getElementById('nav-toggle');
 const navMenu = document.querySelector('.nav__menu');
 const navLinks = document.querySelectorAll('.nav__link');
-const contactForm = document.querySelector('.contact__form');
+const contactForms = document.querySelectorAll('.contact__form');
 const cookieNotice = document.getElementById('cookie-notice');
 const acceptCookiesBtn = document.getElementById('accept-cookies');
 const header = document.querySelector('.header');
+const askAgentForm = document.getElementById('ask-agent-form');
+const askAgentInput = document.getElementById('ask-agent-input');
+const askAgentResponse = document.getElementById('ask-agent-response');
+const askAgentVoiceButton = document.getElementById('ask-agent-voice');
+const askAgentVoiceStatus = document.getElementById('ask-agent-voice-status');
+const askAgentPromptButtons = document.querySelectorAll('[data-ask-prompt]');
+
+const askAgentKnowledgeBase = [
+    {
+        id: 'inclusion-rate',
+        keywords: ['inclusion', 'rate', 'starter', 'grower', 'finisher', 'diet', 'larvae oil', 'oil'],
+        answer: `Begin with a 10% inclusion in starter diets and ramp toward 20% in grower and finisher rations over two flocks. Pair those trials with a 5% larvae oil dose to keep energy balanced. We will share historic FCR curves by breed and help your nutritionist tweak amino targets as data rolls in.`
+    },
+    {
+        id: 'pricing-lock',
+        keywords: ['pricing', 'lock', 'hedging', 'contract', '12 months', 'quarterly', 'volume', 'tons'],
+        answer: `Yes—BSFL supply can be priced quarterly with hedges tied to feedstock indices. Commitments above roughly 2,500 tons per year unlock blended pricing plus off-take credits when you sell frass back through your grower network. We can co-write the contract language with your procurement lead.`
+    },
+    {
+        id: 'frass-credits',
+        keywords: ['frass', 'credit', 'roi', 'revenue', 'soil', 'offtake', 'worksheet'],
+        answer: `Frass revenue typically shows up as a negative cost line inside the ROI workbook. Buyers who loop frass into their agronomy program earn $40–$90 per ton in soil and turf deployments, which covers 8–12% of your annual operating cost. We track every load for traceability so auditors can count it as an off-take credit.`
+    },
+    {
+        id: 'regulator-kpi',
+        keywords: ['regulator', 'kpi', 'compliance', 'report', 'permit', 'scope 3', 'esg'],
+        answer: `Regulators want to see waste diversion %, pathogen log reduction, and documented vector controls. Sustainability teams overlay Scope 3 carbon savings, feed conversion deltas, and soil biology scores. Our dashboards package those KPIs with QA certificates so it is easy to drop into ESG or permitting reports.`
+    },
+    {
+        id: 'lead-time',
+        keywords: ['lead', 'timeline', 'deploy', 'unit', 'installation', 'weeks'],
+        answer: `Modular BSFL units ship on an 8–12 week timeline depending on electrical work. We stage feedstock qualification alongside permitting so the first larvae go live within 30 days of delivery. Payback trackers update automatically once weight tickets hit the CRM.`
+    }
+];
+
+const askAgentFallbackAnswer = `I do not have that data in the on-page agent yet, but share more context through the contact form and we will respond with a sourced answer.`;
+let askAgentSpeechRecognition = null;
+let askAgentListening = false;
 
 // Mobile Navigation Toggle
 function toggleMobileMenu() {
@@ -67,7 +105,8 @@ function handleHeaderScroll() {
 function handleFormSubmission(e) {
     e.preventDefault();
     
-    const formData = new FormData(contactForm);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const name = formData.get('name').trim();
     const email = formData.get('email').trim();
     const message = formData.get('message').trim();
@@ -85,13 +124,13 @@ function handleFormSubmission(e) {
     }
     
     // Show loading state
-    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Sending...';
     submitBtn.disabled = true;
     
     // Submit to Formspree
-    fetch(contactForm.action, {
+    fetch(form.action, {
         method: 'POST',
         body: formData,
         headers: {
@@ -101,7 +140,7 @@ function handleFormSubmission(e) {
     .then(response => {
         if (response.ok) {
             showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
-            contactForm.reset();
+            form.reset();
         } else {
             throw new Error('Form submission failed');
         }
@@ -276,6 +315,188 @@ function setupImageMapHelper() {
     }
 }
 
+function setupAskAgent() {
+    if (!askAgentForm || !askAgentInput || !askAgentResponse) {
+        return;
+    }
+
+    askAgentForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        processAskAgentQuestion(askAgentInput.value);
+    });
+
+    if (askAgentPromptButtons.length > 0) {
+        askAgentPromptButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const prompt = button.getAttribute('data-ask-prompt') || '';
+                askAgentInput.value = prompt;
+                askAgentInput.focus();
+                processAskAgentQuestion(prompt, false);
+            });
+        });
+    }
+
+    setupAskAgentVoice();
+}
+
+function processAskAgentQuestion(question, shouldSpeak = true) {
+    if (!askAgentResponse) {
+        return;
+    }
+
+    const cleanedQuestion = (question || '').trim();
+    if (!cleanedQuestion) {
+        renderAskAgentAnswer('', 'Ask about feed programs, pricing, or permitting to get started.');
+        return;
+    }
+
+    const answer = getAskAgentAnswer(cleanedQuestion);
+    renderAskAgentAnswer(cleanedQuestion, answer);
+
+    if (shouldSpeak) {
+        speakAskAgentAnswer(answer);
+    }
+}
+
+function getAskAgentAnswer(question) {
+    const normalized = question.toLowerCase();
+    let bestScore = 0;
+    let bestAnswer = askAgentFallbackAnswer;
+
+    askAgentKnowledgeBase.forEach((entry) => {
+        const score = entry.keywords.reduce((total, keyword) => {
+            return normalized.includes(keyword.toLowerCase()) ? total + 1 : total;
+        }, 0);
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestAnswer = entry.answer;
+        }
+    });
+
+    return bestAnswer;
+}
+
+function renderAskAgentAnswer(question, answer) {
+    if (!askAgentResponse) {
+        return;
+    }
+
+    askAgentResponse.innerHTML = '';
+
+    if (!question) {
+        const placeholder = document.createElement('p');
+        placeholder.className = 'ask-agent__placeholder';
+        placeholder.textContent = answer;
+        askAgentResponse.appendChild(placeholder);
+        return;
+    }
+
+    const questionEl = document.createElement('p');
+    questionEl.className = 'ask-agent__question';
+    questionEl.textContent = `You asked: ${question}`;
+
+    const answerEl = document.createElement('p');
+    answerEl.className = 'ask-agent__answer';
+    answerEl.textContent = answer;
+
+    askAgentResponse.append(questionEl, answerEl);
+}
+
+function speakAskAgentAnswer(answer) {
+    if (!('speechSynthesis' in window) || !answer) {
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(answer);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.98;
+    window.speechSynthesis.speak(utterance);
+}
+
+function setupAskAgentVoice() {
+    if (!askAgentVoiceButton || !askAgentInput) {
+        return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        askAgentVoiceButton.disabled = true;
+        askAgentVoiceButton.textContent = 'Voice not supported';
+        updateAskAgentVoiceStatus('Your browser does not support speech input. Type your question instead.');
+        return;
+    }
+
+    askAgentSpeechRecognition = new SpeechRecognition();
+    askAgentSpeechRecognition.lang = 'en-US';
+    askAgentSpeechRecognition.interimResults = false;
+    askAgentSpeechRecognition.maxAlternatives = 1;
+
+    askAgentSpeechRecognition.onstart = () => {
+        updateAskAgentVoiceState(true, 'Listening... speak naturally.');
+    };
+
+    askAgentSpeechRecognition.onend = () => {
+        updateAskAgentVoiceState(false, 'Voice capture stopped. Tap to ask another question.');
+    };
+
+    askAgentSpeechRecognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        askAgentInput.value = transcript;
+        processAskAgentQuestion(transcript);
+    };
+
+    askAgentSpeechRecognition.onerror = (event) => {
+        console.error('Voice error:', event.error);
+        updateAskAgentVoiceState(false, `Voice error: ${event.error}`);
+    };
+
+    askAgentVoiceButton.addEventListener('click', () => {
+        if (!askAgentSpeechRecognition) {
+            return;
+        }
+
+        try {
+            if (askAgentListening) {
+                askAgentSpeechRecognition.stop();
+            } else {
+                askAgentSpeechRecognition.start();
+            }
+        } catch (error) {
+            console.error('Speech recognition start error:', error);
+            updateAskAgentVoiceState(false, 'Unable to access microphone permission.');
+        }
+    });
+}
+
+function updateAskAgentVoiceState(listening, statusText = '') {
+    askAgentListening = listening;
+
+    if (!askAgentVoiceButton) {
+        return;
+    }
+
+    if (listening) {
+        askAgentVoiceButton.classList.add('ask-agent__voice-btn--listening');
+        askAgentVoiceButton.textContent = 'Listening... Tap to stop';
+    } else {
+        askAgentVoiceButton.classList.remove('ask-agent__voice-btn--listening');
+        askAgentVoiceButton.textContent = 'Tap to Speak';
+    }
+
+    if (statusText) {
+        updateAskAgentVoiceStatus(statusText);
+    }
+}
+
+function updateAskAgentVoiceStatus(text) {
+    if (askAgentVoiceStatus) {
+        askAgentVoiceStatus.textContent = text;
+    }
+}
+
 // Initialize all functionality
 function init() {
     // Add notification styles
@@ -300,8 +521,10 @@ function init() {
         });
     });
     
-    if (contactForm) {
-        contactForm.addEventListener('submit', handleFormSubmission);
+    if (contactForms.length > 0) {
+        contactForms.forEach(form => {
+            form.addEventListener('submit', handleFormSubmission);
+        });
     }
     
     if (acceptCookiesBtn) {
@@ -319,6 +542,9 @@ function init() {
     
     // Setup image map helper for development
     setupImageMapHelper();
+
+    // Initialize Ask Nellie's agent
+    setupAskAgent();
     
     // Add loading complete class to body
     document.body.classList.add('loaded');
