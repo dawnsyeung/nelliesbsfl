@@ -2,7 +2,7 @@
 const navToggle = document.getElementById('nav-toggle');
 const navMenu = document.querySelector('.nav__menu');
 const navLinks = document.querySelectorAll('.nav__link');
-const contactForm = document.querySelector('.contact__form');
+const contactForms = document.querySelectorAll('.contact__form');
 const cookieNotice = document.getElementById('cookie-notice');
 const acceptCookiesBtn = document.getElementById('accept-cookies');
 const header = document.querySelector('.header');
@@ -67,7 +67,8 @@ function handleHeaderScroll() {
 function handleFormSubmission(e) {
     e.preventDefault();
     
-    const formData = new FormData(contactForm);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const name = formData.get('name').trim();
     const email = formData.get('email').trim();
     const message = formData.get('message').trim();
@@ -85,13 +86,13 @@ function handleFormSubmission(e) {
     }
     
     // Show loading state
-    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Sending...';
     submitBtn.disabled = true;
     
     // Submit to Formspree
-    fetch(contactForm.action, {
+    fetch(form.action, {
         method: 'POST',
         body: formData,
         headers: {
@@ -101,7 +102,7 @@ function handleFormSubmission(e) {
     .then(response => {
         if (response.ok) {
             showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
-            contactForm.reset();
+            form.reset();
         } else {
             throw new Error('Form submission failed');
         }
@@ -300,8 +301,10 @@ function init() {
         });
     });
     
-    if (contactForm) {
-        contactForm.addEventListener('submit', handleFormSubmission);
+    if (contactForms.length > 0) {
+        contactForms.forEach(form => {
+            form.addEventListener('submit', handleFormSubmission);
+        });
     }
     
     if (acceptCookiesBtn) {
