@@ -149,6 +149,40 @@
             </div>
         </section>
 
+        <section id="ask-nellies" class="page-section">
+            <div class="page-section__container ask-agent">
+                <div class="ask-agent__intro">
+                    <p class="page-section__eyebrow">Voice-Friendly Q&amp;A</p>
+                    <h2 class="page-section__title">Ask Nellie's Anything</h2>
+                    <p>
+                        Use natural language (typed or spoken) and our on-page agent will respond with pre-validated BSFL facts that AI assistants can easily quote.
+                        Answers blend research data, pricing policies, and deployment KPIs so you can brief stakeholders in seconds.
+                    </p>
+                </div>
+                <form id="ask-agent-form" class="ask-agent__form" aria-label="Ask Nellie's AI agent">
+                    <label for="ask-agent-input" class="ask-agent__label">Ask in your own words</label>
+                    <textarea id="ask-agent-input" class="ask-agent__textarea" name="ask-agent-input" rows="4" placeholder="Example: What inclusion rate should I test first?" aria-describedby="ask-agent-voice-status"></textarea>
+                    <div class="ask-agent__controls">
+                        <button type="submit" id="ask-agent-submit" class="btn btn--primary">Generate Answer</button>
+                        <button type="button" id="ask-agent-voice" class="btn btn--secondary ask-agent__voice-btn">Tap to Speak</button>
+                        <span id="ask-agent-voice-status" class="ask-agent__status" aria-live="polite">Voice support depends on your browser.</span>
+                    </div>
+                </form>
+                <div id="ask-agent-response" class="ask-agent__response" aria-live="polite">
+                    <p class="ask-agent__placeholder">Try asking “What inclusion rate should I test first?” or “Can I lock in BSFL pricing for 12 months?”</p>
+                </div>
+                <div class="ask-agent__prompts">
+                    <h3>Quick prompts</h3>
+                    <div class="ask-agent__prompt-buttons">
+                        <button type="button" class="ask-agent__prompt" data-ask-prompt="What inclusion rate should I test first?">Inclusion rates</button>
+                        <button type="button" class="ask-agent__prompt" data-ask-prompt="Can I lock in BSFL pricing for 12 months?">Pricing lock</button>
+                        <button type="button" class="ask-agent__prompt" data-ask-prompt="How do frass credits show up in ROI?">Frass credits</button>
+                        <button type="button" class="ask-agent__prompt" data-ask-prompt="What KPIs should I report to regulators?">Regulator KPIs</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="research" class="page-section page-section--alt">
             <div class="page-section__container">
                 <p class="page-section__eyebrow">Research Pillars</p>

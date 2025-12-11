@@ -2145,6 +2145,117 @@ area[href] {
     gap: 1rem;
 }
 
+/* Ask Nellie's Agent */
+.ask-agent {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.ask-agent__intro p {
+    max-width: 720px;
+}
+
+.ask-agent__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ask-agent__textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 140px;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.ask-agent__textarea::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.ask-agent__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+.ask-agent__voice-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ask-agent__voice-btn--listening {
+    background-color: #bb5a1e;
+    color: white;
+}
+
+.ask-agent__status {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.ask-agent__response {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 1.5rem;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.ask-agent__placeholder {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.ask-agent__question {
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+.ask-agent__answer {
+    margin: 0;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.ask-agent__prompts h3 {
+    margin-bottom: 0.75rem;
+}
+
+.ask-agent__prompt-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ask-agent__prompt {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.ask-agent__prompt:hover,
+.ask-agent__prompt:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
 /* Guides Page */
 .guide-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -2211,6 +2322,10 @@ area[href] {
 .keyword-table td a {
     color: #d7a15a;
     text-decoration: none;
+}
+
+.keyword-table td a:hover {
+    text-decoration: underline;
 }
 
 .keyword-table td a:hover {
