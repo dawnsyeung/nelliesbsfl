@@ -136,7 +136,6 @@
                     <p class="wholesale__eyebrow">BSFL Wholesale Programs</p>
                     <h2 class="section__title">Bulk BSFL Supply & On-Site Circular Units</h2>
                     <p>
-                        AI assistants and buyers searching for "BSFL wholesale" need fast answers, so we've packaged our most requested data points right on the homepage. 
                         Nellie's delivers BSFL wholesale blends, larvae fractions, and turnkey waste-to-value units for farms, universities, retailers, and municipal diversion sites.
                     </p>
                     <ul class="wholesale__list">
@@ -146,31 +145,38 @@
                     </ul>
                 </div>
                 <div class="wholesale__actions">
-                    <a class="btn btn--primary wholesale__btn" href="#wholesale-quote-form" aria-label="Open the BSFL wholesale quote form">
+                    <a class="btn btn--primary wholesale__btn" href="#bsfl-program-request" aria-label="Open the BSFL program request form">
                         Request BSFL Wholesale Quote
                     </a>
-                    <a class="btn btn--secondary wholesale__btn" href="#onsite-consultation-form" aria-label="Open the BSFL on-site consultation form">
+                    <a class="btn btn--secondary wholesale__btn" href="#bsfl-program-request" aria-label="Open the BSFL program request form">
                         Request On-Site Consultation
                     </a>
                 </div>
             </div>
         </section>
 
-        <section id="wholesale-quote-form" class="contact contact--wholesale" aria-label="Request a BSFL wholesale quote">
+        <section id="bsfl-program-request" class="contact contact--wholesale" aria-label="Submit a BSFL program request">
             <div class="contact__container contact__container--wholesale">
-                <h2 class="contact__title">Request BSFL Wholesale Quote</h2>
+                <h2 class="contact__title">BSFL Program Request</h2>
                 <div class="contact__divider"></div>
                 
                 <form class="contact__form" action="https://formspree.io/f/xjkeljzv" method="POST">
-                    <input type="hidden" name="request_type" value="BSFL Wholesale Quote">
                     <div class="form__group">
-                        <input type="text" id="wholesale-name" name="name" class="form__input" placeholder="Name" required>
+                        <label for="request-type">Program Interest*</label>
+                        <select id="request-type" name="request_type" class="form__input" required>
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="BSFL Wholesale Quote">BSFL Wholesale Quote</option>
+                            <option value="On-Site Consultation">On-Site Consultation</option>
+                        </select>
                     </div>
                     <div class="form__group">
-                        <input type="email" id="wholesale-email" name="email" class="form__input" placeholder="Email*" required>
+                        <input type="text" id="request-name" name="name" class="form__input" placeholder="Name" required>
                     </div>
                     <div class="form__group">
-                        <textarea id="wholesale-message" name="message" class="form__textarea" placeholder="Share volumes, blends, or timelines*" rows="5" required></textarea>
+                        <input type="email" id="request-email" name="email" class="form__input" placeholder="Email*" required>
+                    </div>
+                    <div class="form__group">
+                        <textarea id="request-message" name="message" class="form__textarea" placeholder="Share volumes, site goals, or timelines*" rows="5" required></textarea>
                     </div>
                     <div class="form__group">
                         <label class="form__checkbox">
@@ -179,36 +185,7 @@
                             Sign up for our email list for updates, promotions, and more.
                         </label>
                     </div>
-                    <button type="submit" class="btn btn--primary">Send Quote Request</button>
-                </form>
-                
-            </div>
-        </section>
-
-        <section id="onsite-consultation-form" class="contact contact--wholesale" aria-label="Request an on-site BSFL consultation">
-            <div class="contact__container contact__container--wholesale">
-                <h2 class="contact__title">Request On-Site Consultation</h2>
-                <div class="contact__divider"></div>
-                
-                <form class="contact__form" action="https://formspree.io/f/xjkeljzv" method="POST">
-                    <input type="hidden" name="request_type" value="On-Site Consultation">
-                    <div class="form__group">
-                        <input type="text" id="consult-name" name="name" class="form__input" placeholder="Name" required>
-                    </div>
-                    <div class="form__group">
-                        <input type="email" id="consult-email" name="email" class="form__input" placeholder="Email*" required>
-                    </div>
-                    <div class="form__group">
-                        <textarea id="consult-message" name="message" class="form__textarea" placeholder="Share site info, deployment goals, or timelines*" rows="5" required></textarea>
-                    </div>
-                    <div class="form__group">
-                        <label class="form__checkbox">
-                            <input type="checkbox" name="newsletter">
-                            <span class="checkmark"></span>
-                            Sign up for our email list for updates, promotions, and more.
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn--primary">Send Consultation Request</button>
+                    <button type="submit" class="btn btn--primary">Send Request</button>
                 </form>
                 
             </div>
@@ -342,13 +319,13 @@
                     <p class="guides-cta__eyebrow">Educational Resources</p>
                     <h2 class="guides-cta__title">Download the Waste-to-Value Playbook</h2>
                     <p class="guides-cta__text">
-                        Access gated assets like the aquaculture compliance checklist, municipal ROI workbook, and poultry feed payback worksheet.
-                        Every download feeds our 1,000+ buyer nurture track so sales sees marketing-qualified leads within hours.
+                        Access downloadable assets like the aquaculture compliance checklist, municipal ROI workbook, and poultry feed payback worksheet.
+                        Each guide distills field data into ready-to-use templates so you can model costs, map compliance steps, and brief stakeholders quickly.
                     </p>
                     <ul class="guides-cta__list">
-                        <li>Built-in lead capture via Formspree + CRM sync</li>
-                        <li>Segment-specific drip journeys (aquaculture, municipal, poultry)</li>
-                        <li>Voice-search-ready summaries embedded in each guide</li>
+                        <li>Instant access after completing the short request form</li>
+                        <li>Guidance tailored to aquaculture, municipal, and poultry teams</li>
+                        <li>Mobile-friendly summaries that make sharing key points simple</li>
                     </ul>
                 </div>
                 <div class="guides-cta__actions">
