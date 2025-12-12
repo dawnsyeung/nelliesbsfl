@@ -972,17 +972,23 @@ section {
 
     .hero__image-container {
         width: min(94vw, 560px);
+        /* Mobile: stack image + overlay so overlay stays visible */
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
         /* Smaller hero image footprint on mobile */
-        min-height: clamp(280px, 50vh, 420px);
+        min-height: 0;
     }
 
     .hero__compost-image {
         width: 100%;
-        height: 100%;
+        /* Clamp image height so hero isn't enormous on phones */
+        height: clamp(190px, 34vh, 260px);
         object-fit: cover;
         object-position: center center;
         max-width: 100%;
-        min-height: 100%;
+        display: block;
     }
 
     .hero__overlay {
@@ -1061,16 +1067,16 @@ section {
 @media (max-width: 480px) {
     .hero__image-container {
         width: min(94vw, 520px);
-        min-height: 240px;
+        min-height: 0;
     }
 
     .hero__compost-image {
         width: 100%;
-        height: 100%;
+        height: clamp(170px, 30vh, 230px);
         object-fit: cover;
         object-position: center center;
         max-width: 100%;
-        min-height: 100%;
+        display: block;
     }
 
     .hero__overlay {
@@ -1118,7 +1124,6 @@ section {
 
 @media (max-width: 320px) {
     .hero__image-container {
-        height: 45vh;
         min-height: 200px;
     }
     
@@ -1258,24 +1263,27 @@ area[href] {
 @media (max-width: 768px) {
     .wholesale__actions {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
     }
 
     .wholesale__btn {
         width: 100%;
-        max-width: 360px;
-        padding: 0.7rem 1.1rem;
-        font-size: 0.9rem;
-        line-height: 1.2;
+        max-width: 520px;
+        min-height: 48px;
+        padding: 0.8rem 1.1rem;
+        font-size: 0.92rem;
+        line-height: 1.25;
         white-space: normal;
+        border-radius: 14px;
+        flex: 0 0 auto;
     }
 }
 
 @media (max-width: 480px) {
     .wholesale__btn {
-        max-width: 320px;
-        padding: 0.65rem 1rem;
-        font-size: 0.88rem;
+        max-width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
     }
 }
 
