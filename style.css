@@ -291,7 +291,8 @@ p {
 .hero {
     padding: 0;
     background: #2d1a14;
-    min-height: calc(100vh - var(--header-height));
+    /* Keep the homepage hero from consuming the full viewport height */
+    min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -308,7 +309,8 @@ p {
     position: relative;
     width: var(--container-width);
     margin: 0 auto;
-    min-height: clamp(420px, 72vh, 640px);
+    /* Smaller hero image footprint on desktop */
+    min-height: clamp(340px, 58vh, 520px);
     border-radius: 28px;
     overflow: hidden;
     display: flex;
@@ -982,7 +984,8 @@ section {
 
     .hero__image-container {
         width: min(94vw, 560px);
-        min-height: clamp(360px, 70vh, 520px);
+        /* Smaller hero image footprint on mobile */
+        min-height: clamp(280px, 50vh, 420px);
     }
 
     .hero__compost-image {
@@ -1076,7 +1079,7 @@ section {
 @media (max-width: 480px) {
     .hero__image-container {
         width: min(94vw, 520px);
-        min-height: 320px;
+        min-height: 240px;
     }
 
     .hero__compost-image {
@@ -1303,10 +1306,24 @@ area[href] {
 @media (max-width: 768px) {
     .wholesale__actions {
         flex-direction: column;
+        align-items: center;
     }
 
     .wholesale__btn {
         width: 100%;
+        max-width: 360px;
+        padding: 0.7rem 1.1rem;
+        font-size: 0.9rem;
+        line-height: 1.2;
+        white-space: normal;
+    }
+}
+
+@media (max-width: 480px) {
+    .wholesale__btn {
+        max-width: 320px;
+        padding: 0.65rem 1rem;
+        font-size: 0.88rem;
     }
 }
 
