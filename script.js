@@ -235,8 +235,7 @@ function setupOnboardingForm() {
     const confirmation = document.getElementById('onboarding-confirmation');
     const submitBtn = onboardingForm.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.textContent : '';
-    const backendAction = onboardingForm.getAttribute('data-backend-action') || '';
-    const fallbackAction = onboardingForm.action || '';
+    const formAction = onboardingForm.action || '';
     const formspreeEmail = document.getElementById('formspree_email');
     const formspreeName = document.getElementById('formspree_name');
 
@@ -246,16 +245,6 @@ function setupOnboardingForm() {
         }
         // Minimal fallback; good enough for common field names.
         return String(value).replace(/["\\]/g, '\\$&');
-    }
-
-    function shouldFallbackToFormspree(response) {
-        if (!response) return true;
-        // Typical "backend missing" responses on static hosting / misconfigured servers
-        if ([404, 405, 501, 502, 503].includes(response.status)) return true;
-        const contentType = (response.headers.get('content-type') || '').toLowerCase();
-        // If we expected JSON but got an HTML error page, treat as backend unavailable.
-        if (contentType.includes('text/html')) return true;
-        return false;
     }
 
     function clearOnboardingFieldErrors() {
@@ -366,19 +355,22 @@ function setupOnboardingForm() {
                 });
             }
 
-            let response = null;
-            if (backendAction) {
-                response = await submitTo(backendAction);
-                if (!response.ok && shouldFallbackToFormspree(response) && fallbackAction) {
-                    response = await submitTo(fallbackAction);
-                }
-            } else {
-                response = await submitTo(fallbackAction);
-            }
+            const response = await submitTo(formAction);
 
             if (!response.ok) {
                 const payload = await parseResponseBody(response);
-                const fieldErrors = payload && payload.errors ? payload.errors : null;
+                // Formspree can return { errors: [...] } or other formats.
+                let fieldErrors = null;
+                if (payload && payload.errors) {
+                    if (Array.isArray(payload.errors)) {
+                        // Convert array errors into a single summary message.
+                        const summary = payload.errors.map((e) => (e && e.message ? String(e.message) : '')).filter(Boolean).join(' ');
+                        throw new Error(summary || `Registration submission failed (${response.status}). Please try again.`);
+                    }
+                    if (typeof payload.errors === 'object') {
+                        fieldErrors = payload.errors;
+                    }
+                }
                 if (fieldErrors) {
                     applyOnboardingFieldErrors(fieldErrors);
                     const messages = Object.values(fieldErrors).filter(Boolean);
