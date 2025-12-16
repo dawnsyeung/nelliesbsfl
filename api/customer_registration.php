@@ -48,6 +48,14 @@ function jsonResponse(int $status, array $payload): void {
     exit();
 }
 
+function errorResponse(int $status, string $message, array $fieldErrors = []): void {
+    $payload = ['error' => $message];
+    if (!empty($fieldErrors)) {
+        $payload['errors'] = $fieldErrors;
+    }
+    jsonResponse($status, $payload);
+}
+
 function isLikelyBrowserFormPost(): bool {
     $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
     return str_contains($accept, 'text/html') || str_contains($accept, 'application/xhtml+xml');
@@ -69,18 +77,67 @@ if ($gotcha !== '') {
 
 // Required fields
 $legalBusinessName = trim((string)($_POST['legal_business_name'] ?? ''));
+$headOfficeStreet = trim((string)($_POST['head_office_street'] ?? ''));
+$headOfficeCity = trim((string)($_POST['head_office_city'] ?? ''));
+$headOfficeState = trim((string)($_POST['head_office_state'] ?? ''));
+$headOfficeZip = trim((string)($_POST['head_office_zip'] ?? ''));
+$headOfficeCountry = trim((string)($_POST['head_office_country'] ?? ''));
 $primaryContactName = trim((string)($_POST['primary_contact_name'] ?? ''));
 $primaryContactEmail = trim((string)($_POST['primary_contact_email'] ?? ''));
 $signatoryName = trim((string)($_POST['signatory_name'] ?? ''));
 $signatureDate = trim((string)($_POST['signature_date'] ?? ''));
 $certifyAccuracy = (string)($_POST['certify_accuracy'] ?? '');
 
-if ($legalBusinessName === '' || $primaryContactName === '' || $primaryContactEmail === '' || $signatoryName === '' || $signatureDate === '' || $certifyAccuracy !== 'Yes') {
+// Field-level validation (so the UI can show the exact issue)
+$fieldErrors = [];
+if ($legalBusinessName === '') {
+    $fieldErrors['legal_business_name'] = 'Legal Business Name is required.';
+}
+if ($headOfficeStreet === '') {
+    $fieldErrors['head_office_street'] = 'Head Office Address (Street) is required.';
+}
+if ($headOfficeCity === '') {
+    $fieldErrors['head_office_city'] = 'Head Office City is required.';
+}
+if ($headOfficeState === '') {
+    $fieldErrors['head_office_state'] = 'Head Office State/Province is required.';
+}
+if ($headOfficeZip === '') {
+    $fieldErrors['head_office_zip'] = 'Head Office Zip/Postal is required.';
+}
+if ($headOfficeCountry === '') {
+    $fieldErrors['head_office_country'] = 'Head Office Country is required.';
+}
+if ($primaryContactName === '') {
+    $fieldErrors['primary_contact_name'] = 'Primary Contact Name is required.';
+}
+if ($primaryContactEmail === '') {
+    $fieldErrors['primary_contact_email'] = 'Primary Contact Email is required.';
+} elseif (!filter_var($primaryContactEmail, FILTER_VALIDATE_EMAIL)) {
+    $fieldErrors['primary_contact_email'] = 'Primary Contact Email must be a valid email address.';
+}
+if ($signatoryName === '') {
+    $fieldErrors['signatory_name'] = 'Authorized Signatory Name is required.';
+}
+if ($signatureDate === '') {
+    $fieldErrors['signature_date'] = 'Signature Date is required.';
+} else {
+    $dt = DateTimeImmutable::createFromFormat('Y-m-d', $signatureDate);
+    $errors = DateTimeImmutable::getLastErrors();
+    if ($dt === false || ($errors['warning_count'] ?? 0) > 0 || ($errors['error_count'] ?? 0) > 0) {
+        $fieldErrors['signature_date'] = 'Signature Date must be a valid date.';
+    }
+}
+if ($certifyAccuracy !== 'Yes') {
+    $fieldErrors['certify_accuracy'] = 'You must certify accuracy before submitting.';
+}
+
+if (!empty($fieldErrors)) {
     if (isLikelyBrowserFormPost()) {
         // Basic fallback: go back if required fields missing
         redirect('/customer-registration.html');
     }
-    jsonResponse(400, ['error' => 'Missing required fields.']);
+    errorResponse(422, 'Please fix the highlighted fields and try again.', $fieldErrors);
 }
 
 // Build normalized submission payload (keep full fidelity in JSON)
@@ -91,11 +148,11 @@ $submission = [
     'business_type_other' => trim((string)($_POST['business_type_other'] ?? '')),
     'industry_sector' => normalizeArrayField($_POST['industry_sector'] ?? []),
     'industry_sector_other' => trim((string)($_POST['industry_sector_other'] ?? '')),
-    'head_office_street' => trim((string)($_POST['head_office_street'] ?? '')),
-    'head_office_city' => trim((string)($_POST['head_office_city'] ?? '')),
-    'head_office_state' => trim((string)($_POST['head_office_state'] ?? '')),
-    'head_office_zip' => trim((string)($_POST['head_office_zip'] ?? '')),
-    'head_office_country' => trim((string)($_POST['head_office_country'] ?? '')),
+    'head_office_street' => $headOfficeStreet,
+    'head_office_city' => $headOfficeCity,
+    'head_office_state' => $headOfficeState,
+    'head_office_zip' => $headOfficeZip,
+    'head_office_country' => $headOfficeCountry,
     'website' => trim((string)($_POST['website'] ?? '')),
     'general_email' => trim((string)($_POST['general_email'] ?? '')),
     'main_phone' => trim((string)($_POST['main_phone'] ?? '')),
@@ -174,7 +231,7 @@ $createdAt = (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format('c'
 $dataJson = json_encode($submission, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
 if ($dataJson === false) {
-    jsonResponse(500, ['error' => 'Failed to encode submission.']);
+    errorResponse(500, 'Server error: unable to process your submission. Please try again.');
 }
 
 // Store in SQLite
@@ -183,7 +240,7 @@ if ($dbPath === false) {
     // Attempt to create if missing
     $targetDir = __DIR__ . '/../data';
     if (!is_dir($targetDir) && !mkdir($targetDir, 0700, true)) {
-        jsonResponse(500, ['error' => 'Server storage directory is unavailable.']);
+        errorResponse(500, 'Server error: unable to save your submission right now. Please try again later.');
     }
     $dbPath = realpath($targetDir);
 }
@@ -230,7 +287,7 @@ try {
     if (isLikelyBrowserFormPost()) {
         redirect('/customer-registration.html');
     }
-    jsonResponse(500, ['error' => 'Failed to store submission.']);
+    errorResponse(500, 'Server error: unable to save your submission right now. Please try again later.');
 }
 
 // Forward to Formspree (optional, explicitly enabled)
