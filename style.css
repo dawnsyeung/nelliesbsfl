@@ -340,6 +340,19 @@ p {
     transition: transform 0.8s ease, filter 0.8s ease;
 }
 
+/* Home hero: reduce desktop image height (mobile unchanged) */
+@media (min-width: 769px) {
+    body.home .hero__image-container {
+        /* ~30% shorter than previous max (520px -> ~365px) */
+        min-height: clamp(340px, 40vh, 365px);
+    }
+
+    body.home .hero__compost-image {
+        /* Bias crop downward so the top is trimmed more */
+        object-position: center 70%;
+    }
+}
+
 .hero__image-container:hover .hero__compost-image {
     transform: scale(1.02);
     filter: saturate(1.05);
