@@ -235,6 +235,10 @@ function setupOnboardingForm() {
     const confirmation = document.getElementById('onboarding-confirmation');
     const submitBtn = onboardingForm.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.textContent : '';
+    const backendAction = onboardingForm.getAttribute('data-backend-action') || '';
+    const fallbackAction = onboardingForm.action || '';
+    const formspreeEmail = document.getElementById('formspree_email');
+    const formspreeName = document.getElementById('formspree_name');
 
     function cssEscape(value) {
         if (window.CSS && typeof window.CSS.escape === 'function') {
@@ -242,6 +246,16 @@ function setupOnboardingForm() {
         }
         // Minimal fallback; good enough for common field names.
         return String(value).replace(/["\\]/g, '\\$&');
+    }
+
+    function shouldFallbackToFormspree(response) {
+        if (!response) return true;
+        // Typical "backend missing" responses on static hosting / misconfigured servers
+        if ([404, 405, 501, 502, 503].includes(response.status)) return true;
+        const contentType = (response.headers.get('content-type') || '').toLowerCase();
+        // If we expected JSON but got an HTML error page, treat as backend unavailable.
+        if (contentType.includes('text/html')) return true;
+        return false;
     }
 
     function clearOnboardingFieldErrors() {
@@ -330,13 +344,37 @@ function setupOnboardingForm() {
 
         try {
             const formData = new FormData(onboardingForm);
-            const response = await fetch(onboardingForm.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
+            // Populate Formspree reply-to helpers (harmless for backend PHP as well)
+            const primaryName = String(formData.get('primary_contact_name') || '').trim();
+            const primaryEmail = String(formData.get('primary_contact_email') || '').trim();
+            if (formspreeEmail && !formData.get('email') && primaryEmail) {
+                formspreeEmail.value = primaryEmail;
+                formData.set('email', primaryEmail);
+            }
+            if (formspreeName && !formData.get('name') && primaryName) {
+                formspreeName.value = primaryName;
+                formData.set('name', primaryName);
+            }
+
+            async function submitTo(url) {
+                return await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+            }
+
+            let response = null;
+            if (backendAction) {
+                response = await submitTo(backendAction);
+                if (!response.ok && shouldFallbackToFormspree(response) && fallbackAction) {
+                    response = await submitTo(fallbackAction);
                 }
-            });
+            } else {
+                response = await submitTo(fallbackAction);
+            }
 
             if (!response.ok) {
                 const payload = await parseResponseBody(response);
