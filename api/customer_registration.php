@@ -4,7 +4,7 @@ declare(strict_types=1);
 // Customer Registration submission endpoint:
 // - Accepts POSTed form data
 // - Stores submission in SQLite (JSON payload)
-// - Forwards submission to Formspree (optional) for email delivery
+// - Forwards submission to Formspree only when explicitly enabled (optional)
 // - Redirects to thank-you page on success
 
 header('X-Content-Type-Options: nosniff');
@@ -56,6 +56,15 @@ function isLikelyBrowserFormPost(): bool {
 function redirect(string $location): void {
     header('Location: ' . $location, true, 302);
     exit();
+}
+
+// Honeypot spam protection: if a hidden field is filled, pretend success but do nothing.
+$gotcha = trim((string)($_POST['_gotcha'] ?? ''));
+if ($gotcha !== '') {
+    if (isLikelyBrowserFormPost()) {
+        redirect('/customer-registration-thank-you.html');
+    }
+    jsonResponse(200, ['success' => true, 'spam' => true]);
 }
 
 // Required fields
@@ -224,10 +233,16 @@ try {
     jsonResponse(500, ['error' => 'Failed to store submission.']);
 }
 
-// Forward to Formspree (optional)
-// Set FORMSPREE_ENDPOINT in your hosting env, e.g. "https://formspree.io/f/xxxxxx"
+// Forward to Formspree (optional, explicitly enabled)
+// To enable, set:
+// - FORMSPREE_FORWARDING_ENABLED=1
+// - FORMSPREE_ENDPOINT="https://formspree.io/f/xxxxxx"
+$forwardingEnabled = strtolower(getEnvOrDefault('FORMSPREE_FORWARDING_ENABLED', '')) === '1'
+    || strtolower(getEnvOrDefault('FORMSPREE_FORWARDING_ENABLED', '')) === 'true'
+    || strtolower(getEnvOrDefault('FORMSPREE_FORWARDING_ENABLED', '')) === 'yes';
+
 $formspreeEndpoint = getEnvOrDefault('FORMSPREE_ENDPOINT', '');
-if ($formspreeEndpoint !== '') {
+if ($forwardingEnabled && $formspreeEndpoint !== '') {
     $emailPayload = [
         'form_name' => 'First-time Customer Registration',
         'submission_id' => (string)$insertId,

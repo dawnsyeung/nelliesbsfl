@@ -44,22 +44,26 @@
         <p class="page-hero__eyebrow">Customer onboarding</p>
         <h1 class="page-hero__title">First-time Customer Registration</h1>
         <p class="page-hero__subtitle">
-          Submit your onboarding details securely. Submissions are delivered to our inbox for internal review.
+          Submit your onboarding details securely. Submissions are recorded for internal review and follow-up.
         </p>
       </div>
     </section>
 
     <section class="page-section page-section--alt" aria-label="Customer registration form">
       <div class="page-section__container">
-        <form class="onboarding-form" action="https://formspree.io/f/xjkeljzv" method="POST" autocomplete="on">
-          <!-- Formspree helpers -->
+        <form class="onboarding-form" action="api/customer_registration.php" method="POST" autocomplete="on">
+          <div id="onboarding-confirmation" class="onboarding-confirmation" role="status" aria-live="polite" hidden>
+            <h2 class="onboarding-confirmation__title">Thanks — we received your registration.</h2>
+            <p class="onboarding-confirmation__copy">Our team will review your submission and follow up shortly.</p>
+            <div class="onboarding-confirmation__actions">
+              <a class="btn btn--secondary" href="shop.html">Visit Shop</a>
+              <a class="btn btn--primary" href="index.html">Back to Home</a>
+            </div>
+          </div>
+
+          <!-- Honeypot field (spam protection) -->
           <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
-          <input type="hidden" name="_subject" value="New customer registration submission" />
-          <input type="hidden" name="_next" value="https://www.nelliesbsfl.com/customer-registration-thank-you.html" />
           <input type="hidden" name="form_name" value="First-time Customer Registration" />
-          <!-- Set Reply-To for Formspree -->
-          <input type="hidden" name="email" id="formspree_email" value="" />
-          <input type="hidden" name="name" id="formspree_name" value="" />
           <!-- 1. Company Information -->
           <div class="onboarding-section">
             <h2 class="onboarding-section__title">1. Company Information</h2>
@@ -435,22 +439,6 @@
       <p class="footer__powered">Powered by <a href="#" class="footer__link">Nellie's BSFL</a></p>
     </div>
   </footer>
-
-  <script>
-    // Ensure Formspree sets Reply-To using primary contact details
-    (function () {
-      const form = document.querySelector('.onboarding-form');
-      if (!form) return;
-      form.addEventListener('submit', function () {
-        const emailInput = document.getElementById('primary_contact_email');
-        const nameInput = document.getElementById('legal_business_name');
-        const formspreeEmail = document.getElementById('formspree_email');
-        const formspreeName = document.getElementById('formspree_name');
-        if (formspreeEmail && emailInput) formspreeEmail.value = (emailInput.value || '').trim();
-        if (formspreeName && nameInput) formspreeName.value = (nameInput.value || '').trim();
-      });
-    })();
-  </script>
   <script src="script.js"></script>
 </body>
 </html>
