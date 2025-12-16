@@ -12,6 +12,9 @@ header('X-Frame-Options: DENY');
 header('Referrer-Policy: no-referrer');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Methods: POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Accept');
+    header('Allow: POST, OPTIONS');
     http_response_code(204);
     exit();
 }
@@ -19,7 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(['error' => 'Method not allowed']);
+    header('Allow: POST, OPTIONS');
+    echo json_encode([
+        'error' => 'Method not allowed. This endpoint only accepts POST submissions from the customer registration form.',
+        'method' => $_SERVER['REQUEST_METHOD'] ?? '',
+        'allowed' => ['POST', 'OPTIONS'],
+    ]);
     exit();
 }
 

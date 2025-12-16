@@ -176,10 +176,14 @@ function showNotification(message, type = 'info') {
     notification.className = `notification notification--${type}`;
     notification.innerHTML = `
         <div class="notification__content">
-            <span class="notification__message">${message}</span>
+            <span class="notification__message"></span>
             <button class="notification__close">&times;</button>
         </div>
     `;
+    const messageEl = notification.querySelector('.notification__message');
+    if (messageEl) {
+        messageEl.textContent = String(message || '');
+    }
     
     // Add styles
     notification.style.cssText = `
@@ -357,7 +361,12 @@ function setupOnboardingForm() {
                     return;
                 }
 
-                const message = (payload && payload.error) ? payload.error : `Registration submission failed (${response.status}). Please try again.`;
+                const baseMessage = (payload && payload.error) ? String(payload.error) : '';
+                const isMethodNotAllowed = response.status === 405;
+                const message = isMethodNotAllowed
+                    ? (baseMessage || 'Method not allowed (405). This endpoint only accepts POST submissions.')
+                        + ' If you see this after clicking “Submit Registration”, your host may be treating `api/customer_registration.php` as a static file (PHP not executing) or blocking POST to that path.'
+                    : (baseMessage || `Registration submission failed (${response.status}). Please try again.`);
                 throw new Error(message);
             }
 
