@@ -2382,6 +2382,35 @@ area[href] {
     gap: 1.75rem;
 }
 
+.onboarding-confirmation {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 18px;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    box-shadow: 0 18px 34px rgba(12, 8, 6, 0.18);
+    display: grid;
+    gap: 0.9rem;
+}
+
+.onboarding-confirmation__title {
+    margin: 0;
+    color: white;
+    font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+}
+
+.onboarding-confirmation__copy {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.onboarding-confirmation__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
 .onboarding-section {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.12);

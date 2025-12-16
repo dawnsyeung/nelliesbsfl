@@ -12,6 +12,7 @@ const askAgentResponse = document.getElementById('ask-agent-response');
 const askAgentVoiceButton = document.getElementById('ask-agent-voice');
 const askAgentVoiceStatus = document.getElementById('ask-agent-voice-status');
 const askAgentPromptButtons = document.querySelectorAll('[data-ask-prompt]');
+const onboardingForm = document.querySelector('.onboarding-form');
 
 const askAgentKnowledgeBase = [
     {
@@ -224,6 +225,62 @@ function removeNotification(notification) {
             notification.parentNode.removeChild(notification);
         }
     }, 300);
+}
+
+function setupOnboardingForm() {
+    if (!onboardingForm) {
+        return;
+    }
+
+    const confirmation = document.getElementById('onboarding-confirmation');
+    const submitBtn = onboardingForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.textContent : '';
+
+    onboardingForm.addEventListener('submit', async (event) => {
+        // If the browser says the form is invalid, let native UI handle it.
+        if (typeof onboardingForm.reportValidity === 'function' && !onboardingForm.reportValidity()) {
+            return;
+        }
+
+        event.preventDefault();
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+        }
+
+        try {
+            const formData = new FormData(onboardingForm);
+            const response = await fetch(onboardingForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Registration submission failed (${response.status})`);
+            }
+
+            // Show on-site confirmation
+            if (confirmation) {
+                confirmation.hidden = false;
+                confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            showNotification('Registration received. We’ll follow up shortly.', 'success');
+            onboardingForm.reset();
+        } catch (error) {
+            console.error('Onboarding submission error:', error);
+            showNotification('Sorry—there was an error submitting your registration. Please try again.', 'error');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        }
+    });
 }
 
 // Cookie notice functionality
@@ -539,6 +596,9 @@ function init() {
     
     // Show cookie notice if not accepted
     showCookieNotice();
+
+    // Setup customer registration onboarding form (stay on-site after submit)
+    setupOnboardingForm();
     
     // Setup image map helper for development
     setupImageMapHelper();
