@@ -1,0 +1,9 @@
+.DS_Store
+*.log
+
+# Local/private data
+/data/*.sqlite
+/data/*.sqlite-wal
+/data/*.sqlite-shm
+/data/*.db
+
