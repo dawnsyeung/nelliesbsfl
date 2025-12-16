@@ -146,9 +146,9 @@ p {
 }
 
 .nav__logo-img {
-    height: clamp(60px, 5.2vw, 76px);
+    height: clamp(72px, 6.24vw, 92px);
     width: auto;
-    max-width: 220px;
+    max-width: 264px;
     object-fit: contain;
     transition: var(--transition);
     display: block;
@@ -997,8 +997,8 @@ section {
     }
 
     .nav__logo-img {
-        height: 56px;
-        max-width: 190px;
+        height: 67px;
+        max-width: 228px;
     }
 
     .hero__image-container {
