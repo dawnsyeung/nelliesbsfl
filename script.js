@@ -236,6 +236,84 @@ function setupOnboardingForm() {
     const submitBtn = onboardingForm.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.textContent : '';
 
+    function cssEscape(value) {
+        if (window.CSS && typeof window.CSS.escape === 'function') {
+            return window.CSS.escape(value);
+        }
+        // Minimal fallback; good enough for common field names.
+        return String(value).replace(/["\\]/g, '\\$&');
+    }
+
+    function clearOnboardingFieldErrors() {
+        onboardingForm.querySelectorAll('.field-error').forEach((el) => el.remove());
+        onboardingForm.querySelectorAll('[aria-invalid="true"]').forEach((el) => el.removeAttribute('aria-invalid'));
+        onboardingForm.querySelectorAll('.form__input--error, .form__textarea--error').forEach((el) => {
+            el.classList.remove('form__input--error', 'form__textarea--error');
+        });
+    }
+
+    function applyOnboardingFieldErrors(errors) {
+        if (!errors || typeof errors !== 'object') {
+            return;
+        }
+
+        Object.entries(errors).forEach(([field, message]) => {
+            const safeField = cssEscape(field);
+            const input =
+                onboardingForm.querySelector(`[name="${safeField}"]`) ||
+                onboardingForm.querySelector(`#${safeField}`);
+
+            if (!input) {
+                return;
+            }
+
+            input.setAttribute('aria-invalid', 'true');
+            if (input.classList.contains('form__textarea')) {
+                input.classList.add('form__textarea--error');
+            } else {
+                input.classList.add('form__input--error');
+            }
+
+            const group = input.closest('.form__group') || input.parentElement;
+            if (!group) {
+                return;
+            }
+
+            // Avoid duplicating errors for the same group.
+            if (group.querySelector('.field-error')) {
+                return;
+            }
+
+            const errorEl = document.createElement('div');
+            errorEl.className = 'field-error';
+            errorEl.textContent = String(message || 'This field has an error.');
+            group.appendChild(errorEl);
+        });
+    }
+
+    async function parseResponseBody(response) {
+        const contentType = (response.headers.get('content-type') || '').toLowerCase();
+        if (contentType.includes('application/json')) {
+            try {
+                return await response.json();
+            } catch (e) {
+                return null;
+            }
+        }
+
+        try {
+            const text = await response.text();
+            if (!text) return null;
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                return { error: text };
+            }
+        } catch (e) {
+            return null;
+        }
+    }
+
     onboardingForm.addEventListener('submit', async (event) => {
         // If the browser says the form is invalid, let native UI handle it.
         if (typeof onboardingForm.reportValidity === 'function' && !onboardingForm.reportValidity()) {
@@ -243,6 +321,7 @@ function setupOnboardingForm() {
         }
 
         event.preventDefault();
+        clearOnboardingFieldErrors();
 
         if (submitBtn) {
             submitBtn.disabled = true;
@@ -260,7 +339,33 @@ function setupOnboardingForm() {
             });
 
             if (!response.ok) {
-                throw new Error(`Registration submission failed (${response.status})`);
+                const payload = await parseResponseBody(response);
+                const fieldErrors = payload && payload.errors ? payload.errors : null;
+                if (fieldErrors) {
+                    applyOnboardingFieldErrors(fieldErrors);
+                    const messages = Object.values(fieldErrors).filter(Boolean);
+                    const summary = messages.length ? messages.join(' ') : (payload && payload.error ? payload.error : 'Please fix the highlighted fields and try again.');
+                    showNotification(summary, 'error');
+
+                    const firstInvalid = onboardingForm.querySelector('[aria-invalid="true"]');
+                    if (firstInvalid && typeof firstInvalid.scrollIntoView === 'function') {
+                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        if (typeof firstInvalid.focus === 'function') {
+                            firstInvalid.focus({ preventScroll: true });
+                        }
+                    }
+                    return;
+                }
+
+                const message = (payload && payload.error) ? payload.error : `Registration submission failed (${response.status}). Please try again.`;
+                throw new Error(message);
+            }
+
+            const payload = await parseResponseBody(response);
+            if (payload && payload.success === false) {
+                const message = payload.error || 'Registration submission failed. Please try again.';
+                showNotification(message, 'error');
+                return;
             }
 
             // Show on-site confirmation
@@ -273,7 +378,8 @@ function setupOnboardingForm() {
             onboardingForm.reset();
         } catch (error) {
             console.error('Onboarding submission error:', error);
-            showNotification('Sorry—there was an error submitting your registration. Please try again.', 'error');
+            const message = (error && error.message) ? error.message : 'Sorry—there was an error submitting your registration. Please try again.';
+            showNotification(message, 'error');
         } finally {
             if (submitBtn) {
                 submitBtn.disabled = false;
