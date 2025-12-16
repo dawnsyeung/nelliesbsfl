@@ -235,6 +235,9 @@ function setupOnboardingForm() {
     const confirmation = document.getElementById('onboarding-confirmation');
     const submitBtn = onboardingForm.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.textContent : '';
+    const formAction = onboardingForm.action || '';
+    const formspreeEmail = document.getElementById('formspree_email');
+    const formspreeName = document.getElementById('formspree_name');
 
     function cssEscape(value) {
         if (window.CSS && typeof window.CSS.escape === 'function') {
@@ -330,17 +333,44 @@ function setupOnboardingForm() {
 
         try {
             const formData = new FormData(onboardingForm);
-            const response = await fetch(onboardingForm.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
+            // Populate Formspree reply-to helpers (harmless for backend PHP as well)
+            const primaryName = String(formData.get('primary_contact_name') || '').trim();
+            const primaryEmail = String(formData.get('primary_contact_email') || '').trim();
+            if (formspreeEmail && !formData.get('email') && primaryEmail) {
+                formspreeEmail.value = primaryEmail;
+                formData.set('email', primaryEmail);
+            }
+            if (formspreeName && !formData.get('name') && primaryName) {
+                formspreeName.value = primaryName;
+                formData.set('name', primaryName);
+            }
+
+            async function submitTo(url) {
+                return await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+            }
+
+            const response = await submitTo(formAction);
 
             if (!response.ok) {
                 const payload = await parseResponseBody(response);
-                const fieldErrors = payload && payload.errors ? payload.errors : null;
+                // Formspree can return { errors: [...] } or other formats.
+                let fieldErrors = null;
+                if (payload && payload.errors) {
+                    if (Array.isArray(payload.errors)) {
+                        // Convert array errors into a single summary message.
+                        const summary = payload.errors.map((e) => (e && e.message ? String(e.message) : '')).filter(Boolean).join(' ');
+                        throw new Error(summary || `Registration submission failed (${response.status}). Please try again.`);
+                    }
+                    if (typeof payload.errors === 'object') {
+                        fieldErrors = payload.errors;
+                    }
+                }
                 if (fieldErrors) {
                     applyOnboardingFieldErrors(fieldErrors);
                     const messages = Object.values(fieldErrors).filter(Boolean);
