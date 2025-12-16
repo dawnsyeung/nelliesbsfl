@@ -146,9 +146,9 @@ p {
 }
 
 .nav__logo-img {
-    height: clamp(60px, 5.2vw, 76px);
+    height: clamp(72px, 6.24vw, 92px);
     width: auto;
-    max-width: 220px;
+    max-width: 264px;
     object-fit: contain;
     transition: var(--transition);
     display: block;
@@ -338,6 +338,19 @@ p {
     object-fit: cover;
     object-position: center center;
     transition: transform 0.8s ease, filter 0.8s ease;
+}
+
+/* Home hero: reduce desktop image height (mobile unchanged) */
+@media (min-width: 769px) {
+    body.home .hero__image-container {
+        /* ~30% shorter than previous max (520px -> ~365px) */
+        min-height: clamp(340px, 40vh, 365px);
+    }
+
+    body.home .hero__compost-image {
+        /* Bias crop downward so the top is trimmed more */
+        object-position: center 70%;
+    }
 }
 
 .hero__image-container:hover .hero__compost-image {
@@ -984,8 +997,8 @@ section {
     }
 
     .nav__logo-img {
-        height: 56px;
-        max-width: 190px;
+        height: 67px;
+        max-width: 228px;
     }
 
     .hero__image-container {
