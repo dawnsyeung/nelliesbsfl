@@ -9,6 +9,11 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Ensure the HTML `hidden` attribute always hides elements (author styles can override UA defaults). */
+[hidden] {
+    display: none !important;
+}
+
 body {
     font-family: var(--font-family-base);
     font-size: var(--font-size-base);
