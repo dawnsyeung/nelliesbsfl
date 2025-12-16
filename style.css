@@ -2373,3 +2373,109 @@ area[href] {
         padding: 3.5rem 0;
     }
 }
+
+/* Customer Onboarding Form */
+.onboarding-form {
+    max-width: min(980px, 96vw);
+    margin: 0 auto;
+    display: grid;
+    gap: 1.75rem;
+}
+
+.onboarding-section {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: clamp(1.4rem, 3.5vw, 2.1rem);
+    box-shadow: 0 18px 34px rgba(12, 8, 6, 0.22);
+    display: grid;
+    gap: 1.1rem;
+}
+
+.onboarding-section__title {
+    margin: 0;
+    font-size: clamp(1.25rem, 2.2vw, 1.55rem);
+    color: white;
+}
+
+.onboarding-section__note {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.95rem;
+}
+
+.onboarding-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: start;
+}
+
+.onboarding-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.65rem 1rem;
+    align-items: start;
+}
+
+.onboarding-table {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.onboarding-table__head,
+.onboarding-table__row {
+    display: grid;
+    grid-template-columns: 1.2fr 1.6fr 1fr 1fr;
+    gap: 0.75rem;
+    padding: 0.95rem;
+}
+
+.onboarding-table__head {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+}
+
+.onboarding-table__row {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.onboarding-table__row .form__input {
+    background-color: rgba(255, 255, 255, 0.92);
+}
+
+.onboarding-actions {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.onboarding-actions__note {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 860px) {
+    .onboarding-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .onboarding-table__head {
+        display: none;
+    }
+
+    .onboarding-table__row {
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+    }
+}
