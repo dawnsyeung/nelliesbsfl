@@ -2452,6 +2452,57 @@ area[href] {
     gap: 0.75rem;
 }
 
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 12000;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+}
+
+.modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+}
+
+.modal__panel {
+    position: relative;
+    width: min(520px, 92vw);
+    border-radius: 18px;
+    padding: 1.6rem 1.6rem 1.25rem;
+    background: linear-gradient(160deg, rgba(30, 20, 17, 0.98), rgba(62, 39, 35, 0.92));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 28px 60px rgba(0, 0, 0, 0.45);
+    display: grid;
+    gap: 0.85rem;
+}
+
+.modal__title {
+    margin: 0;
+    color: white;
+    font-size: 1.35rem;
+}
+
+.modal__message {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+}
+
+.modal__actions {
+    margin-top: 0.35rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.modal__actions .btn {
+    min-width: 120px;
+}
+
 .onboarding-section {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.12);

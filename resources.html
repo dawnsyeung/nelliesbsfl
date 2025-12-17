@@ -759,6 +759,20 @@
         </div>
     </footer>
 
+    <!-- Submission confirmation modal (used by Formspree AJAX forms) -->
+    <div class="modal" id="submission-modal" hidden>
+        <div class="modal__backdrop" data-modal-close></div>
+        <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="submission-modal-title">
+            <h3 class="modal__title" id="submission-modal-title">Submission received</h3>
+            <p class="modal__message" id="submission-modal-message">
+                Thanks — we received your request. Please check your inbox shortly.
+            </p>
+            <div class="modal__actions">
+                <button type="button" class="btn btn--primary modal__close" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
     <div class="cookie-notice" id="cookie-notice">
         <div class="cookie-notice__content">
             <h4 class="cookie-notice__title">This website uses cookies.</h4>

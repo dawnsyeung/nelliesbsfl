@@ -13,6 +13,7 @@ const askAgentVoiceButton = document.getElementById('ask-agent-voice');
 const askAgentVoiceStatus = document.getElementById('ask-agent-voice-status');
 const askAgentPromptButtons = document.querySelectorAll('[data-ask-prompt]');
 const onboardingForm = document.querySelector('.onboarding-form');
+const submissionModal = document.getElementById('submission-modal');
 
 const askAgentKnowledgeBase = [
     {
@@ -225,6 +226,132 @@ function removeNotification(notification) {
             notification.parentNode.removeChild(notification);
         }
     }, 300);
+}
+
+function setupGuideDownloadForms() {
+    const forms = document.querySelectorAll('form.guide-form[action*="formspree.io"]');
+    if (!forms.length) {
+        return;
+    }
+
+    const modal = submissionModal;
+    const modalTitle = modal ? modal.querySelector('#submission-modal-title') : null;
+    const modalMessage = modal ? modal.querySelector('#submission-modal-message') : null;
+    const modalCloseButton = modal ? modal.querySelector('button[data-modal-close]') : null;
+
+    let lastFocusedEl = null;
+    let priorBodyOverflow = null;
+
+    function openModal(titleText, messageText) {
+        if (!modal) {
+            // Fallback if modal isn't present for any reason.
+            showNotification(messageText || 'Submission received.', 'success');
+            return;
+        }
+
+        lastFocusedEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        priorBodyOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+
+        if (modalTitle) {
+            modalTitle.textContent = titleText || 'Submission received';
+        }
+        if (modalMessage) {
+            modalMessage.textContent = messageText || 'Thanks — we received your request. Please check your inbox shortly.';
+        }
+
+        modal.hidden = false;
+
+        // Move focus into the dialog for accessibility.
+        if (modalCloseButton && typeof modalCloseButton.focus === 'function') {
+            modalCloseButton.focus({ preventScroll: true });
+        }
+    }
+
+    function closeModal() {
+        if (!modal || modal.hidden) {
+            return;
+        }
+
+        modal.hidden = true;
+        document.body.style.overflow = priorBodyOverflow ?? '';
+        priorBodyOverflow = null;
+
+        if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') {
+            lastFocusedEl.focus({ preventScroll: true });
+        }
+        lastFocusedEl = null;
+    }
+
+    if (modal) {
+        modal.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (target.closest('[data-modal-close]')) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !modal.hidden) {
+                closeModal();
+            }
+        });
+    }
+
+    forms.forEach((form) => {
+        form.addEventListener('submit', async (event) => {
+            // If the browser says the form is invalid, let native UI handle it.
+            if (typeof form.reportValidity === 'function' && !form.reportValidity()) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.textContent : '';
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+            }
+
+            try {
+                const formData = new FormData(form);
+                const guideName = String(formData.get('guide_name') || '').trim();
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Submission failed (${response.status}). Please try again.`);
+                }
+
+                form.reset();
+
+                const title = 'Submission received';
+                const message = guideName
+                    ? `Thanks — we received your request for “${guideName}”. Please check your inbox shortly.`
+                    : 'Thanks — we received your request. Please check your inbox shortly.';
+
+                openModal(title, message);
+            } catch (error) {
+                console.error('Guide download submission error:', error);
+                const message = (error && error.message) ? error.message : 'Sorry—there was an error submitting your request. Please try again.';
+                showNotification(message, 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
+    });
 }
 
 function setupOnboardingForm() {
@@ -735,6 +862,9 @@ function init() {
 
     // Setup customer registration onboarding form (stay on-site after submit)
     setupOnboardingForm();
+
+    // Setup guide download forms (stay on-site after submit)
+    setupGuideDownloadForms();
     
     // Setup image map helper for development
     setupImageMapHelper();
