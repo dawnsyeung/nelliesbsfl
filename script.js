@@ -18,27 +18,27 @@ const askAgentKnowledgeBase = [
     {
         id: 'inclusion-rate',
         keywords: ['inclusion', 'rate', 'starter', 'grower', 'finisher', 'diet', 'larvae oil', 'oil'],
-        answer: `Begin with a 10% inclusion in starter diets and ramp toward 20% in grower and finisher rations over two flocks. Pair those trials with a 5% larvae oil dose to keep energy balanced. We will share historic FCR curves by breed and help your nutritionist tweak amino targets as data rolls in.`
+        answer: `A sensible starting point is a small, controlled trial—often in the ~5–10% range—then adjust based on species, life stage, and how the ingredient was processed (meal vs. full-fat, defatted, etc.). I’d track palatability, growth, and basic health markers first, and then work with your nutritionist to keep amino acids and energy balanced as you step up.`
     },
     {
         id: 'pricing-lock',
         keywords: ['pricing', 'lock', 'hedging', 'contract', '12 months', 'quarterly', 'volume', 'tons'],
-        answer: `Yes—BSFL supply can be priced quarterly with hedges tied to feedstock indices. Commitments above roughly 2,500 tons per year unlock blended pricing plus off-take credits when you sell frass back through your grower network. We can co-write the contract language with your procurement lead.`
+        answer: `Sometimes, yes. Many ingredients can be contracted with quarterly or annual pricing windows, but the details depend on volume, specs, and freight. If you tell me your target monthly pounds, region, and packaging format, I can outline what a practical “price lock” usually includes (term, quality specs, delivery cadence, and what can change).`
     },
     {
         id: 'frass-credits',
         keywords: ['frass', 'credit', 'roi', 'revenue', 'soil', 'offtake', 'worksheet'],
-        answer: `Frass revenue typically shows up as a negative cost line inside the ROI workbook. Buyers who loop frass into their agronomy program earn $40–$90 per ton in soil and turf deployments, which covers 8–12% of your annual operating cost. We track every load for traceability so auditors can count it as an off-take credit.`
+        answer: `In an ROI model, frass is usually treated as a coproduct: either revenue (if you sell it) or avoided cost (if it replaces some purchased fertility). The “credit” can be meaningful, but it’s highly local—regulations, demand, nutrient analysis, and application logistics all matter. If you share your market and crop/turf use case, I can suggest the right way to model it conservatively.`
     },
     {
         id: 'regulator-kpi',
         keywords: ['regulator', 'kpi', 'compliance', 'report', 'permit', 'scope 3', 'esg'],
-        answer: `Regulators want to see waste diversion %, pathogen log reduction, and documented vector controls. Sustainability teams overlay Scope 3 carbon savings, feed conversion deltas, and soil biology scores. Our dashboards package those KPIs with QA certificates so it is easy to drop into ESG or permitting reports.`
+        answer: `For permitting and regulators, the basics tend to matter most: what you accept (and how you screen it), how you control vectors/odors, and what your process does to reduce risk (handling, storage, and hygiene controls). If you’re reporting sustainability outcomes, lifecycle boundaries matter—so I’d document assumptions (transport, energy, avoided disposal) and report ranges rather than a single “perfect” number.`
     },
     {
         id: 'lead-time',
         keywords: ['lead', 'timeline', 'deploy', 'unit', 'installation', 'weeks'],
-        answer: `Modular BSFL units ship on an 8–12 week timeline depending on electrical work. We stage feedstock qualification alongside permitting so the first larvae go live within 30 days of delivery. Payback trackers update automatically once weight tickets hit the CRM.`
+        answer: `Lead times vary a lot because permitting, utilities, and site prep can be the real constraint. Hardware can be weeks-to-months, but the fastest deployments are the ones that start feedstock qualification and permitting early. If you tell me your scale and region, I can list the usual gating items and a realistic timeline range.`
     }
 ];
 
