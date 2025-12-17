@@ -362,7 +362,7 @@ p {
     position: absolute;
     left: clamp(2rem, 5vw, 3.75rem);
     right: auto;
-    bottom: clamp(2.5rem, 6vw, 4.5rem);
+    top: clamp(2rem, 5vw, 3.5rem);
     max-width: clamp(320px, 45vw, 520px);
     padding: clamp(1.85rem, 4.5vw, 2.85rem);
     background: rgba(15, 10, 8, 0.72);
