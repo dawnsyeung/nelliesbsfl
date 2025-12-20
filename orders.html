@@ -140,8 +140,11 @@
                 <p class="page-section__subtitle">Prices are private. We may counteroffer on delivery window, packaging lead time, or minimum lot size.</p>
 
                 <div class="page-card offer-board-form-card">
-                    <form id="offer-board-form" action="/api/offer_board_submit.php" method="POST" novalidate>
+                    <form id="offer-board-form" action="https://formspree.io/f/xjkeljzv" method="POST" novalidate>
                         <input type="text" name="_gotcha" value="" tabindex="-1" autocomplete="off" class="offer-board-hp" aria-hidden="true">
+                        <input type="hidden" name="_subject" value="Offer Board: Buyer Request">
+                        <input type="hidden" name="_next" value="https://nelliesbsfl.com/offer-board/thanks/">
+                        <input type="hidden" name="source_page" value="orders">
 
                         <div class="offer-board-section">
                             <h3 class="offer-board-section__title">Buyer info</h3>
@@ -498,7 +501,20 @@
 
             const payload = await resp.json().catch(() => null);
             if (!resp.ok) {
-              if (payload && payload.errors) {
+              // Formspree typically returns: { errors: [{ message: "..." }, ...] }
+              if (payload && Array.isArray(payload.errors)) {
+                const summary = payload.errors
+                  .map((e) => (e && e.message ? String(e.message) : ''))
+                  .filter(Boolean)
+                  .join(' ');
+                if (window.NelliesBSF && window.NelliesBSF.showNotification) {
+                  window.NelliesBSF.showNotification(summary || 'Submission failed. Please try again.', 'error');
+                }
+                throw new Error(summary || 'Submission failed. Please try again.');
+              }
+
+              // Legacy/backend shape: { error, errors: { field: message } }
+              if (payload && payload.errors && typeof payload.errors === 'object') {
                 applyFieldErrors(payload.errors);
                 if (window.NelliesBSF && window.NelliesBSF.showNotification) {
                   window.NelliesBSF.showNotification(payload.error || 'Please fix the highlighted fields and try again.', 'error');
@@ -518,6 +534,18 @@
 
             window.location.href = '/offer-board/thanks/';
           } catch (e) {
+            // If AJAX submission is blocked, fall back to a normal browser POST (Formspree supports _next).
+            const isFormspree = /formspree\.io/i.test(String(form.action || ''));
+            const isFetchBlocked = e instanceof TypeError || (e && String(e.message || '').toLowerCase().includes('failed to fetch'));
+            if (isFormspree && isFetchBlocked) {
+              try {
+                form.submit();
+                return;
+              } catch (submitErr) {
+                // continue to notification fallback
+              }
+            }
+
             if (window.NelliesBSF && window.NelliesBSF.showNotification) {
               window.NelliesBSF.showNotification(e && e.message ? e.message : 'Submission failed. Please try again.', 'error');
             }
