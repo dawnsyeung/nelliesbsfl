@@ -512,7 +512,9 @@
                 return;
               }
 
-              throw new Error((payload && payload.error) ? payload.error : 'Submission failed. Please try again.');
+              const baseMsg = (payload && payload.error) ? payload.error : 'Submission failed. Please try again.';
+              const errorIdSuffix = (payload && payload.error_id) ? ` (error id: ${payload.error_id})` : '';
+              throw new Error(baseMsg + errorIdSuffix);
             }
 
             window.location.href = '/offer-board/thanks/';
