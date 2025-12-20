@@ -14,6 +14,41 @@ function offer_board_env(string $key, string $default = ''): string {
     return $v;
 }
 
+function offer_board_data_dir(): string {
+    $dir = realpath(__DIR__ . '/../data');
+    if ($dir !== false) return $dir;
+
+    $targetDir = __DIR__ . '/../data';
+    if (!is_dir($targetDir) && !mkdir($targetDir, 0700, true)) {
+        throw new RuntimeException('Unable to create data directory.');
+    }
+    $dir = realpath($targetDir);
+    if ($dir === false) {
+        throw new RuntimeException('Unable to resolve data directory.');
+    }
+    return $dir;
+}
+
+function offer_board_log_error(string $errorId, string $message, array $context = []): void {
+    // Best-effort logging to /data/offer_board_errors.log. Never throw.
+    try {
+        $dir = offer_board_data_dir();
+        $path = $dir . '/offer_board_errors.log';
+        $line = json_encode([
+            'ts' => gmdate('c'),
+            'error_id' => $errorId,
+            'message' => $message,
+            'context' => $context,
+        ], JSON_UNESCAPED_SLASHES);
+        if ($line === false) {
+            $line = '{"ts":"' . gmdate('c') . '","error_id":"' . $errorId . '","message":"(json_encode failed)"}';
+        }
+        @file_put_contents($path, $line . "\n", FILE_APPEND | LOCK_EX);
+    } catch (Throwable $e) {
+        // no-op
+    }
+}
+
 function offer_board_uuidv4(): string {
     $data = random_bytes(16);
     // Set version to 0100
@@ -32,18 +67,7 @@ function offer_board_uuidv4(): string {
 }
 
 function offer_board_db_path(): string {
-    $dbPath = realpath(__DIR__ . '/../data');
-    if ($dbPath === false) {
-        $targetDir = __DIR__ . '/../data';
-        if (!is_dir($targetDir) && !mkdir($targetDir, 0700, true)) {
-            throw new RuntimeException('Unable to create data directory.');
-        }
-        $dbPath = realpath($targetDir);
-        if ($dbPath === false) {
-            throw new RuntimeException('Unable to resolve data directory.');
-        }
-    }
-    return $dbPath . '/offer_board.sqlite';
+    return offer_board_data_dir() . '/offer_board.sqlite';
 }
 
 function offer_board_pdo(): PDO {

@@ -2,6 +2,41 @@
 declare(strict_types=1);
 require_once __DIR__ . '/offer_board_db.php';
 
+// Ensure the endpoint returns JSON for AJAX callers even on fatal errors,
+// and log a traceable error_id to /data/offer_board_errors.log.
+$__offer_board_error_id = offer_board_uuidv4();
+ini_set('display_errors', '0');
+
+set_error_handler(static function (int $severity, string $message, string $file, int $line) use ($__offer_board_error_id): bool {
+    // Convert PHP warnings/notices into log entries; allow normal flow to continue.
+    offer_board_log_error($__offer_board_error_id, 'php_error', [
+        'severity' => $severity,
+        'message' => $message,
+        'file' => $file,
+        'line' => $line,
+    ]);
+    return false;
+});
+
+register_shutdown_function(static function () use ($__offer_board_error_id): void {
+    $err = error_get_last();
+    if (!$err) return;
+    $type = (int)($err['type'] ?? 0);
+    // Catch fatal-ish errors that would otherwise emit HTML and break JSON parsing.
+    if (!in_array($type, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) return;
+
+    offer_board_log_error($__offer_board_error_id, 'php_fatal', $err);
+
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json; charset=utf-8');
+    }
+    echo json_encode([
+        'error' => 'Server error. Please try again later.',
+        'error_id' => $__offer_board_error_id,
+    ], JSON_UNESCAPED_SLASHES);
+});
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
     exit();
@@ -61,24 +96,30 @@ try {
     offer_board_init_schema($pdo);
 
     if ($ip !== '') {
+        $limitPerHour = (int)offer_board_env('OFFER_BOARD_RATE_LIMIT_PER_HOUR', '20');
+        if ($limitPerHour <= 0) $limitPerHour = 20;
         $cutoff = $now->sub(new DateInterval('PT1H'))->format('c');
         $stmt = $pdo->prepare('SELECT COUNT(1) AS c FROM buyer_requests WHERE ip = :ip AND created_at >= :cutoff');
         $stmt->execute([':ip' => $ip, ':cutoff' => $cutoff]);
         $count = (int)($stmt->fetch()['c'] ?? 0);
-        if ($count >= 5) {
+        if ($count >= $limitPerHour) {
             $msg = 'Too many submissions. Please wait and try again.';
             if (offer_board_is_likely_browser_form_post()) {
-                offer_board_redirect('/orders.html#submit');
+                offer_board_redirect('/offer-board/#submit');
             }
-            offer_board_error_response(429, $msg);
+            offer_board_json_response(429, ['error' => $msg, 'error_id' => $__offer_board_error_id]);
         }
     }
 } catch (Throwable $e) {
     // If DB is unavailable, fail closed (don’t accept requests silently)
     if (offer_board_is_likely_browser_form_post()) {
-        offer_board_redirect('/orders.html#submit');
+        offer_board_redirect('/offer-board/#submit');
     }
-    offer_board_error_response(500, 'Server error. Please try again later.');
+    offer_board_log_error($__offer_board_error_id, 'db_init_failed', [
+        'exception' => get_class($e),
+        'message' => $e->getMessage(),
+    ]);
+    offer_board_json_response(500, ['error' => 'Server error. Please try again later.', 'error_id' => $__offer_board_error_id]);
 }
 
 // Required fields
@@ -150,7 +191,7 @@ if ($privateLabel === 1 && $packagingNotes === '') {
 
 if (!empty($fieldErrors)) {
     if (offer_board_is_likely_browser_form_post()) {
-        offer_board_redirect('/orders.html#submit');
+        offer_board_redirect('/offer-board/#submit');
     }
     offer_board_error_response(422, 'Please fix the highlighted fields and try again.', $fieldErrors);
 }
@@ -217,13 +258,17 @@ try {
     ]);
 } catch (Throwable $e) {
     if (offer_board_is_likely_browser_form_post()) {
-        offer_board_redirect('/orders.html#submit');
+        offer_board_redirect('/offer-board/#submit');
     }
-    offer_board_error_response(500, 'Server error: unable to save your request right now.');
+    offer_board_log_error($__offer_board_error_id, 'db_insert_failed', [
+        'exception' => get_class($e),
+        'message' => $e->getMessage(),
+    ]);
+    offer_board_json_response(500, ['error' => 'Server error: unable to save your request right now.', 'error_id' => $__offer_board_error_id]);
 }
 
 // Email notification to admin (non-blocking)
-$adminEmail = offer_board_env('ADMIN_EMAIL', '');
+$adminEmail = offer_board_env('ADMIN_EMAIL', 'dawn@nelliesbsfl.com');
 if ($adminEmail !== '') {
     $subject = "New BSFL Offer Board Request ({$grade} / {$format} / {$quantityLbs} lbs)";
     $lines = [];

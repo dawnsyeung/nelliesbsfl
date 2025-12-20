@@ -27,7 +27,6 @@
                 </a>
                 <div class="nav__menu">
                     <ul class="nav__menu-list">
-                        <li class="nav__item"><a href="index.html" class="nav__link">Home</a></li>
                         <li class="nav__item"><a href="orders.html" class="nav__link nav__link--active">Offer Board</a></li>
                         <li class="nav__item"><a href="valorization-process.html" class="nav__link">Valorization</a></li>
                         <li class="nav__item"><a href="nutrition.html" class="nav__link">Nutrition</a></li>
@@ -512,7 +511,9 @@
                 return;
               }
 
-              throw new Error((payload && payload.error) ? payload.error : 'Submission failed. Please try again.');
+              const baseMsg = (payload && payload.error) ? payload.error : 'Submission failed. Please try again.';
+              const errorIdSuffix = (payload && payload.error_id) ? ` (error id: ${payload.error_id})` : '';
+              throw new Error(baseMsg + errorIdSuffix);
             }
 
             window.location.href = '/offer-board/thanks/';
