@@ -268,7 +268,7 @@ try {
 }
 
 // Email notification to admin (non-blocking)
-$adminEmail = offer_board_env('ADMIN_EMAIL', '');
+$adminEmail = offer_board_env('ADMIN_EMAIL', 'dawn@nelliesbsfl.com');
 if ($adminEmail !== '') {
     $subject = "New BSFL Offer Board Request ({$grade} / {$format} / {$quantityLbs} lbs)";
     $lines = [];
