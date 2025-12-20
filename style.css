@@ -1104,6 +1104,206 @@ section {
     }
 }
 
+/* Offer Board (Orders page repurposed) */
+.offer-board-tabs {
+    display: inline-flex;
+    gap: 0.5rem;
+    padding: 0.35rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(0, 0, 0, 0.18);
+    margin-bottom: 1.25rem;
+}
+
+.offer-board-tab {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.82);
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.offer-board-tab:hover,
+.offer-board-tab:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff4dc;
+}
+
+.offer-board-tab--active {
+    background: linear-gradient(135deg, rgba(79, 158, 92, 0.92), rgba(215, 161, 90, 0.88));
+    color: #120d0a;
+}
+
+.offer-board-meter__meta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: start;
+}
+
+.offer-board-meter__label {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.offer-board-meter__value {
+    margin-top: 0.25rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff6e7;
+}
+
+.offer-board-meter__note {
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+@media (max-width: 768px) {
+    .offer-board-meter__meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.offer-board-feed {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+}
+
+.offer-board-feed__empty {
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.offer-board-feed__item {
+    padding: 1rem 1.1rem;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: grid;
+    gap: 0.5rem;
+}
+
+.offer-board-feed__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.offer-board-feed__row--sub {
+    justify-content: flex-start;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.95rem;
+}
+
+.offer-board-feed__date {
+    font-weight: 600;
+}
+
+.offer-board-feed__qty {
+    font-weight: 700;
+    color: #d7a15a;
+}
+
+.offer-board-feed__pill {
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.offer-board-feed__note {
+    margin-top: 0.15rem;
+    color: rgba(255, 255, 255, 0.78);
+    font-style: italic;
+}
+
+.offer-board-disclaimer {
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.92rem;
+}
+
+.offer-board-form-card {
+    padding: clamp(1.6rem, 3.5vw, 2.2rem);
+}
+
+.offer-board-section + .offer-board-section {
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.offer-board-section__title {
+    margin: 0 0 0.85rem 0;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.offer-board-helper {
+    margin-top: 0.35rem;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.offer-board-submit {
+    margin-top: 1.75rem;
+    display: grid;
+    gap: 0.6rem;
+}
+
+.offer-board-submit__note {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.9rem;
+}
+
+.offer-board-hp {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0 !important;
+}
+
+.offer-board-sticky-cta {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 16px;
+    z-index: 1200;
+    display: none;
+    width: min(520px, calc(100vw - 32px));
+    text-align: center;
+    padding: 0.85rem 1.25rem;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    background: linear-gradient(140deg, var(--primary-color), rgba(79, 158, 92, 0.85));
+    color: #0f150f;
+    box-shadow: 0 18px 32px rgba(79, 158, 92, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 768px) {
+    .offer-board-sticky-cta {
+        display: block;
+    }
+}
+
 @media (max-width: 480px) {
     .hero__image-container {
         width: min(94vw, 520px);
