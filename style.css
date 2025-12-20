@@ -822,6 +822,11 @@ section {
     font-size: 0.88rem;
 }
 
+.footer__links {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.88rem;
+}
+
 .footer__link {
     color: white;
     text-decoration: none;
