@@ -3,7 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/_auth.php';
 
 if (isAuthed()) {
-    header('Location: /admin/submissions.php', true, 302);
+    header('Location: /admin/offer-board/', true, 302);
     exit();
 }
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         session_regenerate_id(true);
         $_SESSION['authed'] = true;
         $_SESSION['username'] = $username;
-        header('Location: /admin/submissions.php', true, 302);
+        header('Location: /admin/offer-board/', true, 302);
         exit();
     } else {
         $error = 'Invalid username or password.';
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="page-hero__container">
         <p class="page-hero__eyebrow">Admin</p>
         <h1 class="page-hero__title">Login</h1>
-        <p class="page-hero__subtitle">Sign in to view customer registration submissions.</p>
+        <p class="page-hero__subtitle">Sign in to manage Offer Board requests.</p>
       </div>
     </section>
 
