@@ -137,9 +137,15 @@ function offer_board_month_bucket_from_date(string $dateYmd): string {
     return $dt->format('Y-m');
 }
 
+// Polyfill-ish helper for PHP < 8 (no str_contains).
+function offer_board_str_contains(string $haystack, string $needle): bool {
+    if ($needle === '') return true;
+    return strpos($haystack, $needle) !== false;
+}
+
 function offer_board_is_likely_browser_form_post(): bool {
     $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
-    return str_contains($accept, 'text/html') || str_contains($accept, 'application/xhtml+xml');
+    return offer_board_str_contains($accept, 'text/html') || offer_board_str_contains($accept, 'application/xhtml+xml');
 }
 
 function offer_board_json_response(int $status, array $payload): void {

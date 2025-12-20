@@ -58,7 +58,8 @@ function errorResponse(int $status, string $message, array $fieldErrors = []): v
 
 function isLikelyBrowserFormPost(): bool {
     $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
-    return str_contains($accept, 'text/html') || str_contains($accept, 'application/xhtml+xml');
+    // PHP < 8 compatibility (no str_contains).
+    return strpos($accept, 'text/html') !== false || strpos($accept, 'application/xhtml+xml') !== false;
 }
 
 function redirect(string $location): void {
