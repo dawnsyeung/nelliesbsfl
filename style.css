@@ -746,6 +746,10 @@ section {
     scroll-margin-top: calc(var(--header-height) + 32px);
 }
 
+#outputs {
+    scroll-margin-top: calc(var(--header-height) + 32px);
+}
+
 /* Buttons */
 .btn {
     display: inline-flex;

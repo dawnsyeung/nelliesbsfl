@@ -109,13 +109,14 @@ function handleFormSubmission(e) {
     
     const form = e.currentTarget;
     const formData = new FormData(form);
-    const name = formData.get('name').trim();
-    const email = formData.get('email').trim();
-    const message = formData.get('message').trim();
+    const name = String(formData.get('name') || '').trim();
+    const email = String(formData.get('email') || '').trim();
+    const message = String(formData.get('message') || '').trim();
     const newsletter = formData.get('newsletter');
+    const requiresMessage = form.getAttribute('data-requires-message') !== 'false';
     
     // Basic validation
-    if (!name || !email || !message) {
+    if (!name || !email || (requiresMessage && !message)) {
         showNotification('Please fill in all required fields.', 'error');
         return;
     }
