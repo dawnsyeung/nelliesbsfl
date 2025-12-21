@@ -2036,6 +2036,22 @@ area[href] {
     text-transform: uppercase;
 }
 
+/* Bulk buyers landing content (embedded on Offer Board) */
+.lp-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: 1.6rem;
+}
+
+.lp-hero__actions .btn {
+    min-width: 220px;
+}
+
+.lp-hero__badges {
+    margin-top: 1.35rem;
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;
