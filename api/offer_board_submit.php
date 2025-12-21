@@ -80,7 +80,7 @@ function offer_board_validate_date_ymd(string $value): bool {
 $gotcha = trim((string)($_POST['_gotcha'] ?? ''));
 if ($gotcha !== '') {
     if (offer_board_is_likely_browser_form_post()) {
-        offer_board_redirect('/offer-board/thanks/');
+        offer_board_redirect('/offer-board-thanks.html');
     }
     offer_board_json_response(200, ['success' => true, 'spam' => true]);
 }
@@ -105,7 +105,7 @@ try {
         if ($count >= $limitPerHour) {
             $msg = 'Too many submissions. Please wait and try again.';
             if (offer_board_is_likely_browser_form_post()) {
-                offer_board_redirect('/offer-board/#submit');
+                offer_board_redirect('/orders.html#submit');
             }
             offer_board_json_response(429, ['error' => $msg, 'error_id' => $__offer_board_error_id]);
         }
@@ -113,7 +113,7 @@ try {
 } catch (Throwable $e) {
     // If DB is unavailable, fail closed (don’t accept requests silently)
     if (offer_board_is_likely_browser_form_post()) {
-        offer_board_redirect('/offer-board/#submit');
+        offer_board_redirect('/orders.html#submit');
     }
     offer_board_log_error($__offer_board_error_id, 'db_init_failed', [
         'exception' => get_class($e),
@@ -191,7 +191,7 @@ if ($privateLabel === 1 && $packagingNotes === '') {
 
 if (!empty($fieldErrors)) {
     if (offer_board_is_likely_browser_form_post()) {
-        offer_board_redirect('/offer-board/#submit');
+        offer_board_redirect('/orders.html#submit');
     }
     offer_board_error_response(422, 'Please fix the highlighted fields and try again.', $fieldErrors);
 }
@@ -258,7 +258,7 @@ try {
     ]);
 } catch (Throwable $e) {
     if (offer_board_is_likely_browser_form_post()) {
-        offer_board_redirect('/offer-board/#submit');
+        offer_board_redirect('/orders.html#submit');
     }
     offer_board_log_error($__offer_board_error_id, 'db_insert_failed', [
         'exception' => get_class($e),
@@ -312,7 +312,7 @@ if ($adminEmail !== '') {
 }
 
 if (offer_board_is_likely_browser_form_post()) {
-    offer_board_redirect('/offer-board/thanks/');
+    offer_board_redirect('/offer-board-thanks.html');
 }
 
 offer_board_json_response(200, ['success' => true, 'id' => $requestId]);
