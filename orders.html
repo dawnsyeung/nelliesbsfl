@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Submit a BSFL purchase request in 60 seconds. Limited monthly supply. We review offers daily. Public market activity is anonymized; pricing is never shown.">
+    <meta name="description" content="Submit your bid for BSFL supply. Supply is limited—please submit your best bid. We review requests daily; pricing and buyer identity are kept private.">
     <meta name="keywords" content="BSFL offer board, black soldier fly larvae bulk purchase, BSFL wholesale request, insect protein supply, BSFL private label packaging">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="orders.html">
     <meta property="og:title" content="Nellie's BSFL Offer Board | Submit a Purchase Request">
-    <meta property="og:description" content="Limited monthly supply. Submit your request in 60 seconds. Public activity is anonymized; pricing is never shown.">
+    <meta property="og:description" content="Submit your bid for BSFL supply. Supply is limited—please submit your best bid. We review requests daily; pricing and buyer identity are kept private.">
     <meta property="og:type" content="website">
     <title>Nellie's BSFL Offer Board | Submit a Purchase Request</title>
     <link rel="stylesheet" href="style.css">
@@ -243,7 +243,7 @@
             <div class="page-section__container">
                 <p class="page-section__eyebrow">FAQ</p>
                 <h2 class="page-section__title">Quick answers</h2>
-                <div class="page-section__grid page-section__grid--two">
+                <div class="page-section__grid page-section__grid--two-fixed">
                     <article class="page-card">
                         <h3 class="page-card__title">Minimum order?</h3>
                         <p><strong>500 lbs</strong> for this bulk-buyer program.</p>
@@ -354,84 +354,14 @@
 
         <section class="page-hero" id="top">
             <div class="page-hero__container">
-                <p class="page-hero__eyebrow">Nellie’s BSFL Offer Board</p>
-                <h1 class="page-hero__title">Submit a BSFL Purchase Request in 60 Seconds</h1>
+                <p class="page-hero__eyebrow">Some customers know exactly what they want</p>
+                <h1 class="page-hero__title">Submit your bid for supply of BSFL</h1>
                 <p class="page-hero__subtitle">
-                    Limited monthly supply. We review offers daily. Public “market activity” is anonymized — pricing and buyer identity are never shown.
+                    Submit your bid for supply of BSFL here, and we will see if we can accommodate your order as efficiently as possible.
+                    Supply is limited, so please take care to submit your best bid.
                 </p>
-                <div class="page-hero__meta" aria-label="Payment and turnaround">
-                    <div class="page-hero__stat">
-                        <div class="page-hero__stat-number">60s</div>
-                        <div class="page-hero__stat-label">request submission</div>
-                    </div>
-                    <div class="page-hero__stat">
-                        <div class="page-hero__stat-number">A/B</div>
-                        <div class="page-hero__stat-label">grade options</div>
-                    </div>
-                    <div class="page-hero__stat">
-                        <div class="page-hero__stat-number">Bulk</div>
-                        <div class="page-hero__stat-label">or packaged</div>
-                    </div>
-                </div>
                 <div class="callout__actions" style="margin-top: 1.5rem;">
-                    <a href="#submit" class="btn btn--primary">Submit request</a>
-                    <a href="#activity" class="btn btn--secondary">See market activity</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="page-section page-section--alt" aria-label="Monthly supply meter" id="capacity">
-            <div class="page-section__container">
-                <p class="page-section__eyebrow">Monthly supply</p>
-                <h2 class="page-section__title">Capacity is limited — submit your best price</h2>
-                <p class="page-section__subtitle">
-                    To maximize your chance of fulfillment, submit your best price. Capacity remaining is based on published (anonymized) fulfillments.
-                </p>
-                <div class="offer-board-tabs" role="tablist" aria-label="Capacity months">
-                    <button class="offer-board-tab offer-board-tab--active" type="button" data-capacity-tab="this">This month</button>
-                    <button class="offer-board-tab" type="button" data-capacity-tab="next">Next month</button>
-                </div>
-
-                <div class="page-card offer-board-meter" id="capacity-card" aria-live="polite">
-                    <div class="offer-board-meter__meta">
-                        <div>
-                            <div class="offer-board-meter__label">Month</div>
-                            <div class="offer-board-meter__value" id="capacity-month-label">—</div>
-                        </div>
-                        <div>
-                            <div class="offer-board-meter__label">Capacity</div>
-                            <div class="offer-board-meter__value" id="capacity-total">—</div>
-                        </div>
-                        <div>
-                            <div class="offer-board-meter__label">Filled</div>
-                            <div class="offer-board-meter__value" id="capacity-filled">—</div>
-                        </div>
-                        <div>
-                            <div class="offer-board-meter__label">Remaining</div>
-                            <div class="offer-board-meter__value" id="capacity-remaining">—</div>
-                        </div>
-                    </div>
-                    <div class="progress-bar" aria-hidden="true" style="margin-top: 1rem;">
-                        <div class="progress-bar__fill" id="capacity-progress" style="width: 0%;"></div>
-                    </div>
-                    <p class="offer-board-meter__note">To maximize your chance of fulfillment, submit your best price.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="page-section" id="activity" aria-label="Market activity feed">
-            <div class="page-section__container">
-                <p class="page-section__eyebrow">Market activity</p>
-                <h2 class="page-section__title">Recent fulfillments (anonymized)</h2>
-                <p class="page-section__subtitle">
-                    Activity is anonymized; pricing and buyer identity are never shown.
-                </p>
-
-                <div class="page-card">
-                    <ul class="offer-board-feed" id="market-feed" aria-label="Recent fulfillments">
-                        <li class="offer-board-feed__empty" id="market-feed-empty">Loading activity…</li>
-                    </ul>
-                    <p class="offer-board-disclaimer" id="market-disclaimer" style="margin-top: 1rem;"></p>
+                    <a href="#submit" class="btn btn--primary">Submit bid</a>
                 </div>
             </div>
         </section>
@@ -635,103 +565,6 @@
     </div>
 
     <a href="#submit" class="offer-board-sticky-cta" aria-label="Submit request">Submit Request</a>
-
-    <script>
-      (function () {
-        const feedEl = document.getElementById('market-feed');
-        const feedEmptyEl = document.getElementById('market-feed-empty');
-        const disclaimerEl = document.getElementById('market-disclaimer');
-
-        const tabButtons = document.querySelectorAll('[data-capacity-tab]');
-        const capMonthLabel = document.getElementById('capacity-month-label');
-        const capTotal = document.getElementById('capacity-total');
-        const capFilled = document.getElementById('capacity-filled');
-        const capRemaining = document.getElementById('capacity-remaining');
-        const capProgress = document.getElementById('capacity-progress');
-
-        let publicData = null;
-        let activeTab = 'this';
-
-        function fmtNumber(n) {
-          try { return new Intl.NumberFormat('en-US').format(n); } catch (e) { return String(n); }
-        }
-
-        function setActiveTab(tab) {
-          activeTab = tab;
-          tabButtons.forEach((b) => {
-            const isActive = (b.getAttribute('data-capacity-tab') === tab);
-            b.classList.toggle('offer-board-tab--active', isActive);
-          });
-          renderCapacity();
-        }
-
-        function renderCapacity() {
-          if (!publicData || !publicData.capacity) return;
-          const cap = (activeTab === 'next') ? publicData.capacity.next_month : publicData.capacity.this_month;
-          if (!cap) return;
-
-          capMonthLabel.textContent = cap.month_label || cap.month_bucket || '—';
-          capTotal.textContent = fmtNumber(cap.capacity_lbs || 0) + ' lbs';
-          capFilled.textContent = fmtNumber(cap.filled_lbs || 0) + ' lbs';
-          capRemaining.textContent = fmtNumber(cap.remaining_lbs || 0) + ' lbs';
-
-          const total = Number(cap.capacity_lbs || 0);
-          const filled = Number(cap.filled_lbs || 0);
-          const pct = total > 0 ? Math.min(100, Math.max(0, (filled / total) * 100)) : 0;
-          capProgress.style.width = pct.toFixed(1) + '%';
-        }
-
-        function renderFeed() {
-          if (!feedEl) return;
-          feedEl.innerHTML = '';
-          const items = (publicData && Array.isArray(publicData.fulfillments)) ? publicData.fulfillments : [];
-
-          if (items.length === 0) {
-            const li = document.createElement('li');
-            li.className = 'offer-board-feed__empty';
-            li.textContent = 'No fulfillments published yet.';
-            feedEl.appendChild(li);
-            return;
-          }
-
-          items.forEach((f) => {
-            const li = document.createElement('li');
-            li.className = 'offer-board-feed__item';
-            const qty = (typeof f.quantity_lbs_display === 'number') ? fmtNumber(f.quantity_lbs_display) : '—';
-            li.innerHTML = `
-              <div class="offer-board-feed__row">
-                <div class="offer-board-feed__date">${f.fulfilled_date || '—'}</div>
-                <div class="offer-board-feed__pill">${(f.grade || '—')} · ${(f.format || '—')}</div>
-                <div class="offer-board-feed__qty">${qty} lbs</div>
-              </div>
-              <div class="offer-board-feed__row offer-board-feed__row--sub">
-                <div><strong>Delivery:</strong> ${f.delivery_window || '—'}</div>
-                <div><strong>Region:</strong> ${f.region || '—'}</div>
-              </div>
-              ${f.note_public ? `<div class="offer-board-feed__note">${f.note_public}</div>` : ''}
-            `;
-            feedEl.appendChild(li);
-          });
-
-          if (disclaimerEl) disclaimerEl.textContent = publicData && publicData.disclaimer ? publicData.disclaimer : '';
-        }
-
-        async function loadPublicData() {
-          try {
-            const resp = await fetch('/api/offer_board_public.php', { headers: { 'Accept': 'application/json' } });
-            const data = await resp.json();
-            publicData = data;
-            renderCapacity();
-            renderFeed();
-          } catch (e) {
-            if (feedEmptyEl) feedEmptyEl.textContent = 'Coming soon...';
-          }
-        }
-
-        tabButtons.forEach((b) => b.addEventListener('click', () => setActiveTab(b.getAttribute('data-capacity-tab') || 'this')));
-        loadPublicData();
-      })();
-    </script>
 
     <script>
       (function () {
