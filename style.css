@@ -1660,7 +1660,7 @@ area[href] {
 
 .page-hero__image--chickens {
     height: clamp(240px, 40vh, 480px);
-    object-position: center 65%;
+    object-position: center 55%;
 }
 
 .page-hero__eyebrow {
