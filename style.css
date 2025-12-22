@@ -1658,6 +1658,11 @@ area[href] {
     box-shadow: 0 28px 60px rgba(0, 0, 0, 0.38);
 }
 
+.page-hero__image--chickens {
+    height: clamp(240px, 40vh, 480px);
+    object-position: center 65%;
+}
+
 .page-hero__eyebrow {
     text-transform: uppercase;
     letter-spacing: 0.2em;
