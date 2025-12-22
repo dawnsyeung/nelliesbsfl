@@ -29,7 +29,7 @@
                     <ul class="nav__menu-list">
                         <li class="nav__item"><a href="orders.html" class="nav__link nav__link--active">Offer Board</a></li>
                         <li class="nav__item"><a href="valorization-process.html" class="nav__link">Valorization and Products</a></li>
-                        <li class="nav__item"><a href="nutrition.html" class="nav__link">Nutrition</a></li>
+                        <li class="nav__item"><a href="protein.html" class="nav__link">Protein</a></li>
                         <li class="nav__item"><a href="frass-benefits.html" class="nav__link">Frass Benefits</a></li>
                         <li class="nav__item"><a href="partnerships.html" class="nav__link">Partnerships</a></li>
                         <li class="nav__item"><a href="resources.html" class="nav__link">Resources</a></li>
@@ -269,7 +269,7 @@
                 <div class="contact__divider"></div>
                 <p class="contact__subtitle">Tell us your volume + ZIP code. We’ll respond with pricing and logistics options.</p>
 
-                <form class="contact__form" action="https://formspree.io/f/xjkeljzv" method="POST" data-requires-message="false">
+                <form class="contact__form" id="bulk-quote-form" action="https://formspree.io/f/xjkeljzv" method="POST" target="formspree-hidden" data-requires-message="false">
                     <input type="hidden" name="request_type" value="Bulk BSFL Quote (500+ lbs)" />
                     <input type="hidden" name="landing_page" value="orders.html" />
 
@@ -372,7 +372,7 @@
                 <p class="page-section__subtitle">Prices are private. We may counteroffer on delivery window, packaging lead time, or minimum lot size.</p>
 
                 <div class="page-card offer-board-form-card">
-                    <form id="offer-board-form" action="https://formspree.io/f/xjkeljzv" method="POST" novalidate>
+                    <form id="offer-board-form" action="https://formspree.io/f/xjkeljzv" method="POST" target="formspree-hidden" novalidate>
                         <input type="text" name="_gotcha" value="" tabindex="-1" autocomplete="off" class="offer-board-hp" aria-hidden="true">
                         <input type="hidden" name="_subject" value="Offer Board: Buyer Request">
                         <input type="hidden" name="_next" value="https://nelliesbsfl.com/offer-board-thanks.html">
@@ -563,15 +563,16 @@
         </div>
     </div>
 
+    <!-- Hidden iframe target prevents redirecting users off-site -->
+    <iframe id="formspree-hidden" name="formspree-hidden" title="Form submission target" hidden></iframe>
+
     <a href="#submit" class="offer-board-sticky-cta" aria-label="Submit request">Submit Request</a>
 
     <script>
       (function () {
-        const form = document.getElementById('offer-board-form');
-        if (!form) return;
-
-        const submitBtn = document.getElementById('offer-board-submit-btn');
-        const originalText = submitBtn ? submitBtn.textContent : '';
+        const offerForm = document.getElementById('offer-board-form');
+        const bulkForm = document.getElementById('bulk-quote-form');
+        const iframe = document.getElementById('formspree-hidden');
 
         const modal = document.getElementById('submission-modal');
         const modalTitle = modal ? modal.querySelector('#submission-modal-title') : null;
@@ -580,10 +581,10 @@
         let lastFocusedEl = null;
         let priorBodyOverflow = null;
 
+        // Offer Board conditional fields
         const frequency = document.getElementById('delivery_frequency');
         const frequencyMonthsGroup = document.getElementById('frequency_months_group');
         const frequencyMonths = document.getElementById('frequency_months');
-
         const privateLabel = document.getElementById('packaging_private_label');
         const packagingNotesGroup = document.getElementById('packaging_notes_group');
         const packagingNotes = document.getElementById('packaging_notes');
@@ -601,7 +602,7 @@
           document.body.style.overflow = 'hidden';
 
           if (modalTitle) modalTitle.textContent = titleText || 'Request received';
-          if (modalMessage) modalMessage.textContent = messageText || 'Thanks — we received your purchase request.';
+          if (modalMessage) modalMessage.textContent = messageText || 'Thanks — we received your request.';
           modal.hidden = false;
 
           if (modalCloseButton && typeof modalCloseButton.focus === 'function') {
@@ -631,34 +632,7 @@
           });
         }
 
-        function clearFieldErrors() {
-          form.querySelectorAll('.field-error').forEach((el) => el.remove());
-          form.querySelectorAll('[aria-invalid="true"]').forEach((el) => el.removeAttribute('aria-invalid'));
-          form.querySelectorAll('.form__input--error, .form__textarea--error').forEach((el) => {
-            el.classList.remove('form__input--error', 'form__textarea--error');
-          });
-        }
-
-        function applyFieldErrors(errors) {
-          if (!errors || typeof errors !== 'object') return;
-          Object.entries(errors).forEach(([field, message]) => {
-            const esc = (window.CSS && typeof window.CSS.escape === 'function') ? window.CSS.escape : (v) => String(v).replace(/["\\]/g, '\\$&');
-            const input = form.querySelector(`[name="${esc(field)}"]`) || form.querySelector(`#${esc(field)}`);
-            if (!input) return;
-            input.setAttribute('aria-invalid', 'true');
-            if (input.classList.contains('form__textarea')) input.classList.add('form__textarea--error');
-            else input.classList.add('form__input--error');
-            const group = input.closest('.form__group') || input.parentElement;
-            if (!group) return;
-            if (group.querySelector('.field-error')) return;
-            const err = document.createElement('div');
-            err.className = 'field-error';
-            err.textContent = String(message || 'This field has an error.');
-            group.appendChild(err);
-          });
-        }
-
-        function syncConditionalFields() {
+        function syncOfferConditionalFields() {
           const f = (frequency && frequency.value) ? frequency.value : '';
           const needsMonths = (f === 'monthly' || f === 'quarterly');
           if (frequencyMonthsGroup) frequencyMonthsGroup.hidden = !needsMonths;
@@ -671,95 +645,91 @@
           if (!pl && packagingNotes) packagingNotes.value = '';
         }
 
-        syncConditionalFields();
-        if (frequency) frequency.addEventListener('change', syncConditionalFields);
-        if (privateLabel) privateLabel.addEventListener('change', syncConditionalFields);
+        if (offerForm) {
+          syncOfferConditionalFields();
+          if (frequency) frequency.addEventListener('change', syncOfferConditionalFields);
+          if (privateLabel) privateLabel.addEventListener('change', syncOfferConditionalFields);
+        }
 
-        form.addEventListener('submit', async (event) => {
-          clearFieldErrors();
-          syncConditionalFields();
+        // Use a hidden iframe target so users never leave nelliesbsfl.com.
+        // When the iframe loads after submission, show a thank-you modal.
+        let iframeInitialized = false;
+        let pending = null; // { form, submitBtn, originalText, title, message, afterReset? }
 
-          if (typeof form.reportValidity === 'function' && !form.reportValidity()) {
-            return;
-          }
+        function setSubmitting(submitBtn, originalText) {
+          if (!submitBtn) return;
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Submitting...';
+          submitBtn.dataset.originalText = originalText || submitBtn.textContent || '';
+        }
 
-          event.preventDefault();
+        function clearSubmitting(submitBtn) {
+          if (!submitBtn) return;
+          submitBtn.disabled = false;
+          const t = submitBtn.dataset.originalText;
+          if (t) submitBtn.textContent = t;
+        }
 
-          if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
-          }
+        function attachIframeSubmit(form, opts) {
+          if (!form) return;
+          const submitBtn = opts && opts.submitBtnId ? document.getElementById(opts.submitBtnId) : null;
+          const originalText = submitBtn ? submitBtn.textContent : '';
+          const title = (opts && opts.title) ? opts.title : 'Request received';
+          const message = (opts && opts.message) ? opts.message : 'Thanks — we received your request.';
+          const afterReset = (opts && typeof opts.afterReset === 'function') ? opts.afterReset : null;
 
-          try {
-            const formData = new FormData(form);
-            const resp = await fetch(form.action, {
-              method: 'POST',
-              body: formData,
-              headers: { 'Accept': 'application/json' }
-            });
+          form.addEventListener('submit', (event) => {
+            if (form === offerForm) syncOfferConditionalFields();
 
-            const payload = await resp.json().catch(() => null);
-            if (!resp.ok) {
-              // Formspree typically returns: { errors: [{ message: "..." }, ...] }
-              if (payload && Array.isArray(payload.errors)) {
-                const summary = payload.errors
-                  .map((e) => (e && e.message ? String(e.message) : ''))
-                  .filter(Boolean)
-                  .join(' ');
-                if (window.NelliesBSF && window.NelliesBSF.showNotification) {
-                  window.NelliesBSF.showNotification(summary || 'Submission failed. Please try again.', 'error');
-                }
-                throw new Error(summary || 'Submission failed. Please try again.');
-              }
-
-              // Legacy/backend shape: { error, errors: { field: message } }
-              if (payload && payload.errors && typeof payload.errors === 'object') {
-                applyFieldErrors(payload.errors);
-                if (window.NelliesBSF && window.NelliesBSF.showNotification) {
-                  window.NelliesBSF.showNotification(payload.error || 'Please fix the highlighted fields and try again.', 'error');
-                }
-                const firstInvalid = form.querySelector('[aria-invalid="true"]');
-                if (firstInvalid && typeof firstInvalid.scrollIntoView === 'function') {
-                  firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  if (typeof firstInvalid.focus === 'function') firstInvalid.focus({ preventScroll: true });
-                }
-                return;
-              }
-
-              const baseMsg = (payload && payload.error) ? payload.error : 'Submission failed. Please try again.';
-              const errorIdSuffix = (payload && payload.error_id) ? ` (error id: ${payload.error_id})` : '';
-              throw new Error(baseMsg + errorIdSuffix);
+            if (typeof form.reportValidity === 'function' && !form.reportValidity()) {
+              event.preventDefault();
+              return;
             }
 
-            form.reset();
-            syncConditionalFields();
-            openModal(
-              'Request received',
-              'Thanks — we received your purchase request. We review offers daily and will follow up if we can match volume, timing, and specs.'
-            );
-          } catch (e) {
-            // If AJAX submission is blocked, fall back to a normal browser POST (Formspree supports _next).
-            const isFormspree = /formspree\.io/i.test(String(form.action || ''));
-            const isFetchBlocked = e instanceof TypeError || (e && String(e.message || '').toLowerCase().includes('failed to fetch'));
-            if (isFormspree && isFetchBlocked) {
-              try {
-                form.submit();
-                return;
-              } catch (submitErr) {
-                // continue to notification fallback
-              }
-            }
+            pending = { form, submitBtn, originalText, title, message, afterReset };
+            setSubmitting(submitBtn, originalText);
+            // Do not preventDefault: we want the browser POST, but into the hidden iframe (target="formspree-hidden").
+          });
+        }
 
-            if (window.NelliesBSF && window.NelliesBSF.showNotification) {
-              window.NelliesBSF.showNotification(e && e.message ? e.message : 'Submission failed. Please try again.', 'error');
+        if (iframe) {
+          iframe.addEventListener('load', () => {
+            // Ignore the iframe's initial about:blank load.
+            if (!iframeInitialized) {
+              iframeInitialized = true;
+              return;
             }
-          } finally {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.textContent = originalText;
+            if (!pending) return;
+
+            try {
+              pending.form.reset();
+              if (pending.afterReset) pending.afterReset();
+              openModal(pending.title, pending.message);
+            } finally {
+              clearSubmitting(pending.submitBtn);
+              pending = null;
             }
-          }
+          });
+        }
+
+        attachIframeSubmit(offerForm, {
+          submitBtnId: 'offer-board-submit-btn',
+          title: 'Request received',
+          message: 'Thanks — we received your purchase request. We review offers daily and will follow up if we can match volume, timing, and specs.',
+          afterReset: syncOfferConditionalFields
         });
+
+        // Bulk quote form: no redirect, same modal.
+        if (bulkForm) {
+          // Capture its submit button (first submit inside form).
+          const bulkSubmitBtn = bulkForm.querySelector('button[type="submit"]');
+          if (bulkSubmitBtn && !bulkSubmitBtn.id) bulkSubmitBtn.id = 'bulk-quote-submit-btn';
+          attachIframeSubmit(bulkForm, {
+            submitBtnId: bulkSubmitBtn ? bulkSubmitBtn.id : null,
+            title: 'Request received',
+            message: 'Thanks — we received your bulk quote request. We typically reply within 1 business day with pricing and logistics options.'
+          });
+        }
       })();
     </script>
     <script src="script.js"></script>
