@@ -1642,6 +1642,22 @@ area[href] {
     z-index: 1;
 }
 
+.page-hero__media {
+    margin: 0 0 1.75rem;
+    max-width: 900px;
+}
+
+.page-hero__image {
+    width: 100%;
+    height: clamp(190px, 32vh, 360px);
+    object-fit: cover;
+    object-position: center 35%;
+    display: block;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 28px 60px rgba(0, 0, 0, 0.38);
+}
+
 .page-hero__eyebrow {
     text-transform: uppercase;
     letter-spacing: 0.2em;
