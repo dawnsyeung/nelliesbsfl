@@ -269,9 +269,11 @@
                 <div class="contact__divider"></div>
                 <p class="contact__subtitle">Tell us your volume + ZIP code. We’ll respond with pricing and logistics options.</p>
 
-                <form class="contact__form" id="bulk-quote-form" action="https://formspree.io/f/xjkeljzv" method="POST" target="formspree-hidden" data-requires-message="false">
+                <form class="contact__form" id="bulk-quote-form" action="https://formspree.io/f/xjkeljzv" method="POST" data-requires-message="false" data-disable-global-handler="true">
                     <input type="hidden" name="request_type" value="Bulk BSFL Quote (500+ lbs)" />
                     <input type="hidden" name="landing_page" value="orders.html" />
+                    <input type="hidden" name="_subject" value="Bulk BSFL Quote (500+ lbs)" />
+                    <input type="hidden" name="_next" value="https://nelliesbsfl.com/offer-board-thanks.html" />
 
                     <!-- UTM / click IDs populated by JS (when present) -->
                     <input type="hidden" name="utm_source" id="utm_source" value="" />
@@ -372,7 +374,7 @@
                 <p class="page-section__subtitle">Prices are private. We may counteroffer on delivery window, packaging lead time, or minimum lot size.</p>
 
                 <div class="page-card offer-board-form-card">
-                    <form id="offer-board-form" action="https://formspree.io/f/xjkeljzv" method="POST" target="formspree-hidden" novalidate>
+                    <form id="offer-board-form" action="https://formspree.io/f/xjkeljzv" method="POST" data-disable-global-handler="true" novalidate>
                         <input type="text" name="_gotcha" value="" tabindex="-1" autocomplete="off" class="offer-board-hp" aria-hidden="true">
                         <input type="hidden" name="_subject" value="Offer Board: Buyer Request">
                         <input type="hidden" name="_next" value="https://nelliesbsfl.com/offer-board-thanks.html">
@@ -563,16 +565,12 @@
         </div>
     </div>
 
-    <!-- Hidden iframe target prevents redirecting users off-site -->
-    <iframe id="formspree-hidden" name="formspree-hidden" title="Form submission target" hidden></iframe>
-
     <a href="#submit" class="offer-board-sticky-cta" aria-label="Submit request">Submit Request</a>
 
     <script>
       (function () {
         const offerForm = document.getElementById('offer-board-form');
         const bulkForm = document.getElementById('bulk-quote-form');
-        const iframe = document.getElementById('formspree-hidden');
 
         const modal = document.getElementById('submission-modal');
         const modalTitle = modal ? modal.querySelector('#submission-modal-title') : null;
@@ -632,6 +630,16 @@
           });
         }
 
+        function notifyError(messageText) {
+          const message = messageText || 'Sorry — there was an error submitting your request. Please try again.';
+          if (window.NelliesBSF && window.NelliesBSF.showNotification) {
+            window.NelliesBSF.showNotification(message, 'error');
+            return;
+          }
+          // Last-resort fallback.
+          window.alert(message);
+        }
+
         function syncOfferConditionalFields() {
           const f = (frequency && frequency.value) ? frequency.value : '';
           const needsMonths = (f === 'monthly' || f === 'quarterly');
@@ -651,16 +659,13 @@
           if (privateLabel) privateLabel.addEventListener('change', syncOfferConditionalFields);
         }
 
-        // Use a hidden iframe target so users never leave nelliesbsfl.com.
-        // When the iframe loads after submission, show a thank-you modal.
-        let iframeInitialized = false;
-        let pending = null; // { form, submitBtn, originalText, title, message, afterReset? }
-
         function setSubmitting(submitBtn, originalText) {
           if (!submitBtn) return;
+          if (!submitBtn.dataset.originalText) {
+            submitBtn.dataset.originalText = originalText || submitBtn.textContent || '';
+          }
           submitBtn.disabled = true;
           submitBtn.textContent = 'Submitting...';
-          submitBtn.dataset.originalText = originalText || submitBtn.textContent || '';
         }
 
         function clearSubmitting(submitBtn) {
@@ -668,9 +673,38 @@
           submitBtn.disabled = false;
           const t = submitBtn.dataset.originalText;
           if (t) submitBtn.textContent = t;
+          delete submitBtn.dataset.originalText;
         }
 
-        function attachIframeSubmit(form, opts) {
+        async function submitToFormspree(form) {
+          const formData = new FormData(form);
+          const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+
+          let payload = null;
+          try {
+            payload = await response.json();
+          } catch (err) {
+            payload = null;
+          }
+
+          if (!response.ok) {
+            const errors = payload && payload.errors;
+            const messageFromErrors =
+              Array.isArray(errors) && errors.length
+                ? errors.map((e) => (e && e.message ? String(e.message) : '')).filter(Boolean).join(' ')
+                : null;
+            const message = (payload && payload.error) || messageFromErrors || `Submission failed (${response.status}). Please try again.`;
+            throw new Error(message);
+          }
+        }
+
+        function attachAsyncSubmit(form, opts) {
           if (!form) return;
           const submitBtn = opts && opts.submitBtnId ? document.getElementById(opts.submitBtnId) : null;
           const originalText = submitBtn ? submitBtn.textContent : '';
@@ -678,7 +712,7 @@
           const message = (opts && opts.message) ? opts.message : 'Thanks — we received your request.';
           const afterReset = (opts && typeof opts.afterReset === 'function') ? opts.afterReset : null;
 
-          form.addEventListener('submit', (event) => {
+          form.addEventListener('submit', async (event) => {
             if (form === offerForm) syncOfferConditionalFields();
 
             if (typeof form.reportValidity === 'function' && !form.reportValidity()) {
@@ -686,45 +720,36 @@
               return;
             }
 
-            pending = { form, submitBtn, originalText, title, message, afterReset };
             setSubmitting(submitBtn, originalText);
-            // Do not preventDefault: we want the browser POST, but into the hidden iframe (target="formspree-hidden").
-          });
-        }
-
-        if (iframe) {
-          iframe.addEventListener('load', () => {
-            // Ignore the iframe's initial about:blank load.
-            if (!iframeInitialized) {
-              iframeInitialized = true;
-              return;
-            }
-            if (!pending) return;
+            event.preventDefault();
 
             try {
-              pending.form.reset();
-              if (pending.afterReset) pending.afterReset();
-              openModal(pending.title, pending.message);
+              await submitToFormspree(form);
+              form.reset();
+              if (afterReset) afterReset();
+              openModal(title, message);
+            } catch (error) {
+              console.error('Offer board submission error:', error);
+              notifyError(error && error.message ? String(error.message) : '');
             } finally {
-              clearSubmitting(pending.submitBtn);
-              pending = null;
+              clearSubmitting(submitBtn);
             }
           });
         }
 
-        attachIframeSubmit(offerForm, {
+        attachAsyncSubmit(offerForm, {
           submitBtnId: 'offer-board-submit-btn',
           title: 'Request received',
           message: 'Thanks — we received your purchase request. We review offers daily and will follow up if we can match volume, timing, and specs.',
           afterReset: syncOfferConditionalFields
         });
 
-        // Bulk quote form: no redirect, same modal.
+        // Bulk quote form: same on-page modal.
         if (bulkForm) {
           // Capture its submit button (first submit inside form).
           const bulkSubmitBtn = bulkForm.querySelector('button[type="submit"]');
           if (bulkSubmitBtn && !bulkSubmitBtn.id) bulkSubmitBtn.id = 'bulk-quote-submit-btn';
-          attachIframeSubmit(bulkForm, {
+          attachAsyncSubmit(bulkForm, {
             submitBtnId: bulkSubmitBtn ? bulkSubmitBtn.id : null,
             title: 'Request received',
             message: 'Thanks — we received your bulk quote request. We typically reply within 1 business day with pricing and logistics options.'

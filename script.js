@@ -844,6 +844,10 @@ function init() {
     
     if (contactForms.length > 0) {
         contactForms.forEach(form => {
+            // Some pages (e.g. orders.html) implement a custom submit flow + modal.
+            if (form.hasAttribute('data-disable-global-handler')) {
+                return;
+            }
             form.addEventListener('submit', handleFormSubmission);
         });
     }
