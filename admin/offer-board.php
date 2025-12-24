@@ -229,6 +229,15 @@ foreach ($capRows as $r) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Offer Board - Admin | Nellie's BSFL</title>
   <link rel="stylesheet" href="/style.css" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17813054995"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17813054995');
+</script>
 </head>
 <body class="page">
   <main>
