@@ -76,7 +76,7 @@ if ($gotcha !== '') {
     jsonResponse(200, ['success' => true, 'spam' => true]);
 }
 
-// Required fields
+// Key fields (only email is required)
 $legalBusinessName = trim((string)($_POST['legal_business_name'] ?? ''));
 $headOfficeStreet = trim((string)($_POST['head_office_street'] ?? ''));
 $headOfficeCity = trim((string)($_POST['head_office_city'] ?? ''));
@@ -91,46 +91,10 @@ $certifyAccuracy = (string)($_POST['certify_accuracy'] ?? '');
 
 // Field-level validation (so the UI can show the exact issue)
 $fieldErrors = [];
-if ($legalBusinessName === '') {
-    $fieldErrors['legal_business_name'] = 'Legal Business Name is required.';
-}
-if ($headOfficeStreet === '') {
-    $fieldErrors['head_office_street'] = 'Head Office Address (Street) is required.';
-}
-if ($headOfficeCity === '') {
-    $fieldErrors['head_office_city'] = 'Head Office City is required.';
-}
-if ($headOfficeState === '') {
-    $fieldErrors['head_office_state'] = 'Head Office State/Province is required.';
-}
-if ($headOfficeZip === '') {
-    $fieldErrors['head_office_zip'] = 'Head Office Zip/Postal is required.';
-}
-if ($headOfficeCountry === '') {
-    $fieldErrors['head_office_country'] = 'Head Office Country is required.';
-}
-if ($primaryContactName === '') {
-    $fieldErrors['primary_contact_name'] = 'Primary Contact Name is required.';
-}
 if ($primaryContactEmail === '') {
     $fieldErrors['primary_contact_email'] = 'Primary Contact Email is required.';
 } elseif (!filter_var($primaryContactEmail, FILTER_VALIDATE_EMAIL)) {
     $fieldErrors['primary_contact_email'] = 'Primary Contact Email must be a valid email address.';
-}
-if ($signatoryName === '') {
-    $fieldErrors['signatory_name'] = 'Authorized Signatory Name is required.';
-}
-if ($signatureDate === '') {
-    $fieldErrors['signature_date'] = 'Signature Date is required.';
-} else {
-    $dt = DateTimeImmutable::createFromFormat('Y-m-d', $signatureDate);
-    $errors = DateTimeImmutable::getLastErrors();
-    if ($dt === false || ($errors['warning_count'] ?? 0) > 0 || ($errors['error_count'] ?? 0) > 0) {
-        $fieldErrors['signature_date'] = 'Signature Date must be a valid date.';
-    }
-}
-if ($certifyAccuracy !== 'Yes') {
-    $fieldErrors['certify_accuracy'] = 'You must certify accuracy before submitting.';
 }
 
 if (!empty($fieldErrors)) {

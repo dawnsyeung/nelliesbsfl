@@ -116,13 +116,8 @@ function handleFormSubmission(e) {
     const requiresMessage = form.getAttribute('data-requires-message') !== 'false';
     
     // Basic validation
-    if (!name || !email || (requiresMessage && !message)) {
-        showNotification('Please fill in all required fields.', 'error');
-        return;
-    }
-    
     if (!isValidEmail(email)) {
-        showNotification('Please enter a valid email address.', 'error');
+        showNotification(email ? 'Please enter a valid email address.' : 'Please enter your email address.', 'error');
         return;
     }
     

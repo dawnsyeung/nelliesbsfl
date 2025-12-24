@@ -295,8 +295,8 @@
                     <input type="hidden" name="fbclid" id="fbclid" value="" />
 
                     <div class="form__group">
-                        <label for="bulk_buyer_type">I’m buying for*</label>
-                        <select id="bulk_buyer_type" name="buyer_type" class="form__input" required>
+                        <label for="bulk_buyer_type">I’m buying for</label>
+                        <select id="bulk_buyer_type" name="buyer_type" class="form__input">
                             <option value="" disabled selected>Select one</option>
                             <option value="Ranch">Ranch</option>
                             <option value="Homestead">Homestead</option>
@@ -306,7 +306,7 @@
                     </div>
 
                     <div class="form__group">
-                        <input type="text" name="name" class="form__input" placeholder="Name*" required />
+                        <input type="text" name="name" class="form__input" placeholder="Name" />
                     </div>
 
                     <div class="form__group">
@@ -318,8 +318,8 @@
                     </div>
 
                     <div class="form__group">
-                        <label for="bulk_format">Preferred format*</label>
-                        <select id="bulk_format" name="preferred_format" class="form__input" required>
+                        <label for="bulk_format">Preferred format</label>
+                        <select id="bulk_format" name="preferred_format" class="form__input">
                             <option value="" disabled selected>Select one</option>
                             <option value="Bulk">Bulk packaging</option>
                             <option value="22 lb bags">22 lb bags</option>
@@ -328,11 +328,11 @@
                     </div>
 
                     <div class="form__group">
-                        <input type="text" name="estimated_lbs" class="form__input" placeholder="Estimated quantity in lbs (500+)*" required />
+                        <input type="text" name="estimated_lbs" class="form__input" placeholder="Estimated quantity in lbs (500+)" />
                     </div>
 
                     <div class="form__group">
-                        <input type="text" name="ship_to_zip" class="form__input" placeholder="Ship-to ZIP / Postal code*" required />
+                        <input type="text" name="ship_to_zip" class="form__input" placeholder="Ship-to ZIP / Postal code" />
                     </div>
 
                     <div class="form__group">
@@ -383,7 +383,7 @@
                 <p class="page-section__subtitle">Prices are private. We may counteroffer on delivery window, packaging lead time, or minimum lot size.</p>
 
                 <div class="page-card offer-board-form-card">
-                    <form id="offer-board-form" action="https://formspree.io/f/xjkeljzv" method="POST" data-disable-global-handler="true" novalidate>
+                    <form id="offer-board-form" action="https://formspree.io/f/xjkeljzv" method="POST" data-disable-global-handler="true">
                         <input type="text" name="_gotcha" value="" tabindex="-1" autocomplete="off" class="offer-board-hp" aria-hidden="true">
                         <input type="hidden" name="_subject" value="Offer Board: Buyer Request">
                         <input type="hidden" name="_next" value="https://nelliesbsfl.com/offer-board-thanks.html">
@@ -393,12 +393,12 @@
                             <h3 class="offer-board-section__title">Buyer info</h3>
                             <div class="onboarding-grid">
                                 <div class="form__group">
-                                    <label for="company_name">Company name*</label>
-                                    <input id="company_name" name="company_name" class="form__input" type="text" required>
+                                    <label for="company_name">Company name</label>
+                                    <input id="company_name" name="company_name" class="form__input" type="text">
                                 </div>
                                 <div class="form__group">
-                                    <label for="contact_name">Contact name*</label>
-                                    <input id="contact_name" name="contact_name" class="form__input" type="text" required>
+                                    <label for="contact_name">Contact name</label>
+                                    <input id="contact_name" name="contact_name" class="form__input" type="text">
                                 </div>
                                 <div class="form__group">
                                     <label for="email">Email*</label>
@@ -413,8 +413,8 @@
                                     <input id="website" name="website" class="form__input" type="url" placeholder="https://">
                                 </div>
                                 <div class="form__group">
-                                    <label for="shipping_region">Region*</label>
-                                    <select id="shipping_region" name="shipping_region" class="form__input" required>
+                                    <label for="shipping_region">Region</label>
+                                    <select id="shipping_region" name="shipping_region" class="form__input">
                                         <option value="" selected disabled>Select region</option>
                                         <option value="TX">TX</option>
                                         <option value="Gulf Coast">Gulf Coast</option>
@@ -436,16 +436,16 @@
                             <h3 class="offer-board-section__title">Product config</h3>
                             <div class="onboarding-grid">
                                 <div class="form__group">
-                                    <label for="grade">Grade*</label>
-                                    <select id="grade" name="grade" class="form__input" required>
+                                    <label for="grade">Grade</label>
+                                    <select id="grade" name="grade" class="form__input">
                                         <option value="" selected disabled>Select grade</option>
                                         <option value="A">Grade A</option>
                                         <option value="B">Grade B</option>
                                     </select>
                                 </div>
                                 <div class="form__group">
-                                    <label for="format">Format*</label>
-                                    <select id="format" name="format" class="form__input" required>
+                                    <label for="format">Format</label>
+                                    <select id="format" name="format" class="form__input">
                                         <option value="" selected disabled>Select format</option>
                                         <option value="bulk">Bulk</option>
                                         <option value="packaged">Packaged</option>
@@ -458,21 +458,21 @@
                             <h3 class="offer-board-section__title">Request terms</h3>
                             <div class="onboarding-grid">
                                 <div class="form__group">
-                                    <label for="quantity_lbs">Quantity (lbs)*</label>
-                                    <input id="quantity_lbs" name="quantity_lbs" class="form__input" type="number" min="250" max="500000" step="1" required>
+                                    <label for="quantity_lbs">Quantity (lbs)</label>
+                                    <input id="quantity_lbs" name="quantity_lbs" class="form__input" type="number" min="250" max="500000" step="1">
                                     <div class="offer-board-helper">Minimum 250 lbs. Typical lots are 500–50,000+ lbs.</div>
                                 </div>
                                 <div class="form__group">
-                                    <label for="target_price_per_lb">Target price per lb (USD)*</label>
-                                    <input id="target_price_per_lb" name="target_price_per_lb" class="form__input" type="number" min="0" step="0.01" required>
+                                    <label for="target_price_per_lb">Target price per lb (USD)</label>
+                                    <input id="target_price_per_lb" name="target_price_per_lb" class="form__input" type="number" min="0" step="0.01">
                                 </div>
                                 <div class="form__group">
-                                    <label for="delivery_start_date">Delivery start date*</label>
-                                    <input id="delivery_start_date" name="delivery_start_date" class="form__input" type="date" required>
+                                    <label for="delivery_start_date">Delivery start date</label>
+                                    <input id="delivery_start_date" name="delivery_start_date" class="form__input" type="date">
                                 </div>
                                 <div class="form__group">
-                                    <label for="delivery_frequency">Delivery frequency*</label>
-                                    <select id="delivery_frequency" name="delivery_frequency" class="form__input" required>
+                                    <label for="delivery_frequency">Delivery frequency</label>
+                                    <select id="delivery_frequency" name="delivery_frequency" class="form__input">
                                         <option value="" selected disabled>Select frequency</option>
                                         <option value="one_time">One-time</option>
                                         <option value="monthly">Monthly</option>
@@ -480,7 +480,7 @@
                                     </select>
                                 </div>
                                 <div class="form__group" id="frequency_months_group" hidden>
-                                    <label for="frequency_months">Duration (months)*</label>
+                                    <label for="frequency_months">Duration (months)</label>
                                     <select id="frequency_months" name="frequency_months" class="form__input">
                                         <option value="" selected disabled>Select duration</option>
                                         <option value="3">3</option>
@@ -501,7 +501,7 @@
                                 <p class="offer-board-helper">Private label requires onboarding; we will confirm feasibility and timeline.</p>
                             </div>
                             <div class="form__group" id="packaging_notes_group" hidden>
-                                <label for="packaging_notes">Private label notes*</label>
+                                <label for="packaging_notes">Private label notes</label>
                                 <textarea id="packaging_notes" name="packaging_notes" class="form__textarea" rows="4" placeholder="Bag size, brand/label assets, compliance needs, lead time expectations"></textarea>
                             </div>
                         </div>
@@ -653,12 +653,12 @@
           const f = (frequency && frequency.value) ? frequency.value : '';
           const needsMonths = (f === 'monthly' || f === 'quarterly');
           if (frequencyMonthsGroup) frequencyMonthsGroup.hidden = !needsMonths;
-          if (frequencyMonths) frequencyMonths.required = needsMonths;
+          if (frequencyMonths) frequencyMonths.required = false;
           if (!needsMonths && frequencyMonths) frequencyMonths.value = '';
 
           const pl = privateLabel && privateLabel.checked;
           if (packagingNotesGroup) packagingNotesGroup.hidden = !pl;
-          if (packagingNotes) packagingNotes.required = pl;
+          if (packagingNotes) packagingNotes.required = false;
           if (!pl && packagingNotes) packagingNotes.value = '';
         }
 
