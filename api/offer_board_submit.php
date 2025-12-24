@@ -145,48 +145,39 @@ $consentMarketing = offer_board_normalize_bool($_POST['consent_marketing'] ?? nu
 
 $fieldErrors = [];
 
-if ($companyName === '') $fieldErrors['company_name'] = 'Company name is required.';
-if ($contactName === '') $fieldErrors['contact_name'] = 'Contact name is required.';
 if ($email === '') {
     $fieldErrors['email'] = 'Email is required.';
 } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $fieldErrors['email'] = 'Please enter a valid email.';
 }
 
+// Only email is required. Everything else is optional, but the DB schema requires non-null values.
+// Normalize optional fields into safe defaults.
 $allowedRegions = ['TX', 'Gulf Coast', 'Midwest', 'Northeast', 'West', 'Canada', 'Other'];
 if ($shippingRegion === '' || !in_array($shippingRegion, $allowedRegions, true)) {
-    $fieldErrors['shipping_region'] = 'Please select a region.';
+    $shippingRegion = 'Other';
 }
 
-if (!in_array($grade, ['A', 'B'], true)) $fieldErrors['grade'] = 'Please select Grade A or B.';
-if (!in_array($format, ['bulk', 'packaged'], true)) $fieldErrors['format'] = 'Please select Bulk or Packaged.';
+if (!in_array($grade, ['A', 'B'], true)) $grade = 'A';
+if (!in_array($format, ['bulk', 'packaged'], true)) $format = 'bulk';
 
-if ($quantityLbs < 250 || $quantityLbs > 500000) {
-    $fieldErrors['quantity_lbs'] = 'Quantity must be between 250 and 500,000 lbs.';
-}
+if ($quantityLbs < 0) $quantityLbs = 0;
+if ($targetPrice < 0) $targetPrice = 0.0;
 
-if ($targetPrice <= 0) {
-    $fieldErrors['target_price_per_lb'] = 'Target price per lb is required.';
-}
-
-if ($deliveryStart === '' || !offer_board_validate_date_ymd($deliveryStart)) {
-    $fieldErrors['delivery_start_date'] = 'Delivery start date is required.';
+if ($deliveryStart !== '' && !offer_board_validate_date_ymd($deliveryStart)) {
+    $deliveryStart = '';
 }
 
 if (!in_array($deliveryFrequency, ['one_time', 'monthly', 'quarterly'], true)) {
-    $fieldErrors['delivery_frequency'] = 'Please select a delivery frequency.';
+    $deliveryFrequency = 'one_time';
 }
 
 if (in_array($deliveryFrequency, ['monthly', 'quarterly'], true)) {
     if (!in_array($frequencyMonths, [3, 6, 12], true)) {
-        $fieldErrors['frequency_months'] = 'Please select a duration (3, 6, or 12 months).';
+        $frequencyMonths = 0;
     }
 } else {
     $frequencyMonths = 0;
-}
-
-if ($privateLabel === 1 && $packagingNotes === '') {
-    $fieldErrors['packaging_notes'] = 'Please add notes for private label packaging (bag size, label assets, lead time, etc.).';
 }
 
 if (!empty($fieldErrors)) {
