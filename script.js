@@ -225,7 +225,8 @@ function removeNotification(notification) {
 }
 
 function setupGuideDownloadForms() {
-    const forms = document.querySelectorAll('form.guide-form[action*="formspree.io"]');
+    // Guide forms may post to Formspree directly or to our capture endpoint.
+    const forms = document.querySelectorAll('form.guide-form');
     if (!forms.length) {
         return;
     }
@@ -347,6 +348,75 @@ function setupGuideDownloadForms() {
                 }
             }
         });
+    });
+}
+
+function setupHiddenAdminLink() {
+    // This does NOT bypass auth; it only reveals a link to the admin area.
+    const footerContainer = document.querySelector('.footer__container');
+    if (!footerContainer) return;
+
+    const adminHref = '/admin/exports/';
+    const storageKey = 'nellies_show_admin_link_v1';
+
+    function ensureLink() {
+        let link = document.getElementById('nellies-admin-link');
+        if (link) return link;
+        link = document.createElement('a');
+        link.id = 'nellies-admin-link';
+        link.href = adminHref;
+        link.className = 'footer__link';
+        link.textContent = 'Admin';
+        link.style.display = 'none';
+        footerContainer.appendChild(link);
+        return link;
+    }
+
+    function setVisible(visible) {
+        const link = ensureLink();
+        link.style.display = visible ? 'inline' : 'none';
+    }
+
+    // Show if already unlocked.
+    if (localStorage.getItem(storageKey) === '1') {
+        setVisible(true);
+        return;
+    }
+
+    // Unlock using URL param once: ?admin=1
+    try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('admin') === '1') {
+            localStorage.setItem(storageKey, '1');
+            setVisible(true);
+            return;
+        }
+    } catch (e) {
+        // no-op
+    }
+
+    // Unlock by clicking the logo 7 times within 4 seconds.
+    const logo = document.querySelector('.nav__logo-img') || document.querySelector('.nav__logo');
+    if (!logo) return;
+    let clicks = 0;
+    let timer = null;
+
+    logo.addEventListener('click', () => {
+        clicks += 1;
+        if (timer) window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+            clicks = 0;
+            timer = null;
+        }, 4000);
+
+        if (clicks >= 7) {
+            localStorage.setItem(storageKey, '1');
+            setVisible(true);
+            clicks = 0;
+            if (timer) window.clearTimeout(timer);
+            timer = null;
+            showNotification('Admin link enabled (footer).', 'success');
+        }
     });
 }
 
@@ -865,6 +935,9 @@ function init() {
 
     // Setup guide download forms (stay on-site after submit)
     setupGuideDownloadForms();
+
+    // Hidden admin link (requires server-side login)
+    setupHiddenAdminLink();
     
     // Setup image map helper for development
     setupImageMapHelper();
