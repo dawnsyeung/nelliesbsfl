@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Exports - Nellie's BSFL</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="page">
+  <main>
+    <section class="page-hero">
+      <div class="page-hero__container">
+        <p class="page-hero__eyebrow">Admin</p>
+        <h1 class="page-hero__title">Exports</h1>
+        <p class="page-hero__subtitle">Download submissions from Vercel Postgres (requires your admin token).</p>
+      </div>
+    </section>
+
+    <section class="page-section page-section--alt">
+      <div class="page-section__container">
+        <div class="page-card" style="max-width: 760px; margin: 0 auto;">
+          <h2 style="margin-bottom: 0.75rem;">Access</h2>
+          <p style="color: rgba(255,255,255,0.75); margin-bottom: 1rem;">
+            Enter your <code>ADMIN_TOKEN</code> (stored in Vercel env vars). This page stores it in your browser localStorage.
+          </p>
+
+          <div class="onboarding-grid">
+            <div class="form__group">
+              <label for="admin-token">Admin token</label>
+              <input id="admin-token" class="form__input" type="password" placeholder="Paste ADMIN_TOKEN" />
+            </div>
+            <div class="form__group" style="align-self: end;">
+              <button id="save-token" class="btn btn--primary" type="button">Save token</button>
+            </div>
+          </div>
+
+          <div id="export-status" style="margin-top: 0.75rem; color: rgba(255,255,255,0.85);"></div>
+        </div>
+
+        <div class="page-card" style="margin-top: 1.5rem;">
+          <h2 style="margin-bottom: 0.75rem;">Download</h2>
+          <div class="page-section__grid page-section__grid--two-fixed">
+            <div class="page-card">
+              <h3>Generic forms</h3>
+              <p style="color: rgba(255,255,255,0.75);">All non-offerboard, non-registration forms.</p>
+              <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top: 0.75rem;">
+                <button class="btn btn--primary" data-db="form_submissions" data-format="json" type="button">JSON</button>
+                <button class="btn btn--secondary" data-db="form_submissions" data-format="csv" type="button">CSV</button>
+              </div>
+            </div>
+            <div class="page-card">
+              <h3>Customer registrations</h3>
+              <p style="color: rgba(255,255,255,0.75);">Onboarding submissions.</p>
+              <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top: 0.75rem;">
+                <button class="btn btn--primary" data-db="customer_registrations" data-format="json" type="button">JSON</button>
+                <button class="btn btn--secondary" data-db="customer_registrations" data-format="csv" type="button">CSV</button>
+              </div>
+            </div>
+            <div class="page-card">
+              <h3>Offer board requests</h3>
+              <p style="color: rgba(255,255,255,0.75);">Buyer requests from the offer board.</p>
+              <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top: 0.75rem;">
+                <button class="btn btn--primary" data-db="offer_board_requests" data-format="json" type="button">JSON</button>
+                <button class="btn btn--secondary" data-db="offer_board_requests" data-format="csv" type="button">CSV</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var storageKey = 'nellies_admin_token_v1';
+      var tokenInput = document.getElementById('admin-token');
+      var statusEl = document.getElementById('export-status');
+      var saveBtn = document.getElementById('save-token');
+
+      function setStatus(text, isError) {
+        if (!statusEl) return;
+        statusEl.textContent = text || '';
+        statusEl.style.color = isError ? 'rgba(255,180,180,0.95)' : 'rgba(208,255,236,0.92)';
+      }
+
+      function getToken() {
+        try { return localStorage.getItem(storageKey) || ''; } catch (e) { return ''; }
+      }
+
+      function setToken(val) {
+        try { localStorage.setItem(storageKey, val); } catch (e) {}
+      }
+
+      var existing = getToken();
+      if (existing && tokenInput) {
+        tokenInput.value = existing;
+        setStatus('Token loaded from this browser.', false);
+      }
+
+      if (saveBtn) {
+        saveBtn.addEventListener('click', function () {
+          var t = (tokenInput && tokenInput.value) ? tokenInput.value.trim() : '';
+          if (!t) return setStatus('Please paste a token first.', true);
+          setToken(t);
+          setStatus('Token saved on this browser.', false);
+        });
+      }
+
+      async function download(db, format) {
+        var token = (tokenInput && tokenInput.value) ? tokenInput.value.trim() : getToken();
+        if (!token) {
+          setStatus('Missing token. Paste it above and click Save.', true);
+          return;
+        }
+        setStatus('Preparing download…', false);
+        var url = '/api/admin/export?db=' + encodeURIComponent(db) + '&format=' + encodeURIComponent(format);
+        var resp = await fetch(url, { headers: { 'x-admin-token': token } });
+        if (!resp.ok) {
+          setStatus('Export failed (' + resp.status + '). Check token and try again.', true);
+          return;
+        }
+        var blob = await resp.blob();
+        var cd = resp.headers.get('content-disposition') || '';
+        var match = cd.match(/filename="([^"]+)"/);
+        var filename = match && match[1] ? match[1] : (db + '.' + format);
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(a.href);
+        a.remove();
+        setStatus('Downloaded ' + filename, false);
+      }
+
+      document.querySelectorAll('button[data-db][data-format]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          download(btn.getAttribute('data-db'), btn.getAttribute('data-format'));
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
+

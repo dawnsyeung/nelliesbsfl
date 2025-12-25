@@ -306,5 +306,53 @@ if (offer_board_is_likely_browser_form_post()) {
     offer_board_redirect('/offer-board-thanks.html');
 }
 
+// Optional forwarding to Formspree (enabled by default to preserve existing workflow)
+// To disable, set FORMSPREE_FORWARDING_ENABLED=0
+$forwardingDisabled = strtolower(offer_board_env('FORMSPREE_FORWARDING_ENABLED', '1')) === '0'
+    || strtolower(offer_board_env('FORMSPREE_FORWARDING_ENABLED', '1')) === 'false'
+    || strtolower(offer_board_env('FORMSPREE_FORWARDING_ENABLED', '1')) === 'no';
+
+if (!$forwardingDisabled) {
+    $defaultFormspreeEndpoint = 'https://formspree.io/f/xjkeljzv';
+    $formspreeEndpoint = offer_board_env('FORMSPREE_ENDPOINT', $defaultFormspreeEndpoint);
+
+    // Forward the original form payload + server-side identifiers.
+    $forwardPayload = $_POST;
+    $forwardPayload['request_id'] = $requestId;
+    $forwardPayload['captured_at_utc'] = $createdAt;
+    $forwardPayload['captured_by'] = 'nelliesbsfl_offer_board_submit';
+
+    $body = http_build_query($forwardPayload);
+    try {
+        if (function_exists('curl_init')) {
+            $ch = curl_init($formspreeEndpoint);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Accept: application/json',
+                'Content-Type: application/x-www-form-urlencoded',
+            ]);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            @curl_exec($ch);
+            curl_close($ch);
+        } else {
+            $context = stream_context_create([
+                'http' => [
+                    'method' => 'POST',
+                    'header' => "Accept: application/json\r\nContent-Type: application/x-www-form-urlencoded\r\n",
+                    'content' => $body,
+                    'timeout' => 10,
+                    'ignore_errors' => true,
+                ],
+            ]);
+            @file_get_contents($formspreeEndpoint, false, $context);
+        }
+    } catch (Throwable $e) {
+        // no-op (DB already contains the request)
+    }
+}
+
 offer_board_json_response(200, ['success' => true, 'id' => $requestId]);
 
