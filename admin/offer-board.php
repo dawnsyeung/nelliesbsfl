@@ -3,7 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/_auth.php';
 requireAuth();
 
-require_once __DIR__ . '/../api/offer_board_db.php';
+require_once __DIR__ . '/../php-api/offer_board_db.php';
 
 function ob_safe(string $value): string {
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
