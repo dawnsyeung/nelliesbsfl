@@ -5,7 +5,7 @@
   "description": "Static site with Vercel serverless form capture",
   "license": "UNLICENSED",
   "scripts": {
-    "build": "node -e \"console.log('No build step for static HTML site')\""
+    "build": "node scripts/build-static.js"
   },
   "dependencies": {
     "@vercel/postgres": "^0.10.0",
