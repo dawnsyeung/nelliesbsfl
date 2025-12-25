@@ -1,6 +1,15 @@
 .DS_Store
 *.log
 
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vercel
+.env
+.env.*
+
 # Local/private data
 /data/*.sqlite
 /data/*.sqlite-wal
