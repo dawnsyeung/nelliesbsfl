@@ -1,0 +1,12 @@
+{
+  "name": "nelliesbsfl-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static site with Vercel serverless form capture",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0",
+    "busboy": "^1.6.0"
+  }
+}
+

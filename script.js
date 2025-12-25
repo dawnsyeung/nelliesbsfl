@@ -356,7 +356,7 @@ function setupHiddenAdminLink() {
     const footerContainer = document.querySelector('.footer__container');
     if (!footerContainer) return;
 
-    const adminHref = '/admin/exports/';
+    const adminHref = '/admin/exports.html';
     const storageKey = 'nellies_show_admin_link_v1';
 
     function ensureLink() {
