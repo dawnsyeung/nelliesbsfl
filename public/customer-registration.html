@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="First-time customer onboarding registration form." />
+  <title>Customer Registration - Nellie's BSFL</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="posthog.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17813054995"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17813054995');
+</script>
+</head>
+<body class="page">
+  <header class="header">
+    <nav class="nav">
+      <div class="nav__container">
+        <a class="nav__logo" href="index.html" aria-label="Nellie's Black Soldier Fly Larvae Home">
+          <img src="nbsfllogo.PNG" alt="Nellie's Black Soldier Fly Larvae Logo" class="nav__logo-img">
+        </a>
+        <div class="nav__menu">
+          <ul class="nav__menu-list">
+            <li class="nav__item"><a href="orders.html" class="nav__link">Offer Board</a></li>
+            <li class="nav__item"><a href="valorization-process.html" class="nav__link">Valorization and Products</a></li>
+            <li class="nav__item"><a href="nutrition.html" class="nav__link">Nutrition</a></li>
+            <li class="nav__item"><a href="frass-benefits.html" class="nav__link">Frass Benefits</a></li>
+            <li class="nav__item"><a href="partnerships.html" class="nav__link">Partnerships</a></li>
+            <li class="nav__item"><a href="resources.html" class="nav__link">Resources</a></li>
+          </ul>
+          <div class="nav__actions">
+            <a href="index.html#contact" class="nav__link nav__cta">Contact</a>
+          </div>
+        </div>
+        <div class="nav__toggle" id="nav-toggle">
+          <span class="nav__bar"></span>
+          <span class="nav__bar"></span>
+          <span class="nav__bar"></span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="page-hero__container">
+        <p class="page-hero__eyebrow">Customer onboarding</p>
+        <h1 class="page-hero__title">First-time Customer Registration</h1>
+        <p class="page-hero__subtitle">
+          Submit your onboarding details securely. Submissions are recorded for internal review and follow-up.
+        </p>
+      </div>
+    </section>
+
+    <section class="page-section page-section--alt" aria-label="Customer registration form">
+      <div class="page-section__container">
+        <form class="onboarding-form" action="/api/customer_registration" method="POST" autocomplete="on">
+          <input type="hidden" name="form_name" value="Customer Registration" />
+          <div id="onboarding-confirmation" class="onboarding-confirmation" role="status" aria-live="polite" hidden>
+            <h2 class="onboarding-confirmation__title">Thanks — we received your registration.</h2>
+            <p class="onboarding-confirmation__copy">Our team will review your submission and follow up shortly.</p>
+            <div class="onboarding-confirmation__actions">
+              <a class="btn btn--secondary" href="valorization-process.html#products">View Products & Ordering</a>
+              <a class="btn btn--primary" href="index.html">Back to Home</a>
+            </div>
+          </div>
+
+          <!-- Form submission helpers -->
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+          <input type="hidden" name="_subject" value="New customer registration submission" />
+          <input type="hidden" name="_next" value="https://www.nelliesbsfl.com/customer-registration-thank-you.html" />
+          <input type="hidden" name="form_name" value="First-time Customer Registration" />
+          <!-- Set Reply-To for Formspree (populated by JS) -->
+          <input type="hidden" name="email" id="formspree_email" value="" />
+          <input type="hidden" name="name" id="formspree_name" value="" />
+          <!-- 1. Company Information -->
+          <div class="onboarding-section">
+            <h2 class="onboarding-section__title">1. Company Information</h2>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="legal_business_name">Legal Business Name</label>
+                <input class="form__input" id="legal_business_name" name="legal_business_name" type="text" />
+              </div>
+
+              <div class="form__group">
+                <label for="operating_trade_name">Operating/Trade Name (if different)</label>
+                <input class="form__input" id="operating_trade_name" name="operating_trade_name" type="text" />
+              </div>
+            </div>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label>Business Type</label>
+                <div class="onboarding-checkbox-grid" role="group" aria-label="Business type">
+                  <label class="form__checkbox"><input type="checkbox" name="business_type[]" value="Corporation"> Corporation</label>
+                  <label class="form__checkbox"><input type="checkbox" name="business_type[]" value="LLC"> LLC</label>
+                  <label class="form__checkbox"><input type="checkbox" name="business_type[]" value="Partnership"> Partnership</label>
+                  <label class="form__checkbox"><input type="checkbox" name="business_type[]" value="Sole Proprietor"> Sole Proprietor</label>
+                  <label class="form__checkbox"><input type="checkbox" name="business_type[]" value="Other"> Other</label>
+                </div>
+                <input class="form__input" name="business_type_other" type="text" placeholder="If Other, specify" />
+              </div>
+
+              <div class="form__group">
+                <label>Industry Sector</label>
+                <div class="onboarding-checkbox-grid" role="group" aria-label="Industry sector">
+                  <label class="form__checkbox"><input type="checkbox" name="industry_sector[]" value="Pet Food"> Pet Food</label>
+                  <label class="form__checkbox"><input type="checkbox" name="industry_sector[]" value="Reptile Supply"> Reptile Supply</label>
+                  <label class="form__checkbox"><input type="checkbox" name="industry_sector[]" value="Feed Manufacturing"> Feed Manufacturing</label>
+                  <label class="form__checkbox"><input type="checkbox" name="industry_sector[]" value="Retail"> Retail</label>
+                  <label class="form__checkbox"><input type="checkbox" name="industry_sector[]" value="Distributor"> Distributor</label>
+                  <label class="form__checkbox"><input type="checkbox" name="industry_sector[]" value="Other"> Other</label>
+                </div>
+                <input class="form__input" name="industry_sector_other" type="text" placeholder="If Other, specify" />
+              </div>
+            </div>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="head_office_street">Head Office Address - Street</label>
+                <input class="form__input" id="head_office_street" name="head_office_street" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="head_office_city">City</label>
+                <input class="form__input" id="head_office_city" name="head_office_city" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="head_office_state">State/Province</label>
+                <input class="form__input" id="head_office_state" name="head_office_state" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="head_office_zip">Zip/Postal</label>
+                <input class="form__input" id="head_office_zip" name="head_office_zip" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="head_office_country">Country</label>
+                <input class="form__input" id="head_office_country" name="head_office_country" type="text" />
+              </div>
+            </div>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="website">Website</label>
+                <input class="form__input" id="website" name="website" type="url" placeholder="https://example.com" />
+              </div>
+              <div class="form__group">
+                <label for="general_email">General Email</label>
+                <input class="form__input" id="general_email" name="general_email" type="email" />
+              </div>
+              <div class="form__group">
+                <label for="main_phone">Main Phone Number</label>
+                <input class="form__input" id="main_phone" name="main_phone" type="tel" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Primary Business Contact -->
+          <div class="onboarding-section">
+            <h2 class="onboarding-section__title">2. Primary Business Contact (Official Representative)</h2>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="primary_contact_name">Name</label>
+                <input class="form__input" id="primary_contact_name" name="primary_contact_name" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="primary_contact_title">Title/Role</label>
+                <input class="form__input" id="primary_contact_title" name="primary_contact_title" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="primary_contact_email">Email*</label>
+                <input class="form__input" id="primary_contact_email" name="primary_contact_email" type="email" required />
+              </div>
+              <div class="form__group">
+                <label for="primary_contact_phone">Direct Phone</label>
+                <input class="form__input" id="primary_contact_phone" name="primary_contact_phone" type="tel" />
+              </div>
+            </div>
+
+            <div class="onboarding-checkbox-grid" role="group" aria-label="Primary contact authorizations">
+              <label class="form__checkbox"><input type="checkbox" name="primary_contact_authorizations[]" value="Authorized to place orders"> Authorized to place orders</label>
+              <label class="form__checkbox"><input type="checkbox" name="primary_contact_authorizations[]" value="Authorized to negotiate pricing"> Authorized to negotiate pricing</label>
+              <label class="form__checkbox"><input type="checkbox" name="primary_contact_authorizations[]" value="Authorized to sign agreements"> Authorized to sign agreements</label>
+            </div>
+          </div>
+
+          <!-- 3. Additional Locations -->
+          <div class="onboarding-section">
+            <h2 class="onboarding-section__title">3. Additional Company Locations (If Applicable)</h2>
+            <p class="onboarding-section__note">Add up to three additional locations.</p>
+
+            <div class="onboarding-table">
+              <div class="onboarding-table__head">
+                <div>Location Name/Function</div>
+                <div>Address</div>
+                <div>Contact Person</div>
+                <div>Phone/Email</div>
+              </div>
+              <div class="onboarding-table__row">
+                <input class="form__input" name="location_1_name" type="text" />
+                <input class="form__input" name="location_1_address" type="text" />
+                <input class="form__input" name="location_1_contact" type="text" />
+                <input class="form__input" name="location_1_phone_email" type="text" />
+              </div>
+              <div class="onboarding-table__row">
+                <input class="form__input" name="location_2_name" type="text" />
+                <input class="form__input" name="location_2_address" type="text" />
+                <input class="form__input" name="location_2_contact" type="text" />
+                <input class="form__input" name="location_2_phone_email" type="text" />
+              </div>
+              <div class="onboarding-table__row">
+                <input class="form__input" name="location_3_name" type="text" />
+                <input class="form__input" name="location_3_address" type="text" />
+                <input class="form__input" name="location_3_contact" type="text" />
+                <input class="form__input" name="location_3_phone_email" type="text" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Shipping & Receiving -->
+          <div class="onboarding-section">
+            <h2 class="onboarding-section__title">4. Shipping & Receiving Information</h2>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="delivery_street">Primary Delivery Address (if different) - Street</label>
+                <input class="form__input" id="delivery_street" name="delivery_street" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="delivery_city">City</label>
+                <input class="form__input" id="delivery_city" name="delivery_city" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="delivery_state">State</label>
+                <input class="form__input" id="delivery_state" name="delivery_state" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="delivery_zip">Zip</label>
+                <input class="form__input" id="delivery_zip" name="delivery_zip" type="text" />
+              </div>
+            </div>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="receiving_hours">Receiving Hours</label>
+                <input class="form__input" id="receiving_hours" name="receiving_hours" type="text" />
+              </div>
+              <div class="form__group">
+                <label>Dock / Forklift Available?</label>
+                <div class="onboarding-checkbox-grid" role="group" aria-label="Dock or forklift">
+                  <label class="form__checkbox"><input type="radio" name="dock_forklift_available" value="Yes"> Yes</label>
+                  <label class="form__checkbox"><input type="radio" name="dock_forklift_available" value="No"> No</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form__group">
+              <label for="receiving_requirements">Receiving Requirements or Restrictions</label>
+              <textarea class="form__textarea" id="receiving_requirements" name="receiving_requirements" rows="4"></textarea>
+            </div>
+
+            <div class="form__group">
+              <label>Preferred Shipment Size</label>
+              <div class="onboarding-checkbox-grid" role="group" aria-label="Preferred shipment size">
+                <label class="form__checkbox"><input type="radio" name="preferred_shipment_size" value="Full pallet"> Full pallet</label>
+                <label class="form__checkbox"><input type="radio" name="preferred_shipment_size" value="Half pallet"> Half pallet</label>
+                <label class="form__checkbox"><input type="radio" name="preferred_shipment_size" value="Less-than-pallet"> Less-than-pallet</label>
+                <label class="form__checkbox"><input type="radio" name="preferred_shipment_size" value="Bulk"> Bulk</label>
+              </div>
+              <input class="form__input" name="preferred_shipment_size_bulk_details" type="text" placeholder="If Bulk, specify details" />
+            </div>
+          </div>
+
+          <!-- 5. Accounts Payable -->
+          <div class="onboarding-section">
+            <h2 class="onboarding-section__title">5. Accounts Payable Information</h2>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="billing_contact_name">Billing Contact Name</label>
+                <input class="form__input" id="billing_contact_name" name="billing_contact_name" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="billing_email">Billing Email</label>
+                <input class="form__input" id="billing_email" name="billing_email" type="email" />
+              </div>
+              <div class="form__group">
+                <label for="billing_phone">Billing Phone</label>
+                <input class="form__input" id="billing_phone" name="billing_phone" type="tel" />
+              </div>
+            </div>
+
+            <div class="form__group">
+              <label>Preferred Invoice Method</label>
+              <div class="onboarding-checkbox-grid" role="group" aria-label="Preferred invoice method">
+                <label class="form__checkbox"><input type="radio" name="preferred_invoice_method" value="Email PDF"> Email PDF</label>
+                <label class="form__checkbox"><input type="radio" name="preferred_invoice_method" value="EDI / Portal"> EDI / Portal</label>
+                <label class="form__checkbox"><input type="radio" name="preferred_invoice_method" value="Other"> Other</label>
+              </div>
+              <input class="form__input" name="preferred_invoice_method_other" type="text" placeholder="If Other, specify" />
+            </div>
+
+            <div class="form__group">
+              <label for="billing_address_different">Billing Address (if different)</label>
+              <textarea class="form__textarea" id="billing_address_different" name="billing_address_different" rows="3"></textarea>
+            </div>
+          </div>
+
+          <!-- 6. Credit Evaluation -->
+          <div class="onboarding-section">
+            <h2 class="onboarding-section__title">6. Credit Evaluation (Optional for Prepaid Customers)</h2>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="ein">Federal Tax ID / EIN</label>
+                <input class="form__input" id="ein" name="ein" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="years_in_business">Years in Business</label>
+                <input class="form__input" id="years_in_business" name="years_in_business" type="text" />
+              </div>
+            </div>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="bank_name">Bank Reference (optional) - Bank Name</label>
+                <input class="form__input" id="bank_name" name="bank_name" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="bank_contact">Contact</label>
+                <input class="form__input" id="bank_contact" name="bank_contact" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="bank_phone">Phone</label>
+                <input class="form__input" id="bank_phone" name="bank_phone" type="tel" />
+              </div>
+            </div>
+
+            <p class="onboarding-section__note">Trade References</p>
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="trade_ref_1_company">1. Company</label>
+                <input class="form__input" id="trade_ref_1_company" name="trade_ref_1_company" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="trade_ref_1_contact">Contact</label>
+                <input class="form__input" id="trade_ref_1_contact" name="trade_ref_1_contact" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="trade_ref_1_phone">Phone</label>
+                <input class="form__input" id="trade_ref_1_phone" name="trade_ref_1_phone" type="tel" />
+              </div>
+            </div>
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="trade_ref_2_company">2. Company</label>
+                <input class="form__input" id="trade_ref_2_company" name="trade_ref_2_company" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="trade_ref_2_contact">Contact</label>
+                <input class="form__input" id="trade_ref_2_contact" name="trade_ref_2_contact" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="trade_ref_2_phone">Phone</label>
+                <input class="form__input" id="trade_ref_2_phone" name="trade_ref_2_phone" type="tel" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 7. Product & Compliance -->
+          <div class="onboarding-section">
+            <h2 class="onboarding-section__title">7. Product & Compliance Information</h2>
+
+            <div class="form__group">
+              <label>Intended Use of BSFL Products</label>
+              <div class="onboarding-checkbox-grid" role="group" aria-label="Intended use">
+                <label class="form__checkbox"><input type="checkbox" name="intended_use[]" value="Reptile Feed"> Reptile Feed</label>
+                <label class="form__checkbox"><input type="checkbox" name="intended_use[]" value="Pet Treats"> Pet Treats</label>
+                <label class="form__checkbox"><input type="checkbox" name="intended_use[]" value="Poultry/Bird Feed"> Poultry/Bird Feed</label>
+                <label class="form__checkbox"><input type="checkbox" name="intended_use[]" value="Aquaculture Feed"> Aquaculture Feed</label>
+                <label class="form__checkbox"><input type="checkbox" name="intended_use[]" value="Retail Resale"> Retail Resale</label>
+                <label class="form__checkbox"><input type="checkbox" name="intended_use[]" value="Other"> Other</label>
+              </div>
+              <input class="form__input" name="intended_use_other" type="text" placeholder="If Other, specify" />
+            </div>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label>Require third-party lab certificates with each shipment?</label>
+                <div class="onboarding-checkbox-grid" role="group" aria-label="Require lab certificates">
+                  <label class="form__checkbox"><input type="radio" name="require_lab_certs" value="Yes"> Yes</label>
+                  <label class="form__checkbox"><input type="radio" name="require_lab_certs" value="No"> No</label>
+                </div>
+              </div>
+              <div class="form__group">
+                <label>Require AAFCO, FDA, or state feed compliance docs?</label>
+                <div class="onboarding-checkbox-grid" role="group" aria-label="Require compliance docs">
+                  <label class="form__checkbox"><input type="radio" name="require_compliance_docs" value="Yes"> Yes</label>
+                  <label class="form__checkbox"><input type="radio" name="require_compliance_docs" value="No"> No</label>
+                </div>
+                <input class="form__input" name="compliance_docs_specify" type="text" placeholder="If yes, specify" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 8. Authorized Signatory -->
+          <div class="onboarding-section">
+            <h2 class="onboarding-section__title">8. Authorized Signatory</h2>
+
+            <div class="onboarding-grid">
+              <div class="form__group">
+                <label for="signatory_name">Name</label>
+                <input class="form__input" id="signatory_name" name="signatory_name" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="signatory_title">Title</label>
+                <input class="form__input" id="signatory_title" name="signatory_title" type="text" />
+              </div>
+              <div class="form__group">
+                <label for="signature_date">Date</label>
+                <input class="form__input" id="signature_date" name="signature_date" type="date" />
+              </div>
+            </div>
+
+            <div class="form__group">
+              <label class="form__checkbox">
+                <input type="checkbox" name="certify_accuracy" value="Yes">
+                By submitting, Customer certifies that all information provided is accurate and authorizes IHT to verify references for credit evaluation.
+              </label>
+            </div>
+          </div>
+
+          <div class="onboarding-actions">
+            <button type="submit" class="btn btn--primary">Submit Registration</button>
+            <p class="onboarding-actions__note">
+              This form is sent securely over HTTPS (when your site is served via TLS). Do not submit sensitive personal data beyond what’s required for onboarding.
+            </p>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__container">
+      <p class="footer__copyright">Copyright © 2025 Nellie's Black Soldier Fly Larvae - All Rights Reserved.</p>
+      <p class="footer__powered">Powered by <a href="#" class="footer__link">Nellie's BSFL</a></p>
+      <p class="footer__links"><a href="customer-registration.html" class="footer__link">Customer Registration</a></p>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
+
