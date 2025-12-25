@@ -46,13 +46,13 @@ requireAuth();
           <div class="page-section__grid page-section__grid--two-fixed">
             <div class="page-card">
               <h3 style="margin-bottom: 0.5rem;">Generic form submissions</h3>
-              <p style="color: rgba(255,255,255,0.75); margin-bottom: 1rem;">Captured by <code>/api/form_capture.php</code>.</p>
+              <p style="color: rgba(255,255,255,0.75); margin-bottom: 1rem;">Captured by <code>/api/form_capture</code>.</p>
               <a class="btn btn--primary" href="/admin/download-db.php?db=form_submissions">Download</a>
             </div>
 
             <div class="page-card">
               <h3 style="margin-bottom: 0.5rem;">Customer registrations</h3>
-              <p style="color: rgba(255,255,255,0.75); margin-bottom: 1rem;">Captured by <code>/api/customer_registration.php</code>.</p>
+              <p style="color: rgba(255,255,255,0.75); margin-bottom: 1rem;">Captured by <code>/api/customer_registration</code>.</p>
               <a class="btn btn--primary" href="/admin/download-db.php?db=customer_registrations">Download</a>
             </div>
 
