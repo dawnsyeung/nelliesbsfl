@@ -283,7 +283,7 @@
                     <input type="hidden" name="request_type" value="Bulk BSFL Quote (500+ lbs)" />
                     <input type="hidden" name="landing_page" value="orders.html" />
                     <input type="hidden" name="_subject" value="Bulk BSFL Quote (500+ lbs)" />
-                    <input type="hidden" name="_next" value="https://nelliesbsfl.com/offer-board-thanks.html" />
+                    <input type="hidden" name="_next" value="https://www.nelliesbsfl.com/bulk-quote-thank-you.html" />
 
                     <!-- UTM / click IDs populated by JS (when present) -->
                     <input type="hidden" name="utm_source" id="utm_source" value="" />
@@ -387,7 +387,7 @@
                     <form id="offer-board-form" action="https://formspree.io/f/xjkeljzv" method="POST" data-disable-global-handler="true">
                         <input type="text" name="_gotcha" value="" tabindex="-1" autocomplete="off" class="offer-board-hp" aria-hidden="true">
                         <input type="hidden" name="_subject" value="Offer Board: Buyer Request">
-                        <input type="hidden" name="_next" value="https://nelliesbsfl.com/offer-board-thanks.html">
+                        <input type="hidden" name="_next" value="https://www.nelliesbsfl.com/offer-board-thanks.html">
                         <input type="hidden" name="source_page" value="orders">
 
                         <div class="offer-board-section">
@@ -742,6 +742,12 @@
 
             try {
               await submitToFormspree(form);
+              const nextInput = form.querySelector('input[name="_next"]');
+              const nextUrl = nextInput ? String(nextInput.value || '').trim() : '';
+              if (nextUrl) {
+                window.location.href = nextUrl;
+                return;
+              }
               form.reset();
               if (afterReset) afterReset();
               openModal(title, message);

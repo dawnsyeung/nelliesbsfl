@@ -133,6 +133,16 @@ function handleFormSubmission(e) {
         return next;
     }
 
+    function resolveNextUrl(nextUrlTemplate) {
+        const template = String(nextUrlTemplate || '').trim();
+        if (!template) return '';
+        // Allow simple template substitution: https://.../thanks.html?type={request_type}
+        return template.replace(/\{([^}]+)\}/g, (_, fieldName) => {
+            const value = formData.get(String(fieldName || '').trim());
+            return encodeURIComponent(value == null ? '' : String(value));
+        });
+    }
+
     async function parseResponseBody(response) {
         const contentType = (response.headers.get('content-type') || '').toLowerCase();
         if (contentType.includes('application/json')) {
@@ -187,7 +197,7 @@ function handleFormSubmission(e) {
                 throw new Error(msg);
             }
 
-            const nextUrl = getNextUrl();
+            const nextUrl = resolveNextUrl(getNextUrl());
             if (nextUrl) {
                 window.location.href = nextUrl;
                 return;
@@ -400,6 +410,20 @@ function setupGuideDownloadForms() {
                             : '';
                     const message = (payload && payload.error) ? String(payload.error) : (messageFromErrors || `Submission failed (${response.status}). Please try again.`);
                     throw new Error(message);
+                }
+
+                const nextInput = form.querySelector('input[name="_next"]');
+                const nextTemplate = nextInput ? String(nextInput.value || '').trim() : '';
+                const nextUrl = nextTemplate
+                    ? nextTemplate.replace(/\{([^}]+)\}/g, (_, fieldName) => {
+                        const value = formData.get(String(fieldName || '').trim());
+                        return encodeURIComponent(value == null ? '' : String(value));
+                    })
+                    : '';
+
+                if (nextUrl) {
+                    window.location.href = nextUrl;
+                    return;
                 }
 
                 form.reset();
@@ -661,6 +685,19 @@ function setupOnboardingForm() {
             if (payload && payload.success === false) {
                 const message = payload.error || 'Registration submission failed. Please try again.';
                 showNotification(message, 'error');
+                return;
+            }
+
+            const nextInput = onboardingForm.querySelector('input[name="_next"]');
+            const nextTemplate = nextInput ? String(nextInput.value || '').trim() : '';
+            const nextUrl = nextTemplate
+                ? nextTemplate.replace(/\{([^}]+)\}/g, (_, fieldName) => {
+                    const value = formData.get(String(fieldName || '').trim());
+                    return encodeURIComponent(value == null ? '' : String(value));
+                })
+                : '';
+            if (nextUrl) {
+                window.location.href = nextUrl;
                 return;
             }
 

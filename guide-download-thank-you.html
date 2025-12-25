@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registration Received - Nellie's BSFL</title>
+  <title>Guide request received - Nellie's BSFL</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="posthog.js"></script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17813054995"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'AW-17813054995');
-</script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17813054995"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17813054995');
+  </script>
 </head>
 <body class="page">
   <header class="header">
@@ -28,7 +27,7 @@
         </a>
         <div class="nav__menu">
           <ul class="nav__menu-list">
-            <li class="nav__item"><a href="orders.html" class="nav__link">Offer Board</a></li>
+            <li class="nav__item"><a href="resources.html" class="nav__link">Resources</a></li>
           </ul>
           <div class="nav__actions">
             <a href="index.html#contact" class="nav__link nav__cta">Contact</a>
@@ -47,16 +46,16 @@
     <section class="page-hero">
       <div class="page-hero__container">
         <p class="page-hero__eyebrow">Thank you</p>
-        <h1 class="page-hero__title">Registration received</h1>
-        <p class="page-hero__subtitle">
-          We’ve received your onboarding submission. Our team will review and follow up shortly.
+        <h1 class="page-hero__title" id="guide-title">Guide request received</h1>
+        <p class="page-hero__subtitle" id="guide-subtitle">
+          We’ve received your request. Please check your inbox shortly.
         </p>
         <p class="page-hero__subtitle">
           If you would like to email us directly, you can reach us at <a href="mailto:dawn@nelliesbsfl.com">dawn@nelliesbsfl.com</a>
         </p>
         <div class="page-hero__meta">
-          <a class="btn btn--primary" href="index.html">Back to Home</a>
-          <a class="btn btn--secondary" href="valorization-process.html#products">View Products & Ordering</a>
+          <a class="btn btn--primary" href="resources.html">Back to Resources</a>
+          <a class="btn btn--secondary" href="index.html">Back to Home</a>
         </div>
       </div>
     </section>
@@ -70,6 +69,24 @@
     </div>
   </footer>
 
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var guide = (params.get('guide') || '').trim();
+        if (!guide) return;
+
+        var titleEl = document.getElementById('guide-title');
+        var subtitleEl = document.getElementById('guide-subtitle');
+
+        if (titleEl) titleEl.textContent = 'Guide request received';
+        if (subtitleEl) subtitleEl.textContent = 'We’ve received your request for “' + guide + '”. Please check your inbox shortly.';
+        document.title = guide + ' - Request Received - Nell\'s BSFL';
+      } catch (e) {
+        // no-op
+      }
+    })();
+  </script>
   <script src="script.js"></script>
 </body>
 </html>
