@@ -401,8 +401,9 @@ p {
 .hero__cta {
     margin-top: 0.75rem;
     display: flex;
-    flex-wrap: wrap;
     gap: 0.75rem;
+    flex-direction: column;
+    align-items: center;
     justify-content: flex-start;
 }
 
@@ -410,10 +411,7 @@ p {
     min-width: 0;
     padding: 0.85rem 1.85rem;
     font-size: 0.95rem;
-}
-
-.hero__btn--form {
-    flex-basis: 100%;
+    width: 80%;
 }
 
 /* Hero overlay images removed (fly/larva) */
@@ -1067,7 +1065,7 @@ section {
     }
 
     .hero__btn {
-        width: 100%;
+        width: 80%;
     }
 
     .benefits__grid {
@@ -1342,7 +1340,7 @@ section {
         font-size: 0.95rem;
     }
     
-    .hero__btn { width: 100%; }
+    .hero__btn { width: 80%; }
 
     .hero__compost-image {
         object-position: center top;

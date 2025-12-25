@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Request a free BSFL sample from Nellie's Black Soldier Fly Larvae." />
+  <title>Request Free BSFL Sample - Nellie's BSFL</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="posthog.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17813054995"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17813054995');
+  </script>
+</head>
+<body class="page">
+  <header class="header">
+    <nav class="nav">
+      <div class="nav__container">
+        <a class="nav__logo" href="index.html" aria-label="Nellie's Black Soldier Fly Larvae Home">
+          <img src="nbsfllogo.PNG" alt="Nellie's Black Soldier Fly Larvae Logo" class="nav__logo-img">
+        </a>
+        <div class="nav__menu">
+          <ul class="nav__menu-list">
+            <li class="nav__item"><a href="orders.html" class="nav__link">Offer Board</a></li>
+            <li class="nav__item"><a href="protein.html" class="nav__link">Protein</a></li>
+            <li class="nav__item"><a href="valorization-process.html" class="nav__link">Valorization and Products</a></li>
+          </ul>
+          <div class="nav__actions">
+            <a href="index.html#contact" class="nav__link nav__cta">Contact</a>
+          </div>
+        </div>
+        <div class="nav__toggle" id="nav-toggle">
+          <span class="nav__bar"></span>
+          <span class="nav__bar"></span>
+          <span class="nav__bar"></span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="page-hero__container">
+        <p class="page-hero__eyebrow">Samples</p>
+        <h1 class="page-hero__title">Request a free BSFL sample</h1>
+        <p class="page-hero__subtitle">
+          Share a few details and we’ll follow up to confirm fit, format, and shipping.
+        </p>
+        <div class="page-hero__meta">
+          <a class="btn btn--secondary" href="protein.html">View Protein Products</a>
+          <a class="btn btn--primary" href="index.html">Back to Home</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section page-section--alt" aria-label="Free BSFL sample request form">
+      <div class="page-section__container">
+        <form class="contact__form" action="/api/form_capture" method="POST" autocomplete="on" data-requires-message="false">
+          <input type="hidden" name="form_name" value="Free BSFL Sample Request" />
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+          <input type="hidden" name="_next" value="https://www.nelliesbsfl.com/request-sample-thank-you.html" />
+
+          <div class="form__group">
+            <label for="sample-name">Name</label>
+            <input class="form__input" id="sample-name" name="name" type="text" placeholder="Your name" />
+          </div>
+
+          <div class="form__group">
+            <label for="sample-email">Email*</label>
+            <input class="form__input" id="sample-email" name="email" type="email" placeholder="you@company.com" required />
+          </div>
+
+          <div class="form__group">
+            <label for="sample-company">Company / Organization</label>
+            <input class="form__input" id="sample-company" name="company" type="text" placeholder="Company or organization" />
+          </div>
+
+          <div class="form__group">
+            <label for="sample-use">Intended use</label>
+            <select class="form__input" id="sample-use" name="intended_use">
+              <option value="" selected>Choose one (optional)</option>
+              <option value="Feed trial">Feed trial</option>
+              <option value="Lab analysis">Lab analysis</option>
+              <option value="Product evaluation">Product evaluation</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form__group">
+            <label for="sample-location">Shipping location (city/state)</label>
+            <input class="form__input" id="sample-location" name="shipping_location" type="text" placeholder="e.g., Portland, OR" />
+          </div>
+
+          <div class="form__group">
+            <label for="sample-message">Notes (optional)</label>
+            <textarea class="form__textarea" id="sample-message" name="message" rows="5" placeholder="Formats you want to evaluate, target volumes, timelines, etc."></textarea>
+          </div>
+
+          <div class="form__group">
+            <label class="form__checkbox">
+              <input type="checkbox" name="newsletter" />
+              <span class="checkmark"></span>
+              Sign up for updates and product announcements.
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn--primary">Request Sample</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__container">
+      <p class="footer__copyright">Copyright © 2025 Nellie's Black Soldier Fly Larvae - All Rights Reserved.</p>
+      <p class="footer__powered">Powered by <a href="#" class="footer__link">Nellie's BSFL</a></p>
+      <p class="footer__links"><a href="customer-registration.html" class="footer__link">Customer Registration</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
