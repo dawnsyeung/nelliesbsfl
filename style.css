@@ -799,6 +799,27 @@ section {
     box-shadow: 0 16px 28px rgba(0, 0, 0, 0.3);
 }
 
+.btn--sample {
+    /* Dark warm yellow CTA to stand out on the hero */
+    background: linear-gradient(135deg, #d7a15a 0%, #b8792f 55%, #8f5a1f 100%);
+    color: #1b130f;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 18px 34px rgba(215, 161, 90, 0.22), 0 10px 22px rgba(0, 0, 0, 0.35);
+}
+
+.btn--sample:hover {
+    background: linear-gradient(135deg, #e0b069 0%, #c68433 55%, #9a6222 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 22px 40px rgba(215, 161, 90, 0.28), 0 12px 26px rgba(0, 0, 0, 0.38);
+}
+
+.btn--sample:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(215, 161, 90, 0.32), 0 22px 40px rgba(215, 161, 90, 0.22), 0 12px 26px rgba(0, 0, 0, 0.38);
+}
+
 /* Footer */
 .footer {
     background: linear-gradient(150deg, rgba(28, 18, 15, 0.95), rgba(56, 35, 29, 0.78));
