@@ -412,6 +412,10 @@ p {
     font-size: 0.95rem;
 }
 
+.hero__btn--form {
+    flex-basis: 100%;
+}
+
 /* Hero overlay images removed (fly/larva) */
 
 /* Section Styles */
