@@ -278,7 +278,8 @@
                 <div class="contact__divider"></div>
                 <p class="contact__subtitle">Tell us your volume + ZIP code. We’ll respond with pricing and logistics options.</p>
 
-                <form class="contact__form" id="bulk-quote-form" action="https://formspree.io/f/xjkeljzv" method="POST" data-requires-message="false" data-disable-global-handler="true">
+                <form class="contact__form" id="bulk-quote-form" action="/api/form_capture.php" method="POST" data-requires-message="false" data-disable-global-handler="true">
+                    <input type="hidden" name="form_name" value="Bulk BSFL Quote (500+ lbs): Offer Board Page" />
                     <input type="hidden" name="request_type" value="Bulk BSFL Quote (500+ lbs)" />
                     <input type="hidden" name="landing_page" value="orders.html" />
                     <input type="hidden" name="_subject" value="Bulk BSFL Quote (500+ lbs)" />
@@ -383,7 +384,7 @@
                 <p class="page-section__subtitle">Prices are private. We may counteroffer on delivery window, packaging lead time, or minimum lot size.</p>
 
                 <div class="page-card offer-board-form-card">
-                    <form id="offer-board-form" action="https://formspree.io/f/xjkeljzv" method="POST" data-disable-global-handler="true">
+                    <form id="offer-board-form" action="/api/offer_board_submit.php" method="POST" data-disable-global-handler="true">
                         <input type="text" name="_gotcha" value="" tabindex="-1" autocomplete="off" class="offer-board-hp" aria-hidden="true">
                         <input type="hidden" name="_subject" value="Offer Board: Buyer Request">
                         <input type="hidden" name="_next" value="https://nelliesbsfl.com/offer-board-thanks.html">

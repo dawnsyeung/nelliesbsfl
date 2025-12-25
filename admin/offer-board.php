@@ -248,6 +248,7 @@ foreach ($capRows as $r) {
         <p class="page-hero__subtitle">Review requests, publish anonymized fulfillments, and manage monthly capacity.</p>
         <div class="page-hero__meta">
           <a class="btn btn--secondary" href="/admin/submissions.php">Customer registrations</a>
+          <a class="btn btn--secondary" href="/admin/form-submissions.php">Form submissions</a>
           <a class="btn btn--secondary" href="/admin/logout.php">Logout</a>
         </div>
       </div>

@@ -49,6 +49,8 @@ try {
         <h1 class="page-hero__title">Customer registrations</h1>
         <p class="page-hero__subtitle">Showing the 250 most recent submissions.</p>
         <div class="page-hero__meta">
+          <a class="btn btn--secondary" href="/admin/offer-board.php">Offer board</a>
+          <a class="btn btn--secondary" href="/admin/form-submissions.php">Form submissions</a>
           <a class="btn btn--secondary" href="/admin/logout.php">Logout</a>
         </div>
       </div>
