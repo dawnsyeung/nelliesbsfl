@@ -126,32 +126,85 @@ function handleFormSubmission(e) {
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Sending...';
     submitBtn.disabled = true;
-    
-    // Submit to Formspree
-    fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'Accept': 'application/json'
+
+    function getNextUrl() {
+        const nextInput = form.querySelector('input[name="_next"]');
+        const next = nextInput ? String(nextInput.value || '').trim() : '';
+        return next;
+    }
+
+    async function parseResponseBody(response) {
+        const contentType = (response.headers.get('content-type') || '').toLowerCase();
+        if (contentType.includes('application/json')) {
+            try {
+                return await response.json();
+            } catch (e) {
+                return null;
+            }
         }
-    })
-    .then(response => {
-        if (response.ok) {
-            showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
+
+        try {
+            const text = await response.text();
+            if (!text) return null;
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                return { error: text };
+            }
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function extractErrorMessage(payload, fallback) {
+        if (payload && typeof payload === 'object') {
+            if (typeof payload.error === 'string' && payload.error.trim()) return payload.error.trim();
+            const errors = payload.errors;
+            if (Array.isArray(errors) && errors.length) {
+                const message = errors
+                    .map((err) => (err && err.message ? String(err.message) : ''))
+                    .filter(Boolean)
+                    .join(' ');
+                if (message) return message;
+            }
+        }
+        return fallback;
+    }
+
+    (async () => {
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                const payload = await parseResponseBody(response);
+                const msg = extractErrorMessage(payload, `Form submission failed (${response.status}). Please try again.`);
+                throw new Error(msg);
+            }
+
+            const nextUrl = getNextUrl();
+            if (nextUrl) {
+                window.location.href = nextUrl;
+                return;
+            }
+
+            showNotification('Thank you! We received your submission.', 'success');
             form.reset();
-        } else {
-            throw new Error('Form submission failed');
+        } catch (error) {
+            console.error('Error:', error);
+            const msg = (error && error.message) ? String(error.message) : 'Sorry, there was an error sending your message. Please try again.';
+            showNotification(msg || 'Sorry, there was an error sending your message. Please try again.', 'error');
+        } finally {
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showNotification('Sorry, there was an error sending your message. Please try again.', 'error');
-    })
-    .finally(() => {
-        // Reset button state
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-    });
+    })();
 }
 
 // Email validation
@@ -162,6 +215,15 @@ function isValidEmail(email) {
 
 // Notification system
 function showNotification(message, type = 'info') {
+    const safeMessage = (() => {
+        if (typeof message === 'string') return message;
+        if (message == null) return '';
+        try {
+            return JSON.stringify(message);
+        } catch (e) {
+            return String(message);
+        }
+    })();
     // Remove existing notifications
     const existingNotification = document.querySelector('.notification');
     if (existingNotification) {
@@ -173,7 +235,7 @@ function showNotification(message, type = 'info') {
     notification.className = `notification notification--${type}`;
     notification.innerHTML = `
         <div class="notification__content">
-            <span class="notification__message">${message}</span>
+            <span class="notification__message">${safeMessage}</span>
             <button class="notification__close">&times;</button>
         </div>
     `;
@@ -326,7 +388,18 @@ function setupGuideDownloadForms() {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Submission failed (${response.status}). Please try again.`);
+                    let payload = null;
+                    try {
+                        payload = await response.json();
+                    } catch (e) {
+                        payload = null;
+                    }
+                    const messageFromErrors =
+                        payload && Array.isArray(payload.errors) && payload.errors.length
+                            ? payload.errors.map((e) => (e && e.message ? String(e.message) : '')).filter(Boolean).join(' ')
+                            : '';
+                    const message = (payload && payload.error) ? String(payload.error) : (messageFromErrors || `Submission failed (${response.status}). Please try again.`);
+                    throw new Error(message);
                 }
 
                 form.reset();
@@ -339,7 +412,7 @@ function setupGuideDownloadForms() {
                 openModal(title, message);
             } catch (error) {
                 console.error('Guide download submission error:', error);
-                const message = (error && error.message) ? error.message : 'Sorry—there was an error submitting your request. Please try again.';
+                const message = (error && error.message) ? String(error.message) : 'Sorry—there was an error submitting your request. Please try again.';
                 showNotification(message, 'error');
             } finally {
                 if (submitBtn) {
@@ -601,7 +674,7 @@ function setupOnboardingForm() {
             onboardingForm.reset();
         } catch (error) {
             console.error('Onboarding submission error:', error);
-            const message = (error && error.message) ? error.message : 'Sorry—there was an error submitting your registration. Please try again.';
+            const message = (error && error.message) ? String(error.message) : 'Sorry—there was an error submitting your registration. Please try again.';
             showNotification(message, 'error');
         } finally {
             if (submitBtn) {
