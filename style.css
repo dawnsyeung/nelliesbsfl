@@ -1723,6 +1723,11 @@ area[href] {
     align-items: center;
 }
 
+.page-hero__actions--stack {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .page-hero__actions .btn {
     min-width: 220px;
 }
