@@ -448,6 +448,31 @@ function setupGuideDownloadForms() {
     });
 }
 
+function setupFooterSocialLinks() {
+    const footerContainer = document.querySelector('.footer__container');
+    if (!footerContainer) return;
+
+    if (document.getElementById('nellies-twitter-link')) {
+        return;
+    }
+
+    const wrapper = document.createElement('p');
+    wrapper.className = 'footer__links';
+    wrapper.id = 'nellies-twitter-link';
+
+    const link = document.createElement('a');
+    link.className = 'footer__link';
+    link.href = 'https://twitter.com/nelliesbsfl';
+    link.target = '_blank';
+    link.rel = 'me noopener noreferrer';
+    link.textContent = 'Twitter (@nelliesbsfl)';
+
+    wrapper.appendChild(document.createTextNode('Follow us on '));
+    wrapper.appendChild(link);
+
+    footerContainer.appendChild(wrapper);
+}
+
 function setupHiddenAdminLink() {
     // This does NOT bypass auth; it only reveals a link to the admin area.
     const footerContainer = document.querySelector('.footer__container');
@@ -1045,6 +1070,9 @@ function init() {
 
     // Setup guide download forms (stay on-site after submit)
     setupGuideDownloadForms();
+
+    // Footer social links (Twitter/X, etc.)
+    setupFooterSocialLinks();
 
     // Hidden admin link (requires server-side login)
     setupHiddenAdminLink();
