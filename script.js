@@ -452,25 +452,47 @@ function setupFooterSocialLinks() {
     const footerContainer = document.querySelector('.footer__container');
     if (!footerContainer) return;
 
-    if (document.getElementById('nellies-twitter-link')) {
+    const hasTwitter = Boolean(document.getElementById('nellies-twitter-link'));
+    const hasLinkedIn = Boolean(document.getElementById('nellies-linkedin-link'));
+
+    if (hasTwitter && hasLinkedIn) {
         return;
     }
 
-    const wrapper = document.createElement('p');
-    wrapper.className = 'footer__links';
-    wrapper.id = 'nellies-twitter-link';
+    if (!hasTwitter) {
+        const twitterWrapper = document.createElement('p');
+        twitterWrapper.className = 'footer__links';
+        twitterWrapper.id = 'nellies-twitter-link';
 
-    const link = document.createElement('a');
-    link.className = 'footer__link';
-    link.href = 'https://twitter.com/nelliesbsfl';
-    link.target = '_blank';
-    link.rel = 'me noopener noreferrer';
-    link.textContent = 'Twitter (@nelliesbsfl)';
+        const twitterLink = document.createElement('a');
+        twitterLink.className = 'footer__link';
+        twitterLink.href = 'https://twitter.com/nelliesbsfl';
+        twitterLink.target = '_blank';
+        twitterLink.rel = 'me noopener noreferrer';
+        twitterLink.textContent = 'Twitter (@nelliesbsfl)';
 
-    wrapper.appendChild(document.createTextNode('Follow us on '));
-    wrapper.appendChild(link);
+        twitterWrapper.appendChild(document.createTextNode('Follow us on '));
+        twitterWrapper.appendChild(twitterLink);
 
-    footerContainer.appendChild(wrapper);
+        footerContainer.appendChild(twitterWrapper);
+    }
+
+    if (!hasLinkedIn) {
+        const linkedInWrapper = document.createElement('p');
+        linkedInWrapper.className = 'footer__links';
+        linkedInWrapper.id = 'nellies-linkedin-link';
+
+        const linkedInLink = document.createElement('a');
+        linkedInLink.className = 'footer__link';
+        linkedInLink.href = 'https://www.linkedin.com/company/nellies-bsfl/';
+        linkedInLink.target = '_blank';
+        linkedInLink.rel = 'me noopener noreferrer';
+        linkedInLink.textContent = 'Connect with us on LinkedIn';
+
+        linkedInWrapper.appendChild(linkedInLink);
+
+        footerContainer.appendChild(linkedInWrapper);
+    }
 }
 
 function setupHiddenAdminLink() {
