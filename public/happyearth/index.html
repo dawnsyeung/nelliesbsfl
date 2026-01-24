@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Partnership one-pager for Happy Earth Compost and Nellie's BSFL. A waste-to-value collaboration for curbside, commercial, and low-carbon services."
+    />
+    <title>Happy Earth x Nellie's BSFL Partnership</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #1b1b1b;
+        --muted: #5d5d5d;
+        --green: #2c5530;
+        --green-light: #4a7c59;
+        --gold: #a78b5b;
+        --sand: #f6f2ea;
+        --white: #ffffff;
+        --shadow: 0 16px 40px rgba(27, 27, 27, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: #f4f3ef;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .content {
+        display: none;
+      }
+
+      .content.show {
+        display: block;
+      }
+
+      .password-form {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(44, 85, 48, 0.9), rgba(27, 27, 27, 0.9));
+        z-index: 1000;
+        padding: 2rem;
+      }
+
+      .password-card {
+        background: var(--white);
+        padding: 2.5rem;
+        border-radius: 16px;
+        max-width: 420px;
+        width: 100%;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
+
+      .password-card h2 {
+        margin-top: 0;
+        font-size: 1.6rem;
+      }
+
+      .password-input {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border-radius: 8px;
+        border: 1px solid #d3d3d3;
+        margin: 1rem 0 0.5rem;
+        font-size: 1rem;
+      }
+
+      .password-btn {
+        border: none;
+        background: var(--green);
+        color: var(--white);
+        padding: 0.7rem 1.6rem;
+        border-radius: 999px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .password-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(44, 85, 48, 0.2);
+      }
+
+      .password-error {
+        color: #b3261e;
+        min-height: 1.2rem;
+      }
+
+      .hero {
+        position: relative;
+        padding: 5rem 1.5rem 4rem;
+        background: linear-gradient(135deg, rgba(27, 27, 27, 0.65), rgba(44, 85, 48, 0.75)),
+          url("/coverpage.png") center/cover no-repeat;
+        color: var(--white);
+      }
+
+      .hero__container {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .hero__eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.18rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1rem;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.2rem, 3vw, 3.2rem);
+        margin: 0 0 1rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin: 0 0 1.5rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .hero__badges {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .hero__badge {
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        padding: 0.4rem 0.9rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+
+      .hero__card {
+        background: rgba(255, 255, 255, 0.96);
+        color: var(--ink);
+        border-radius: 18px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+      }
+
+      .hero__logos {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .hero__logo {
+        width: 110px;
+        background: var(--white);
+        padding: 0.5rem;
+        border-radius: 12px;
+      }
+
+      .hero__partner {
+        font-size: 1.05rem;
+        font-weight: 600;
+      }
+
+      .section {
+        padding: 4rem 1.5rem;
+      }
+
+      .section--alt {
+        background: var(--sand);
+      }
+
+      .section__container {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .section__eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.16rem;
+        font-size: 0.75rem;
+        color: var(--gold);
+        font-weight: 600;
+      }
+
+      .section__title {
+        font-size: clamp(1.7rem, 2.4vw, 2.4rem);
+        margin: 0.8rem 0 1.5rem;
+        color: var(--green);
+      }
+
+      .section__subtitle {
+        color: var(--muted);
+        max-width: 720px;
+        line-height: 1.7;
+      }
+
+      .grid {
+        display: grid;
+        gap: 1.8rem;
+      }
+
+      .grid--two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid--three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .card {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 1.6rem;
+        box-shadow: 0 12px 28px rgba(27, 27, 27, 0.08);
+        border-left: 4px solid var(--gold);
+      }
+
+      .card h3 {
+        margin-top: 0;
+        margin-bottom: 0.8rem;
+        color: var(--green);
+      }
+
+      .card ul {
+        padding-left: 1.2rem;
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .card li {
+        margin-bottom: 0.5rem;
+      }
+
+      .pill-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin-top: 1.2rem;
+      }
+
+      .pill {
+        background: rgba(44, 85, 48, 0.08);
+        color: var(--green);
+        padding: 0.35rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .timeline__item {
+        background: var(--white);
+        border-radius: 14px;
+        padding: 1.4rem 1.6rem;
+        border-left: 4px solid var(--green);
+        box-shadow: 0 10px 26px rgba(27, 27, 27, 0.08);
+      }
+
+      .timeline__item h4 {
+        margin: 0 0 0.4rem;
+        color: var(--green);
+      }
+
+      .timeline__item p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .flow__step {
+        background: var(--white);
+        border-radius: 18px;
+        padding: 1.6rem;
+        text-align: center;
+        box-shadow: 0 12px 28px rgba(27, 27, 27, 0.08);
+      }
+
+      .flow__icon {
+        width: 54px;
+        height: 54px;
+        margin: 0 auto 1rem;
+        border-radius: 50%;
+        background: rgba(44, 85, 48, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .flow__title {
+        margin: 0 0 0.6rem;
+        color: var(--green);
+      }
+
+      .callout {
+        background: linear-gradient(135deg, #2c5530, #4a7c59);
+        color: var(--white);
+        border-radius: 18px;
+        padding: 2.5rem;
+        box-shadow: var(--shadow);
+        display: grid;
+        gap: 1rem;
+      }
+
+      .callout p {
+        margin: 0;
+        line-height: 1.7;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .callout__actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border-radius: 999px;
+        padding: 0.65rem 1.5rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid transparent;
+      }
+
+      .btn--primary {
+        background: var(--white);
+        color: var(--green);
+      }
+
+      .btn--secondary {
+        border-color: rgba(255, 255, 255, 0.6);
+        color: var(--white);
+      }
+
+      .footer {
+        padding: 2rem 1.5rem 3rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .floating-larva {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        width: 76px;
+        opacity: 0.85;
+        filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.3));
+      }
+
+      @media (max-width: 960px) {
+        .hero__container {
+          grid-template-columns: 1fr;
+        }
+
+        .grid--two,
+        .grid--three,
+        .flow {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .hero {
+          padding: 4rem 1.2rem 3rem;
+        }
+
+        .floating-larva {
+          width: 60px;
+          right: 16px;
+          bottom: 16px;
+        }
+      }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17813054995"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "AW-17813054995");
+    </script>
+  </head>
+  <body>
+    <div class="password-form" id="passwordForm" aria-live="polite">
+      <div class="password-card">
+        <h2>Happy Earth Partnership Access</h2>
+        <p>Please enter the password to view this partnership one-pager.</p>
+        <input
+          type="password"
+          class="password-input"
+          id="passwordInput"
+          placeholder="Password"
+          aria-label="Password"
+        />
+        <div class="password-error" id="errorMsg"></div>
+        <button class="password-btn" type="button" onclick="checkPassword()">
+          Unlock Page
+        </button>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+      <header class="hero">
+        <div class="hero__container">
+          <div>
+            <div class="hero__eyebrow">Partnership One-Pager</div>
+            <h1>Happy Earth Compost x Nellie's BSFL</h1>
+            <p>
+              A targeted partnership to expand Happy Earth's zero-waste, low-carbon services
+              by converting curbside and commercial organics into high-value larvae protein and frass.
+            </p>
+            <div class="hero__badges">
+              <div class="hero__badge">Curbside + Commercial</div>
+              <div class="hero__badge">Waste-to-Value Modules</div>
+              <div class="hero__badge">Zero Waste, Zero Carbon</div>
+            </div>
+          </div>
+          <div class="hero__card">
+            <div class="hero__logos">
+              <img src="/nbsfllogo.PNG" alt="Nellie's BSFL logo" class="hero__logo" />
+              <div>
+                <div class="hero__partner">Happy Earth Compost</div>
+                <div class="section__subtitle">
+                  Serving Houston, College Station, and Bryan with curbside composting, recycling, carbon
+                  offsets, and renewable power options.
+                </div>
+              </div>
+            </div>
+            <div class="pill-list">
+              <span class="pill">Weekly, bi-weekly, or monthly pickup</span>
+              <span class="pill">$17-$39 plan range</span>
+              <span class="pill">Carbon offsets at $12 per ton CO2</span>
+              <span class="pill">Commercial sustainability programs</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="section">
+          <div class="section__container grid grid--two">
+            <div>
+              <p class="section__eyebrow">Happy Earth Snapshot</p>
+              <h2 class="section__title">What Happy Earth Delivers Today</h2>
+              <p class="section__subtitle">
+                Happy Earth provides curbside composting, recycling, and low-carbon services that make it easy
+                for households and businesses to reduce waste and emissions. Residents receive branded buckets,
+                schedule weekly, bi-weekly, or monthly swaps, and can request finished compost through the customer portal.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Current Service Highlights</h3>
+              <ul>
+                <li>Stylish indoor bin + outdoor bucket swap on pickup day.</li>
+                <li>Residential pricing range of $17-$39 based on pickup cadence.</li>
+                <li>Recycling services and commercial waste programs available.</li>
+                <li>Carbon offsets priced at $12 per ton with subscription options.</li>
+                <li>Renewable power plan evaluations delivered in 3-5 business days.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section--alt">
+          <div class="section__container">
+            <p class="section__eyebrow">Shared Vision</p>
+            <h2 class="section__title">Why This Partnership Works</h2>
+            <p class="section__subtitle">
+              Nellie's BSFL brings modular, climate-controlled valorization units that can sit near Happy Earth's
+              collection routes. Together we keep organics local, lower hauling costs, and create new revenue from
+              larvae protein and frass soil amendments.
+            </p>
+            <div class="grid grid--three" style="margin-top: 2rem;">
+              <article class="card">
+                <h3>Expanded Diversion</h3>
+                <ul>
+                  <li>Capture more organics from curbside and commercial streams.</li>
+                  <li>Reduce landfill dependency and hauling miles.</li>
+                  <li>Provide a local, visible destination for collected waste.</li>
+                </ul>
+              </article>
+              <article class="card">
+                <h3>Waste-to-Value Outputs</h3>
+                <ul>
+                  <li>Larvae protein for feed and specialty buyers.</li>
+                  <li>Frass soil amendment for farms and landscapers.</li>
+                  <li>Co-branded education for customers and municipalities.</li>
+                </ul>
+              </article>
+              <article class="card">
+                <h3>Carbon Impact</h3>
+                <ul>
+                  <li>Target hauling reductions of 35-80% per site.</li>
+                  <li>Improved Scope 3 reporting for Happy Earth clients.</li>
+                  <li>Data-backed storytelling for zero-carbon programs.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section__container">
+            <p class="section__eyebrow">Partnership Model</p>
+            <h2 class="section__title">How the On-Site System Works</h2>
+            <p class="section__subtitle">
+              Each deployment uses modular BSFL units sized to the local waste stream. Units include feedstock intake,
+              larvae rearing racks, harvest stations, and frass finishing equipment with remote monitoring dashboards.
+              Typical capacity ranges from 0.5 to 10 tons per day per module cluster.
+            </p>
+            <div class="flow">
+              <div class="flow__step">
+                <div class="flow__icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 8h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z" stroke="#2c5530" stroke-width="1.6"/>
+                    <path d="M7 8V6a5 5 0 0 1 10 0v2" stroke="#2c5530" stroke-width="1.6"/>
+                  </svg>
+                </div>
+                <h3 class="flow__title">Collected Organics</h3>
+                <p class="section__subtitle">Curbside and commercial feedstock from Happy Earth routes.</p>
+              </div>
+              <div class="flow__step">
+                <div class="flow__icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M5 12c2-4 12-4 14 0-2 4-12 4-14 0z" stroke="#2c5530" stroke-width="1.6"/>
+                    <path d="M7 12c1.5-2 8.5-2 10 0-1.5 2-8.5 2-10 0z" stroke="#2c5530" stroke-width="1.6"/>
+                  </svg>
+                </div>
+                <h3 class="flow__title">BSFL Modules</h3>
+                <p class="section__subtitle">Climate-controlled rearing turns waste into biomass.</p>
+              </div>
+              <div class="flow__step">
+                <div class="flow__icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M6 19h12" stroke="#2c5530" stroke-width="1.6"/>
+                    <path d="M8 17c1-3 2-5 4-7 2 2 3 4 4 7" stroke="#2c5530" stroke-width="1.6"/>
+                    <path d="M9 9c1-1 2-2 3-4 1 2 2 3 3 4" stroke="#2c5530" stroke-width="1.6"/>
+                  </svg>
+                </div>
+                <h3 class="flow__title">Local Products</h3>
+                <p class="section__subtitle">Larvae protein and frass re-enter local supply chains.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section--alt">
+          <div class="section__container">
+            <p class="section__eyebrow">Engagement Path</p>
+            <h2 class="section__title">From Feasibility to Operations</h2>
+            <div class="timeline" style="margin-top: 1.5rem;">
+              <div class="timeline__item">
+                <h4>Step 1: Waste Audit + Feedstock Mapping</h4>
+                <p>Quantify volumes, composition, and routing to size modules and capture economics.</p>
+              </div>
+              <div class="timeline__item">
+                <h4>Step 2: Site Layout + Permitting</h4>
+                <p>Integrate utilities, compliance plans, and partner documentation requirements.</p>
+              </div>
+              <div class="timeline__item">
+                <h4>Step 3: Fabrication + Installation</h4>
+                <p>Assemble modular units, commission equipment, and connect monitoring dashboards.</p>
+              </div>
+              <div class="timeline__item">
+                <h4>Step 4: Training + Ramp-Up</h4>
+                <p>Hands-on operator training, SOP onboarding, and initial production runs.</p>
+              </div>
+              <div class="timeline__item">
+                <h4>Step 5: Optimization + Scale</h4>
+                <p>Quarterly review of throughput, revenue, and carbon impact.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section__container">
+            <p class="section__eyebrow">Value Creation</p>
+            <h2 class="section__title">Benefits for Happy Earth and Its Customers</h2>
+            <div class="grid grid--three">
+              <article class="card">
+                <h3>Happy Earth Growth</h3>
+                <ul>
+                  <li>Add on-site organics processing to existing routes.</li>
+                  <li>Differentiate with local, measurable waste-to-value outcomes.</li>
+                  <li>Open new revenue from larvae protein and frass distribution.</li>
+                </ul>
+              </article>
+              <article class="card">
+                <h3>Residential & Commercial Clients</h3>
+                <ul>
+                  <li>Stronger zero-waste and zero-carbon program outcomes.</li>
+                  <li>Clear reporting for ESG and municipal requirements.</li>
+                  <li>Local circular economy story for customers and staff.</li>
+                </ul>
+              </article>
+              <article class="card">
+                <h3>Regional Impact</h3>
+                <ul>
+                  <li>Reduced hauling miles and landfill dependency.</li>
+                  <li>Local soil health inputs for farms and landscapers.</li>
+                  <li>Education opportunities for schools and communities.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section--alt">
+          <div class="section__container grid grid--two">
+            <div>
+              <p class="section__eyebrow">Compliance + Governance</p>
+              <h2 class="section__title">Operating Standards That Scale</h2>
+              <p class="section__subtitle">
+                Nellie's BSFL delivers HACCP and GMP-aligned programs, documentation, and audit support so
+                Happy Earth can confidently grow across municipalities and commercial clients.
+              </p>
+              <div class="pill-list">
+                <span class="pill">HACCP + GMP protocols</span>
+                <span class="pill">Traceability + QA documentation</span>
+                <span class="pill">Environmental permitting support</span>
+                <span class="pill">Worker safety programs</span>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Low-Carbon Alignment</h3>
+              <ul>
+                <li>Supports Happy Earth's carbon offset and renewable power offerings.</li>
+                <li>Provides tangible emissions reductions from avoided hauling.</li>
+                <li>Captures data for carbon accounting and subscription programs.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section__container">
+            <div class="callout">
+              <h2 style="margin: 0;">Next Steps for Happy Earth</h2>
+              <p>
+                Share current route volumes, commercial customer profiles, and target municipalities.
+                Nellie's will deliver a tailored business case, site layout, and deployment plan for a
+                Happy Earth pilot site.
+              </p>
+              <div class="callout__actions">
+                <a class="btn btn--primary" href="/index.html#contact">Schedule a Discovery Call</a>
+                <a class="btn btn--secondary" href="/partnerships.html">Review Partnership Framework</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>Prepared for Happy Earth Compost. Nellie's BSFL Partnership Proposal.</p>
+        <p>nelliesbsfl.com/happyearth</p>
+      </footer>
+
+      <img src="/larva.png" alt="Black soldier fly larvae" class="floating-larva" />
+    </div>
+
+    <script>
+      const CORRECT_PASSWORD = "Happy";
+      const STORAGE_KEY = "happyEarthAuth";
+
+      function checkPassword() {
+        const input = document.getElementById("passwordInput");
+        const errorMsg = document.getElementById("errorMsg");
+        const passwordForm = document.getElementById("passwordForm");
+        const content = document.getElementById("content");
+
+        if (input.value === CORRECT_PASSWORD) {
+          passwordForm.style.display = "none";
+          content.classList.add("show");
+          sessionStorage.setItem(STORAGE_KEY, "true");
+        } else {
+          errorMsg.textContent = "Incorrect password. Please try again.";
+          input.value = "";
+          input.focus();
+        }
+      }
+
+      window.addEventListener("load", () => {
+        if (sessionStorage.getItem(STORAGE_KEY) === "true") {
+          document.getElementById("passwordForm").style.display = "none";
+          document.getElementById("content").classList.add("show");
+        }
+      });
+
+      document.getElementById("passwordInput").addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+          checkPassword();
+        }
+      });
+    </script>
+  </body>
+</html>
