@@ -90,7 +90,7 @@ function main() {
     if (entry.isDirectory()) {
       if (EXCLUDED_DIRS.has(entry.name)) continue;
       // Only copy the known static sub-site folder(s).
-      if (entry.name === "offer-board") {
+      if (entry.name === "offer-board" || entry.name === "happyearth") {
         copyDirRecursive(path.join(ROOT, entry.name), path.join(OUT_DIR, entry.name));
       }
       continue;
