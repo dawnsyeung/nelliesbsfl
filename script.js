@@ -14,6 +14,7 @@ const askAgentVoiceStatus = document.getElementById('ask-agent-voice-status');
 const askAgentPromptButtons = document.querySelectorAll('[data-ask-prompt]');
 const onboardingForm = document.querySelector('.onboarding-form');
 const submissionModal = document.getElementById('submission-modal');
+const buyBsflUrl = 'https://ismtus-61.myshopify.com/?utm_source=shop_app&list_generator=link_to_storefront&context=shop_store&user_id=51355742';
 
 const askAgentKnowledgeBase = [
     {
@@ -92,6 +93,18 @@ function isHashLink(href) {
     } catch (error) {
         return false;
     }
+}
+
+function setupBuyBsflNavCta() {
+    const navCtas = document.querySelectorAll('.nav__link.nav__cta');
+    if (!navCtas.length) {
+        return;
+    }
+
+    navCtas.forEach((cta) => {
+        cta.href = buyBsflUrl;
+        cta.textContent = 'Buy BSFL';
+    });
 }
 
 // Header scroll effect
@@ -1044,6 +1057,8 @@ function updateAskAgentVoiceStatus(text) {
 function init() {
     // Add notification styles
     addNotificationStyles();
+
+    setupBuyBsflNavCta();
     
     // Event listeners
     if (navToggle) {
