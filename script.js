@@ -15,6 +15,8 @@ const askAgentPromptButtons = document.querySelectorAll('[data-ask-prompt]');
 const onboardingForm = document.querySelector('.onboarding-form');
 const submissionModal = document.getElementById('submission-modal');
 const buyBsflUrl = 'https://ismtus-61.myshopify.com/?utm_source=shop_app&list_generator=link_to_storefront&context=shop_store&user_id=51355742';
+const freeSampleProductComponentId = 'product-component-1780596602393';
+const shopifyBuyButtonScriptUrl = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
 
 const askAgentKnowledgeBase = [
     {
@@ -105,6 +107,115 @@ function setupBuyBsflNavCta() {
         cta.href = buyBsflUrl;
         cta.textContent = 'Buy BSFL';
     });
+}
+
+function setupShopifyFreeSampleButton() {
+    const node = document.getElementById(freeSampleProductComponentId);
+    if (!node || node.dataset.shopifyInitialized === 'true') {
+        return;
+    }
+
+    function initShopifyBuyButton() {
+        if (!window.ShopifyBuy || !window.ShopifyBuy.UI) {
+            return;
+        }
+
+        node.dataset.shopifyInitialized = 'true';
+
+        const client = window.ShopifyBuy.buildClient({
+            domain: 'ismtus-61.myshopify.com',
+            storefrontAccessToken: '3b590ca1668ed6e062cbd717247d8ce7',
+        });
+
+        window.ShopifyBuy.UI.onReady(client).then(function (ui) {
+            ui.createComponent('product', {
+                id: '9462552461452',
+                node,
+                moneyFormat: '%24%7B%7Bamount%7D%7D',
+                options: {
+                    product: {
+                        styles: {
+                            product: {
+                                '@media (min-width: 601px)': {
+                                    'max-width': 'calc(25% - 20px)',
+                                    'margin-left': '20px',
+                                    'margin-bottom': '50px'
+                                }
+                            }
+                        },
+                        contents: {
+                            button: false,
+                            buttonWithQuantity: true
+                        },
+                        text: {
+                            button: 'Add to cart'
+                        }
+                    },
+                    productSet: {
+                        styles: {
+                            products: {
+                                '@media (min-width: 601px)': {
+                                    'margin-left': '-20px'
+                                }
+                            }
+                        }
+                    },
+                    modalProduct: {
+                        contents: {
+                            img: false,
+                            imgWithCarousel: true,
+                            button: false,
+                            buttonWithQuantity: true
+                        },
+                        styles: {
+                            product: {
+                                '@media (min-width: 601px)': {
+                                    'max-width': '100%',
+                                    'margin-left': '0px',
+                                    'margin-bottom': '0px'
+                                }
+                            }
+                        },
+                        text: {
+                            button: 'Add to cart'
+                        }
+                    },
+                    option: {},
+                    cart: {
+                        text: {
+                            total: 'Subtotal',
+                            button: 'Checkout'
+                        }
+                    },
+                    toggle: {}
+                },
+            });
+        });
+    }
+
+    if (window.ShopifyBuy) {
+        if (window.ShopifyBuy.UI) {
+            initShopifyBuyButton();
+        } else {
+            loadShopifyBuyButtonScript(initShopifyBuyButton);
+        }
+    } else {
+        loadShopifyBuyButtonScript(initShopifyBuyButton);
+    }
+}
+
+function loadShopifyBuyButtonScript(onLoad) {
+    const existingScript = document.querySelector(`script[src="${shopifyBuyButtonScriptUrl}"]`);
+    if (existingScript) {
+        existingScript.addEventListener('load', onLoad, { once: true });
+        return;
+    }
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = shopifyBuyButtonScriptUrl;
+    script.onload = onLoad;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
 }
 
 // Header scroll effect
@@ -1059,6 +1170,9 @@ function init() {
     addNotificationStyles();
 
     setupBuyBsflNavCta();
+
+    // Shopify Buy Button for the homepage free sample CTA.
+    setupShopifyFreeSampleButton();
     
     // Event listeners
     if (navToggle) {
