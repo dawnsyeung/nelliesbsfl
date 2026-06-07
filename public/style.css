@@ -258,15 +258,23 @@ p {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.45rem 1.4rem;
+    min-width: 132px;
+    min-height: 42px;
+    padding: 0.55rem 1.55rem;
     border-radius: 999px;
-    border: 1px solid #ffe45c;
-    background: #ffd400;
-    color: #1b1300;
-    box-shadow: 0 0 22px rgba(255, 212, 0, 0.42);
-    letter-spacing: 0.08em;
+    border: 1px solid #fff176;
+    background: linear-gradient(135deg, #fff45f 0%, #ffd400 48%, #ffb300 100%);
+    color: #241400;
+    box-shadow: 0 12px 24px rgba(255, 179, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.62);
+    font-family: var(--font-family-base);
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.055em;
+    text-align: center;
     text-transform: uppercase;
-    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    white-space: nowrap;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .nav__cta::after {
@@ -275,11 +283,11 @@ p {
 
 .nav__cta:hover,
 .nav__cta:focus-visible {
-    background-color: #ffea00;
+    background: linear-gradient(135deg, #fff98c 0%, #ffe100 48%, #ffc400 100%);
     border-color: #fff176;
-    color: #120d00;
-    box-shadow: 0 0 28px rgba(255, 234, 0, 0.58);
-    transform: translateY(-1px);
+    color: #120900;
+    box-shadow: 0 15px 30px rgba(255, 196, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    transform: translateY(-2px);
 }
 
 .nav__toggle {
@@ -1068,10 +1076,7 @@ section {
         text-align: center;
         padding: 0.95rem 1.5rem;
         border-radius: 12px;
-        border: 1px solid #ffe45c;
-        background: #ffd400;
-        color: #1b1300;
-        box-shadow: 0 0 22px rgba(255, 212, 0, 0.42);
+        min-height: 48px;
     }
 
     .nav__toggle {
