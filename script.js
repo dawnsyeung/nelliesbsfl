@@ -15,6 +15,7 @@ const askAgentPromptButtons = document.querySelectorAll('[data-ask-prompt]');
 const onboardingForm = document.querySelector('.onboarding-form');
 const submissionModal = document.getElementById('submission-modal');
 const buyBsflUrl = 'https://ismtus-61.myshopify.com/?utm_source=shop_app&list_generator=link_to_storefront&context=shop_store&user_id=51355742';
+const freeSampleTileUrl = '/index.html#one-pound-sample';
 const freeSampleProductComponentId = 'product-component-1780596602393';
 const shopifyBuyButtonScriptUrl = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
 
@@ -106,6 +107,14 @@ function setupBuyBsflNavCta() {
     navCtas.forEach((cta) => {
         cta.href = buyBsflUrl;
         cta.textContent = 'Buy BSFL';
+        cta.setAttribute('aria-label', 'Buy BSFL from Nellie\'s Shopify store');
+    });
+}
+
+function setupRequestSampleCtas() {
+    const sampleCtas = document.querySelectorAll('a[href$="request-sample.html"]');
+    sampleCtas.forEach((cta) => {
+        cta.href = freeSampleTileUrl;
     });
 }
 
@@ -1170,6 +1179,7 @@ function init() {
     addNotificationStyles();
 
     setupBuyBsflNavCta();
+    setupRequestSampleCtas();
 
     // Shopify Buy Button for the homepage free sample CTA.
     setupShopifyFreeSampleButton();
