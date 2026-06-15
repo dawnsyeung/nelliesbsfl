@@ -113,18 +113,18 @@
   <header class="header">
     <nav class="nav" aria-label="Primary">
       <div class="nav__container">
-        <a class="nav__logo" href="index.html" aria-label="Nellie's Black Soldier Fly Larvae Home">
+        <a class="nav__logo" href="/" aria-label="Nellie's Black Soldier Fly Larvae Home">
           <img src="nbsfllogo.PNG" alt="Nellie's Black Soldier Fly Larvae Logo" class="nav__logo-img" />
         </a>
 
         <div class="nav__menu">
           <ul class="nav__menu-list" aria-hidden="true">
-            <li class="nav__item"><a href="orders.html" class="nav__link">Offer Board</a></li>
+            <li class="nav__item"><a href="shop.html" class="nav__link">Products</a></li>
             <li class="nav__item"><a href="resources.html" class="nav__link">Resources</a></li>
           </ul>
           <div class="nav__actions">
             <a href="#quote" class="nav__link nav__link--shop">Request Quote</a>
-            <a href="index.html#contact" class="nav__link nav__cta">Contact</a>
+            <a href="/#contact" class="nav__link nav__cta">Contact</a>
           </div>
         </div>
 
@@ -358,12 +358,13 @@
         <div class="contact__divider"></div>
         <p class="contact__subtitle">Tell us your volume + ZIP code. We’ll respond with pricing and logistics options.</p>
 
-        <form class="contact__form" action="https://formspree.io/f/xjkeljzv" method="POST">
+        <form class="contact__form" action="/api/form_capture" method="POST">
           <input type="hidden" name="form_name" value="Bulk Quote (500+ lbs): Landing Page" />
           <input type="hidden" name="request_type" value="Bulk BSFL Quote (500+ lbs)" />
           <input type="hidden" name="landing_page" value="bulk-bsfl-buyers-500lb.html" />
           <input type="hidden" name="_subject" value="Bulk BSFL Quote (500+ lbs)" />
           <input type="hidden" name="_next" value="https://www.nelliesbsfl.com/bulk-quote-thank-you.html" />
+          <input type="hidden" name="auto_reply_message" value="Hi [Name], we received your inquiry and will be in touch within 1 business day. To make sure you receive our reply, please reply to this email with 'Got it!' — this ensures our emails reach your inbox." />
 
           <!-- UTM / click IDs populated by JS -->
           <input type="hidden" name="utm_source" id="utm_source" value="" />
@@ -395,7 +396,7 @@
           </div>
 
           <div class="form__group">
-            <input type="tel" name="phone" class="form__input" placeholder="Phone (optional)" />
+            <input type="tel" name="phone" class="form__input" placeholder="We may text you to confirm receipt of your inquiry" required />
           </div>
 
           <div class="form__group">
