@@ -1,4 +1,8 @@
 {
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/orders.html", "destination": "/shop.html", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/(.*)\\.php", "destination": "/404.html" },
     { "source": "/data/(.*)", "destination": "/404.html" }

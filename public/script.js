@@ -1,7 +1,7 @@
 // DOM Elements
 const navToggle = document.getElementById('nav-toggle');
 const navMenu = document.querySelector('.nav__menu');
-const navLinks = document.querySelectorAll('.nav__link');
+let navLinks = document.querySelectorAll('.nav__link');
 const contactForms = document.querySelectorAll('.contact__form');
 const cookieNotice = document.getElementById('cookie-notice');
 const acceptCookiesBtn = document.getElementById('accept-cookies');
@@ -14,8 +14,12 @@ const askAgentVoiceStatus = document.getElementById('ask-agent-voice-status');
 const askAgentPromptButtons = document.querySelectorAll('[data-ask-prompt]');
 const onboardingForm = document.querySelector('.onboarding-form');
 const submissionModal = document.getElementById('submission-modal');
-const buyBsflUrl = 'https://ismtus-61.myshopify.com/?utm_source=shop_app&list_generator=link_to_storefront&context=shop_store&user_id=51355742';
-const freeSampleTileUrl = '/index.html#one-pound-sample';
+const buyBsflUrl = 'https://ismtus-61.myshopify.com/';
+const freeSampleTileUrl = '/request-sample.html';
+const calendlyUrl = 'https://calendly.com/nelliesbsfl/15min';
+const ownerPhone = '+1-503-555-0145';
+const ownerEmail = 'procurement@nelliesbsfl.com';
+const inquiryAutoReplyMessage = 'Hi [Name], we received your inquiry and will be in touch within 1 business day. To make sure you receive our reply, please reply to this email with "Got it!" — this ensures our emails reach your inbox.';
 const freeSampleProductComponentId = 'product-component-1780596602393';
 const shopifyBuyButtonScriptUrl = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
 
@@ -53,6 +57,7 @@ let askAgentListening = false;
 
 // Mobile Navigation Toggle
 function toggleMobileMenu() {
+    if (!navMenu || !navToggle) return;
     navMenu.classList.toggle('active');
     navToggle.classList.toggle('active');
     
@@ -66,6 +71,7 @@ function toggleMobileMenu() {
 
 // Close mobile menu when clicking on a link
 function closeMobileMenu() {
+    if (!navMenu || !navToggle) return;
     navMenu.classList.remove('active');
     navToggle.classList.remove('active');
     document.body.style.overflow = 'auto';
@@ -75,7 +81,7 @@ function closeMobileMenu() {
 function smoothScroll(target) {
     const element = document.querySelector(target);
     if (element) {
-        const headerHeight = header.offsetHeight;
+        const headerHeight = header ? header.offsetHeight : 0;
         const elementPosition = element.offsetTop - headerHeight;
         
         window.scrollTo({
@@ -109,6 +115,43 @@ function setupBuyBsflNavCta() {
         cta.textContent = 'Buy BSFL';
         cta.setAttribute('aria-label', 'Buy BSFL from Nellie\'s Shopify store');
     });
+}
+
+function setupGlobalNavigation() {
+    const headerEl = document.querySelector('.header');
+    const navMenuEl = document.querySelector('.nav__menu');
+    if (!headerEl || !navMenuEl || document.body.classList.contains('ads-landing')) {
+        navLinks = document.querySelectorAll('.nav__link');
+        return;
+    }
+
+    const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+    const links = [
+        { href: '/shop.html', label: 'Products', match: ['/shop.html', '/orders.html'] },
+        { href: '/valorization-process.html', label: 'How It Works', match: ['/valorization-process.html'] },
+        { href: '/frass-benefits.html', label: 'Frass Benefits', match: ['/frass-benefits.html'] },
+        { href: '/resources.html', label: 'Resources', match: ['/resources.html'] },
+        { href: '/#contact', label: 'Contact', match: ['/#contact'] }
+    ];
+
+    navMenuEl.innerHTML = `
+        <ul class="nav__menu-list">
+            ${links.map((item) => {
+                const active = item.match.includes(currentPath) ? ' nav__link--active' : '';
+                return `<li class="nav__item"><a href="${item.href}" class="nav__link${active}">${item.label}</a></li>`;
+            }).join('')}
+        </ul>
+        <div class="nav__actions">
+            <a href="${buyBsflUrl}" class="nav__link nav__cta" aria-label="Shop BSFL products on Shopify">Shop BSFL</a>
+        </div>
+    `;
+
+    const logo = document.querySelector('.nav__logo');
+    if (logo) {
+        logo.setAttribute('href', '/');
+    }
+
+    navLinks = document.querySelectorAll('.nav__link');
 }
 
 function setupRequestSampleCtas() {
@@ -229,6 +272,7 @@ function loadShopifyBuyButtonScript(onLoad) {
 
 // Header scroll effect
 function handleHeaderScroll() {
+    if (!header) return;
     if (window.scrollY > 100) {
         header.style.backgroundColor = 'rgba(28, 19, 16, 0.94)';
     } else {
@@ -628,6 +672,38 @@ function setupFooterSocialLinks() {
     }
 }
 
+function setupGlobalFooter() {
+    const footerContainer = document.querySelector('.footer__container');
+    if (!footerContainer) return;
+
+    footerContainer.innerHTML = `
+        <div class="footer__grid">
+            <div class="footer__brand-block">
+                <p class="footer__copyright">Copyright © 2026 Nellie's Black Soldier Fly Larvae - All Rights Reserved.</p>
+                <p class="footer__powered">Premium BSFL products for feed, soil, and circular agriculture programs.</p>
+            </div>
+            <div class="footer__contact-block" aria-label="Contact Nellie's BSFL">
+                <h3 class="footer__heading">Contact</h3>
+                <p class="footer__links"><a href="tel:${ownerPhone.replace(/[^+\d]/g, '')}" class="footer__link">${ownerPhone}</a></p>
+                <p class="footer__links"><a href="mailto:${ownerEmail}" class="footer__link">${ownerEmail}</a></p>
+                <p class="footer__links"><a href="${calendlyUrl}" class="footer__link" target="_blank" rel="noopener noreferrer">Schedule a 15-minute discovery call</a></p>
+            </div>
+            <div class="footer__quick-block" aria-label="Quick purchase links">
+                <h3 class="footer__heading">Order</h3>
+                <p class="footer__links"><a href="${buyBsflUrl}" class="footer__link">Shop (Shopify)</a></p>
+                <p class="footer__links"><a href="/request-sample.html" class="footer__link">Free Sample</a></p>
+                <p class="footer__links"><a href="/shop.html#bulk-wholesale" class="footer__link">Bulk Quote</a></p>
+            </div>
+            <div class="footer__quick-block" aria-label="Company links">
+                <h3 class="footer__heading">Company</h3>
+                <p class="footer__links"><a href="/partnerships.html" class="footer__link">Partnerships</a></p>
+                <p class="footer__links"><a href="/customer-registration.html" class="footer__link">Customer Registration</a></p>
+                <p class="footer__links"><a href="/privacy-policy.html" class="footer__link">Privacy Policy</a></p>
+            </div>
+        </div>
+    `;
+}
+
 function setupHiddenAdminLink() {
     // This does NOT bypass auth; it only reveals a link to the admin area.
     const footerContainer = document.querySelector('.footer__container');
@@ -904,14 +980,116 @@ function setupOnboardingForm() {
 
 // Cookie notice functionality
 function showCookieNotice() {
+    if (!cookieNotice) return;
     if (!localStorage.getItem('cookiesAccepted')) {
         cookieNotice.classList.add('show');
+        window.setTimeout(() => {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                hideCookieNotice();
+            }
+        }, 5000);
     }
 }
 
 function hideCookieNotice() {
+    if (!cookieNotice) return;
     cookieNotice.classList.remove('show');
     localStorage.setItem('cookiesAccepted', 'true');
+}
+
+function ensureHiddenInput(form, name, value) {
+    let input = form.querySelector(`input[name="${name}"]`);
+    if (!input) {
+        input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        form.appendChild(input);
+    }
+    input.value = value;
+}
+
+function setupInquiryFormDeliverability() {
+    const inquiryForms = document.querySelectorAll('.contact__form, #sample-request-form, #bulk-quote-form, #offer-board-form');
+    inquiryForms.forEach((form) => {
+        if (!(form instanceof HTMLFormElement)) return;
+        if (!form.hasAttribute('data-direct-formspree')) {
+            form.action = '/api/form_capture';
+        }
+
+        ensureHiddenInput(form, 'auto_reply_message', inquiryAutoReplyMessage);
+        ensureHiddenInput(form, 'deliverability_note', 'Please reply with "Got it!" to keep Nellie’s BSFL follow-up emails out of spam.');
+
+        let phoneInput = form.querySelector('input[type="tel"], input[name="phone"], input[name="mobile"], input[name="primary_contact_phone"]');
+        if (phoneInput) {
+            phoneInput.required = true;
+            if (!phoneInput.placeholder || /optional/i.test(phoneInput.placeholder)) {
+                phoneInput.placeholder = 'Phone* - we may text you to confirm receipt of your inquiry';
+            }
+        }
+
+        if (!form.querySelector('.form__sms-note')) {
+            const note = document.createElement('p');
+            note.className = 'form__sms-note';
+            note.textContent = 'Prefer a text? Enter your mobile number and we will text you instead.';
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton && submitButton.parentNode) {
+                submitButton.parentNode.insertBefore(note, submitButton);
+            } else {
+                form.appendChild(note);
+            }
+        }
+    });
+}
+
+function setupConversionTracking() {
+    document.querySelectorAll('a[href*="myshopify.com"]').forEach(el => {
+        el.addEventListener('click', () => {
+            if (window.posthog && typeof window.posthog.capture === 'function') {
+                window.posthog.capture('shopify_click', {
+                    page: window.location.pathname,
+                    button_text: el.innerText
+                });
+            }
+        });
+    });
+
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', () => {
+            if (window.posthog && typeof window.posthog.capture === 'function') {
+                window.posthog.capture('form_submitted', {
+                    page: window.location.pathname,
+                    form_id: form.id || 'unknown'
+                });
+            }
+        });
+    });
+
+    window.addEventListener('message', function(e) {
+        if (e.data && e.data.event && e.data.event === 'calendly.event_scheduled') {
+            if (window.posthog && typeof window.posthog.capture === 'function') {
+                window.posthog.capture('calendly_booking', { page: window.location.pathname });
+            }
+        }
+    });
+}
+
+function setupValorizationCtas() {
+    if (!/\/valorization-process\.html$/.test(window.location.pathname)) return;
+
+    document.querySelectorAll('.page-section .page-section__container').forEach((container) => {
+        if (container.querySelector('.section-shop-cta') || container.closest('.page-section--no-auto-cta')) return;
+        const cta = document.createElement('div');
+        cta.className = 'section-shop-cta';
+        cta.innerHTML = `<a href="${buyBsflUrl}" class="btn btn--primary">Shop Products</a>`;
+        container.appendChild(cta);
+    });
+
+    if (!document.querySelector('.sticky-shop-bar')) {
+        const sticky = document.createElement('div');
+        sticky.className = 'sticky-shop-bar';
+        sticky.innerHTML = `<span>Ready to order?</span><a href="${buyBsflUrl}" class="btn btn--primary">Shop Now →</a>`;
+        document.body.appendChild(sticky);
+    }
 }
 
 // Smooth scrolling for any anchor links
@@ -1178,6 +1356,7 @@ function init() {
     // Add notification styles
     addNotificationStyles();
 
+    setupGlobalNavigation();
     setupBuyBsflNavCta();
     setupRequestSampleCtas();
 
@@ -1223,6 +1402,10 @@ function init() {
     // Setup smooth scrolling
     setupSmoothScrolling();
     
+    setupInquiryFormDeliverability();
+    setupConversionTracking();
+    setupValorizationCtas();
+
     // Show cookie notice if not accepted
     showCookieNotice();
 
@@ -1231,6 +1414,8 @@ function init() {
 
     // Setup guide download forms (stay on-site after submit)
     setupGuideDownloadForms();
+
+    setupGlobalFooter();
 
     // Footer social links (Twitter/X, etc.)
     setupFooterSocialLinks();
