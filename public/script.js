@@ -1,0 +1,1463 @@
+// DOM Elements
+const navToggle = document.getElementById('nav-toggle');
+const navMenu = document.querySelector('.nav__menu');
+let navLinks = document.querySelectorAll('.nav__link');
+const contactForms = document.querySelectorAll('.contact__form');
+const cookieNotice = document.getElementById('cookie-notice');
+const acceptCookiesBtn = document.getElementById('accept-cookies');
+const header = document.querySelector('.header');
+const askAgentForm = document.getElementById('ask-agent-form');
+const askAgentInput = document.getElementById('ask-agent-input');
+const askAgentResponse = document.getElementById('ask-agent-response');
+const askAgentVoiceButton = document.getElementById('ask-agent-voice');
+const askAgentVoiceStatus = document.getElementById('ask-agent-voice-status');
+const askAgentPromptButtons = document.querySelectorAll('[data-ask-prompt]');
+const onboardingForm = document.querySelector('.onboarding-form');
+const submissionModal = document.getElementById('submission-modal');
+const buyBsflUrl = 'https://ismtus-61.myshopify.com/';
+const freeSampleTileUrl = 'https://whiteeaglenutrition.myshopify.com/products/free-bsfl-sample?variant=50446087487628';
+const calendlyUrl = 'https://calendly.com/nelliesbsfl/15min';
+const ownerPhone = '+1-503-555-0145';
+const ownerEmail = 'procurement@nelliesbsfl.com';
+const inquiryAutoReplyMessage = 'Hi [Name], we received your inquiry and will be in touch within 1 business day. To make sure you receive our reply, please reply to this email with "Got it!" — this ensures our emails reach your inbox.';
+const freeSampleProductComponentId = 'product-component-1780596602393';
+const shopifyBuyButtonScriptUrl = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+
+const askAgentKnowledgeBase = [
+    {
+        id: 'inclusion-rate',
+        keywords: ['inclusion', 'rate', 'starter', 'grower', 'finisher', 'diet', 'larvae oil', 'oil'],
+        answer: `A sensible starting point is a small, controlled trial—often in the ~5–10% range—then adjust based on species, life stage, and how the ingredient was processed (meal vs. full-fat, defatted, etc.). I’d track palatability, growth, and basic health markers first, and then work with your nutritionist to keep amino acids and energy balanced as you step up.`
+    },
+    {
+        id: 'pricing-lock',
+        keywords: ['pricing', 'lock', 'hedging', 'contract', '12 months', 'quarterly', 'volume', 'tons'],
+        answer: `Sometimes, yes. Many ingredients can be contracted with quarterly or annual pricing windows, but the details depend on volume, specs, and freight. If you tell me your target monthly pounds, region, and packaging format, I can outline what a practical “price lock” usually includes (term, quality specs, delivery cadence, and what can change).`
+    },
+    {
+        id: 'frass-credits',
+        keywords: ['frass', 'credit', 'roi', 'revenue', 'soil', 'offtake', 'worksheet'],
+        answer: `In an ROI model, frass is usually treated as a coproduct: either revenue (if you sell it) or avoided cost (if it replaces some purchased fertility). The “credit” can be meaningful, but it’s highly local—regulations, demand, nutrient analysis, and application logistics all matter. If you share your market and crop/turf use case, I can suggest the right way to model it conservatively.`
+    },
+    {
+        id: 'regulator-kpi',
+        keywords: ['regulator', 'kpi', 'compliance', 'report', 'permit', 'scope 3', 'esg'],
+        answer: `For permitting and regulators, the basics tend to matter most: what you accept (and how you screen it), how you control vectors/odors, and what your process does to reduce risk (handling, storage, and hygiene controls). If you’re reporting sustainability outcomes, lifecycle boundaries matter—so I’d document assumptions (transport, energy, avoided disposal) and report ranges rather than a single “perfect” number.`
+    },
+    {
+        id: 'lead-time',
+        keywords: ['lead', 'timeline', 'deploy', 'unit', 'installation', 'weeks'],
+        answer: `Lead times vary a lot because permitting, utilities, and site prep can be the real constraint. Hardware can be weeks-to-months, but the fastest deployments are the ones that start feedstock qualification and permitting early. If you tell me your scale and region, I can list the usual gating items and a realistic timeline range.`
+    }
+];
+
+const askAgentFallbackAnswer = `I do not have that data in the on-page agent yet, but share more context through the contact form and we will respond with a sourced answer.`;
+let askAgentSpeechRecognition = null;
+let askAgentListening = false;
+
+// Mobile Navigation Toggle
+function toggleMobileMenu() {
+    if (!navMenu || !navToggle) return;
+    navMenu.classList.toggle('active');
+    navToggle.classList.toggle('active');
+    
+    // Prevent body scroll when menu is open
+    if (navMenu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Close mobile menu when clicking on a link
+function closeMobileMenu() {
+    if (!navMenu || !navToggle) return;
+    navMenu.classList.remove('active');
+    navToggle.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Smooth scrolling for navigation links
+function smoothScroll(target) {
+    const element = document.querySelector(target);
+    if (element) {
+        const headerHeight = header ? header.offsetHeight : 0;
+        const elementPosition = element.offsetTop - headerHeight;
+        
+        window.scrollTo({
+            top: elementPosition,
+            behavior: 'smooth'
+        });
+    }
+}
+
+function isHashLink(href) {
+    if (!href) return false;
+    if (href.startsWith('#')) return true;
+    try {
+        const url = new URL(href, window.location.href);
+        const currentPath = window.location.pathname.replace(/\/+$/, '');
+        const targetPath = url.pathname.replace(/\/+$/, '');
+        return Boolean(url.hash) && targetPath === currentPath;
+    } catch (error) {
+        return false;
+    }
+}
+
+function setupBuyBsflNavCta() {
+    const navCtas = document.querySelectorAll('.nav__link.nav__cta');
+    if (!navCtas.length) {
+        return;
+    }
+
+    navCtas.forEach((cta) => {
+        cta.href = buyBsflUrl;
+        cta.textContent = 'Buy BSFL';
+        cta.setAttribute('aria-label', 'Buy BSFL from Nellie\'s Shopify store');
+    });
+}
+
+function setupGlobalNavigation() {
+    const headerEl = document.querySelector('.header');
+    const navMenuEl = document.querySelector('.nav__menu');
+    if (!headerEl || !navMenuEl || document.body.classList.contains('ads-landing')) {
+        navLinks = document.querySelectorAll('.nav__link');
+        return;
+    }
+
+    const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+    const links = [
+        { href: '/shop.html', label: 'Products', match: ['/shop.html', '/orders.html'] },
+        { href: '/valorization-process.html', label: 'How It Works', match: ['/valorization-process.html'] },
+        { href: '/frass-benefits.html', label: 'Frass Benefits', match: ['/frass-benefits.html'] },
+        { href: '/resources.html', label: 'Resources', match: ['/resources.html'] },
+        { href: '/#contact', label: 'Contact', match: ['/#contact'] }
+    ];
+
+    navMenuEl.innerHTML = `
+        <ul class="nav__menu-list">
+            ${links.map((item) => {
+                const active = item.match.includes(currentPath) ? ' nav__link--active' : '';
+                return `<li class="nav__item"><a href="${item.href}" class="nav__link${active}">${item.label}</a></li>`;
+            }).join('')}
+        </ul>
+        <div class="nav__actions">
+            <a href="${buyBsflUrl}" class="nav__link nav__cta" aria-label="Shop BSFL products on Shopify">Shop BSFL</a>
+        </div>
+    `;
+
+    const logo = document.querySelector('.nav__logo');
+    if (logo) {
+        logo.setAttribute('href', '/');
+    }
+
+    navLinks = document.querySelectorAll('.nav__link');
+}
+
+function setupRequestSampleCtas() {
+    const sampleCtas = document.querySelectorAll('a[href$="request-sample.html"]');
+    sampleCtas.forEach((cta) => {
+        cta.href = freeSampleTileUrl;
+    });
+}
+
+function setupShopifyFreeSampleButton() {
+    const node = document.getElementById(freeSampleProductComponentId);
+    if (!node || node.dataset.shopifyInitialized === 'true') {
+        return;
+    }
+
+    function initShopifyBuyButton() {
+        if (!window.ShopifyBuy || !window.ShopifyBuy.UI) {
+            return;
+        }
+
+        node.dataset.shopifyInitialized = 'true';
+
+        const client = window.ShopifyBuy.buildClient({
+            domain: 'ismtus-61.myshopify.com',
+            storefrontAccessToken: '3b590ca1668ed6e062cbd717247d8ce7',
+        });
+
+        window.ShopifyBuy.UI.onReady(client).then(function (ui) {
+            ui.createComponent('product', {
+                id: '9462552461452',
+                node,
+                moneyFormat: '%24%7B%7Bamount%7D%7D',
+                options: {
+                    product: {
+                        styles: {
+                            product: {
+                                '@media (min-width: 601px)': {
+                                    'max-width': 'calc(25% - 20px)',
+                                    'margin-left': '20px',
+                                    'margin-bottom': '50px'
+                                }
+                            }
+                        },
+                        contents: {
+                            button: false,
+                            buttonWithQuantity: true
+                        },
+                        text: {
+                            button: 'Add to cart'
+                        }
+                    },
+                    productSet: {
+                        styles: {
+                            products: {
+                                '@media (min-width: 601px)': {
+                                    'margin-left': '-20px'
+                                }
+                            }
+                        }
+                    },
+                    modalProduct: {
+                        contents: {
+                            img: false,
+                            imgWithCarousel: true,
+                            button: false,
+                            buttonWithQuantity: true
+                        },
+                        styles: {
+                            product: {
+                                '@media (min-width: 601px)': {
+                                    'max-width': '100%',
+                                    'margin-left': '0px',
+                                    'margin-bottom': '0px'
+                                }
+                            }
+                        },
+                        text: {
+                            button: 'Add to cart'
+                        }
+                    },
+                    option: {},
+                    cart: {
+                        text: {
+                            total: 'Subtotal',
+                            button: 'Checkout'
+                        }
+                    },
+                    toggle: {}
+                },
+            });
+        });
+    }
+
+    if (window.ShopifyBuy) {
+        if (window.ShopifyBuy.UI) {
+            initShopifyBuyButton();
+        } else {
+            loadShopifyBuyButtonScript(initShopifyBuyButton);
+        }
+    } else {
+        loadShopifyBuyButtonScript(initShopifyBuyButton);
+    }
+}
+
+function loadShopifyBuyButtonScript(onLoad) {
+    const existingScript = document.querySelector(`script[src="${shopifyBuyButtonScriptUrl}"]`);
+    if (existingScript) {
+        existingScript.addEventListener('load', onLoad, { once: true });
+        return;
+    }
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = shopifyBuyButtonScriptUrl;
+    script.onload = onLoad;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+}
+
+// Header scroll effect
+function handleHeaderScroll() {
+    if (!header) return;
+    if (window.scrollY > 100) {
+        header.style.backgroundColor = 'rgba(28, 19, 16, 0.94)';
+    } else {
+        header.style.backgroundColor = 'rgba(28, 19, 16, 0.82)';
+    }
+}
+
+// Form validation and submission
+function handleFormSubmission(e) {
+    e.preventDefault();
+    
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const name = String(formData.get('name') || '').trim();
+    const email = String(formData.get('email') || '').trim();
+    const message = String(formData.get('message') || '').trim();
+    const newsletter = formData.get('newsletter');
+    const requiresMessage = form.getAttribute('data-requires-message') !== 'false';
+    
+    // Basic validation
+    if (!isValidEmail(email)) {
+        showNotification(email ? 'Please enter a valid email address.' : 'Please enter your email address.', 'error');
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+
+    function getNextUrl() {
+        const nextInput = form.querySelector('input[name="_next"]');
+        const next = nextInput ? String(nextInput.value || '').trim() : '';
+        return next;
+    }
+
+    function resolveNextUrl(nextUrlTemplate) {
+        const template = String(nextUrlTemplate || '').trim();
+        if (!template) return '';
+        // Allow simple template substitution: https://.../thanks.html?type={request_type}
+        return template.replace(/\{([^}]+)\}/g, (_, fieldName) => {
+            const value = formData.get(String(fieldName || '').trim());
+            return encodeURIComponent(value == null ? '' : String(value));
+        });
+    }
+
+    async function parseResponseBody(response) {
+        const contentType = (response.headers.get('content-type') || '').toLowerCase();
+        if (contentType.includes('application/json')) {
+            try {
+                return await response.json();
+            } catch (e) {
+                return null;
+            }
+        }
+
+        try {
+            const text = await response.text();
+            if (!text) return null;
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                return { error: text };
+            }
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function extractErrorMessage(payload, fallback) {
+        if (payload && typeof payload === 'object') {
+            if (typeof payload.error === 'string' && payload.error.trim()) return payload.error.trim();
+            const errors = payload.errors;
+            if (Array.isArray(errors) && errors.length) {
+                const message = errors
+                    .map((err) => (err && err.message ? String(err.message) : ''))
+                    .filter(Boolean)
+                    .join(' ');
+                if (message) return message;
+            }
+        }
+        return fallback;
+    }
+
+    (async () => {
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                const payload = await parseResponseBody(response);
+                const msg = extractErrorMessage(payload, `Form submission failed (${response.status}). Please try again.`);
+                throw new Error(msg);
+            }
+
+            const nextUrl = resolveNextUrl(getNextUrl());
+            if (nextUrl) {
+                window.location.href = nextUrl;
+                return;
+            }
+
+            showNotification('Thank you! We received your submission.', 'success');
+            form.reset();
+        } catch (error) {
+            console.error('Error:', error);
+            const msg = (error && error.message) ? String(error.message) : 'Sorry, there was an error sending your message. Please try again.';
+            showNotification(msg || 'Sorry, there was an error sending your message. Please try again.', 'error');
+        } finally {
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    })();
+}
+
+// Email validation
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// Notification system
+function showNotification(message, type = 'info') {
+    const safeMessage = (() => {
+        if (typeof message === 'string') return message;
+        if (message == null) return '';
+        try {
+            return JSON.stringify(message);
+        } catch (e) {
+            return String(message);
+        }
+    })();
+    // Remove existing notifications
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification--${type}`;
+    notification.innerHTML = `
+        <div class="notification__content">
+            <span class="notification__message">${safeMessage}</span>
+            <button class="notification__close">&times;</button>
+        </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 4px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 10000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        max-width: 400px;
+    `;
+    
+    // Add to DOM
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Auto remove after 5 seconds
+    const autoRemove = setTimeout(() => {
+        removeNotification(notification);
+    }, 5000);
+    
+    // Close button functionality
+    const closeBtn = notification.querySelector('.notification__close');
+    closeBtn.addEventListener('click', () => {
+        clearTimeout(autoRemove);
+        removeNotification(notification);
+    });
+}
+
+function removeNotification(notification) {
+    notification.style.transform = 'translateX(100%)';
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 300);
+}
+
+function setupGuideDownloadForms() {
+    // Guide forms may post to Formspree directly or to our capture endpoint.
+    const forms = document.querySelectorAll('form.guide-form');
+    if (!forms.length) {
+        return;
+    }
+
+    const modal = submissionModal;
+    const modalTitle = modal ? modal.querySelector('#submission-modal-title') : null;
+    const modalMessage = modal ? modal.querySelector('#submission-modal-message') : null;
+    const modalCloseButton = modal ? modal.querySelector('button[data-modal-close]') : null;
+
+    let lastFocusedEl = null;
+    let priorBodyOverflow = null;
+
+    function openModal(titleText, messageText) {
+        if (!modal) {
+            // Fallback if modal isn't present for any reason.
+            showNotification(messageText || 'Submission received.', 'success');
+            return;
+        }
+
+        lastFocusedEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        priorBodyOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+
+        if (modalTitle) {
+            modalTitle.textContent = titleText || 'Submission received';
+        }
+        if (modalMessage) {
+            modalMessage.textContent = messageText || 'Thanks — we received your request. Please check your inbox shortly.';
+        }
+
+        modal.hidden = false;
+
+        // Move focus into the dialog for accessibility.
+        if (modalCloseButton && typeof modalCloseButton.focus === 'function') {
+            modalCloseButton.focus({ preventScroll: true });
+        }
+    }
+
+    function closeModal() {
+        if (!modal || modal.hidden) {
+            return;
+        }
+
+        modal.hidden = true;
+        document.body.style.overflow = priorBodyOverflow ?? '';
+        priorBodyOverflow = null;
+
+        if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') {
+            lastFocusedEl.focus({ preventScroll: true });
+        }
+        lastFocusedEl = null;
+    }
+
+    if (modal) {
+        modal.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (target.closest('[data-modal-close]')) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !modal.hidden) {
+                closeModal();
+            }
+        });
+    }
+
+    forms.forEach((form) => {
+        form.addEventListener('submit', async (event) => {
+            // If the browser says the form is invalid, let native UI handle it.
+            if (typeof form.reportValidity === 'function' && !form.reportValidity()) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.textContent : '';
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+            }
+
+            try {
+                const formData = new FormData(form);
+                const guideName = String(formData.get('guide_name') || '').trim();
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    let payload = null;
+                    try {
+                        payload = await response.json();
+                    } catch (e) {
+                        payload = null;
+                    }
+                    const messageFromErrors =
+                        payload && Array.isArray(payload.errors) && payload.errors.length
+                            ? payload.errors.map((e) => (e && e.message ? String(e.message) : '')).filter(Boolean).join(' ')
+                            : '';
+                    const message = (payload && payload.error) ? String(payload.error) : (messageFromErrors || `Submission failed (${response.status}). Please try again.`);
+                    throw new Error(message);
+                }
+
+                const nextInput = form.querySelector('input[name="_next"]');
+                const nextTemplate = nextInput ? String(nextInput.value || '').trim() : '';
+                const nextUrl = nextTemplate
+                    ? nextTemplate.replace(/\{([^}]+)\}/g, (_, fieldName) => {
+                        const value = formData.get(String(fieldName || '').trim());
+                        return encodeURIComponent(value == null ? '' : String(value));
+                    })
+                    : '';
+
+                if (nextUrl) {
+                    window.location.href = nextUrl;
+                    return;
+                }
+
+                form.reset();
+
+                const title = 'Submission received';
+                const message = guideName
+                    ? `Thanks — we received your request for “${guideName}”. Please check your inbox shortly.`
+                    : 'Thanks — we received your request. Please check your inbox shortly.';
+
+                openModal(title, message);
+            } catch (error) {
+                console.error('Guide download submission error:', error);
+                const message = (error && error.message) ? String(error.message) : 'Sorry—there was an error submitting your request. Please try again.';
+                showNotification(message, 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
+    });
+}
+
+function setupFooterSocialLinks() {
+    const footerContainer = document.querySelector('.footer__container');
+    if (!footerContainer) return;
+
+    const hasTwitter = Boolean(document.getElementById('nellies-twitter-link'));
+    const hasLinkedIn = Boolean(document.getElementById('nellies-linkedin-link'));
+
+    if (hasTwitter && hasLinkedIn) {
+        return;
+    }
+
+    if (!hasTwitter) {
+        const twitterWrapper = document.createElement('p');
+        twitterWrapper.className = 'footer__links';
+        twitterWrapper.id = 'nellies-twitter-link';
+
+        const twitterLink = document.createElement('a');
+        twitterLink.className = 'footer__link';
+        twitterLink.href = 'https://twitter.com/nelliesbsfl';
+        twitterLink.target = '_blank';
+        twitterLink.rel = 'me noopener noreferrer';
+        twitterLink.textContent = 'Twitter (@nelliesbsfl)';
+
+        twitterWrapper.appendChild(document.createTextNode('Follow us on '));
+        twitterWrapper.appendChild(twitterLink);
+
+        footerContainer.appendChild(twitterWrapper);
+    }
+
+    if (!hasLinkedIn) {
+        const linkedInWrapper = document.createElement('p');
+        linkedInWrapper.className = 'footer__links';
+        linkedInWrapper.id = 'nellies-linkedin-link';
+
+        const linkedInLink = document.createElement('a');
+        linkedInLink.className = 'footer__link';
+        linkedInLink.href = 'https://www.linkedin.com/company/nellies-bsfl/';
+        linkedInLink.target = '_blank';
+        linkedInLink.rel = 'me noopener noreferrer';
+        linkedInLink.textContent = 'Connect with us on LinkedIn';
+
+        linkedInWrapper.appendChild(linkedInLink);
+
+        footerContainer.appendChild(linkedInWrapper);
+    }
+}
+
+function setupGlobalFooter() {
+    const footerContainer = document.querySelector('.footer__container');
+    if (!footerContainer) return;
+
+    footerContainer.innerHTML = `
+        <div class="footer__grid">
+            <div class="footer__brand-block">
+                <p class="footer__copyright">Copyright © 2026 Nellie's Black Soldier Fly Larvae - All Rights Reserved.</p>
+                <p class="footer__powered">Premium BSFL products for feed, soil, and circular agriculture programs.</p>
+            </div>
+            <div class="footer__contact-block" aria-label="Contact Nellie's BSFL">
+                <h3 class="footer__heading">Contact</h3>
+                <p class="footer__links"><a href="tel:${ownerPhone.replace(/[^+\d]/g, '')}" class="footer__link">${ownerPhone}</a></p>
+                <p class="footer__links"><a href="mailto:${ownerEmail}" class="footer__link">${ownerEmail}</a></p>
+                <p class="footer__links"><a href="${calendlyUrl}" class="footer__link" target="_blank" rel="noopener noreferrer">Schedule a 15-minute discovery call</a></p>
+            </div>
+            <div class="footer__quick-block" aria-label="Quick purchase links">
+                <h3 class="footer__heading">Order</h3>
+                <p class="footer__links"><a href="${buyBsflUrl}" class="footer__link">Shop (Shopify)</a></p>
+                <p class="footer__links"><a href="${freeSampleTileUrl}" class="footer__link">Free Sample</a></p>
+                <p class="footer__links"><a href="/shop.html#bulk-wholesale" class="footer__link">Bulk Quote</a></p>
+            </div>
+            <div class="footer__quick-block" aria-label="Company links">
+                <h3 class="footer__heading">Company</h3>
+                <p class="footer__links"><a href="/partnerships.html" class="footer__link">Partnerships</a></p>
+                <p class="footer__links"><a href="/customer-registration.html" class="footer__link">Customer Registration</a></p>
+                <p class="footer__links"><a href="/privacy-policy.html" class="footer__link">Privacy Policy</a></p>
+            </div>
+        </div>
+    `;
+}
+
+function setupHiddenAdminLink() {
+    // This does NOT bypass auth; it only reveals a link to the admin area.
+    const footerContainer = document.querySelector('.footer__container');
+    if (!footerContainer) return;
+
+    const adminHref = '/admin/exports.html';
+    const storageKey = 'nellies_show_admin_link_v1';
+
+    function ensureLink() {
+        let link = document.getElementById('nellies-admin-link');
+        if (link) return link;
+        link = document.createElement('a');
+        link.id = 'nellies-admin-link';
+        link.href = adminHref;
+        link.className = 'footer__link';
+        link.textContent = 'Admin';
+        link.style.display = 'none';
+        footerContainer.appendChild(link);
+        return link;
+    }
+
+    function setVisible(visible) {
+        const link = ensureLink();
+        link.style.display = visible ? 'inline' : 'none';
+    }
+
+    // Show if already unlocked.
+    if (localStorage.getItem(storageKey) === '1') {
+        setVisible(true);
+        return;
+    }
+
+    // Unlock using URL param once: ?admin=1
+    try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('admin') === '1') {
+            localStorage.setItem(storageKey, '1');
+            setVisible(true);
+            return;
+        }
+    } catch (e) {
+        // no-op
+    }
+
+    // Unlock by clicking the logo 7 times within 4 seconds.
+    const logo = document.querySelector('.nav__logo-img') || document.querySelector('.nav__logo');
+    if (!logo) return;
+    let clicks = 0;
+    let timer = null;
+
+    logo.addEventListener('click', () => {
+        clicks += 1;
+        if (timer) window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+            clicks = 0;
+            timer = null;
+        }, 4000);
+
+        if (clicks >= 7) {
+            localStorage.setItem(storageKey, '1');
+            setVisible(true);
+            clicks = 0;
+            if (timer) window.clearTimeout(timer);
+            timer = null;
+            showNotification('Admin link enabled (footer).', 'success');
+        }
+    });
+}
+
+function setupOnboardingForm() {
+    if (!onboardingForm) {
+        return;
+    }
+
+    const confirmation = document.getElementById('onboarding-confirmation');
+    const submitBtn = onboardingForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.textContent : '';
+    const formAction = onboardingForm.action || '';
+    const formspreeEmail = document.getElementById('formspree_email');
+    const formspreeName = document.getElementById('formspree_name');
+
+    function cssEscape(value) {
+        if (window.CSS && typeof window.CSS.escape === 'function') {
+            return window.CSS.escape(value);
+        }
+        // Minimal fallback; good enough for common field names.
+        return String(value).replace(/["\\]/g, '\\$&');
+    }
+
+    function clearOnboardingFieldErrors() {
+        onboardingForm.querySelectorAll('.field-error').forEach((el) => el.remove());
+        onboardingForm.querySelectorAll('[aria-invalid="true"]').forEach((el) => el.removeAttribute('aria-invalid'));
+        onboardingForm.querySelectorAll('.form__input--error, .form__textarea--error').forEach((el) => {
+            el.classList.remove('form__input--error', 'form__textarea--error');
+        });
+    }
+
+    function applyOnboardingFieldErrors(errors) {
+        if (!errors || typeof errors !== 'object') {
+            return;
+        }
+
+        Object.entries(errors).forEach(([field, message]) => {
+            const safeField = cssEscape(field);
+            const input =
+                onboardingForm.querySelector(`[name="${safeField}"]`) ||
+                onboardingForm.querySelector(`#${safeField}`);
+
+            if (!input) {
+                return;
+            }
+
+            input.setAttribute('aria-invalid', 'true');
+            if (input.classList.contains('form__textarea')) {
+                input.classList.add('form__textarea--error');
+            } else {
+                input.classList.add('form__input--error');
+            }
+
+            const group = input.closest('.form__group') || input.parentElement;
+            if (!group) {
+                return;
+            }
+
+            // Avoid duplicating errors for the same group.
+            if (group.querySelector('.field-error')) {
+                return;
+            }
+
+            const errorEl = document.createElement('div');
+            errorEl.className = 'field-error';
+            errorEl.textContent = String(message || 'This field has an error.');
+            group.appendChild(errorEl);
+        });
+    }
+
+    async function parseResponseBody(response) {
+        const contentType = (response.headers.get('content-type') || '').toLowerCase();
+        if (contentType.includes('application/json')) {
+            try {
+                return await response.json();
+            } catch (e) {
+                return null;
+            }
+        }
+
+        try {
+            const text = await response.text();
+            if (!text) return null;
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                return { error: text };
+            }
+        } catch (e) {
+            return null;
+        }
+    }
+
+    onboardingForm.addEventListener('submit', async (event) => {
+        // If the browser says the form is invalid, let native UI handle it.
+        if (typeof onboardingForm.reportValidity === 'function' && !onboardingForm.reportValidity()) {
+            return;
+        }
+
+        event.preventDefault();
+        clearOnboardingFieldErrors();
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+        }
+
+        try {
+            const formData = new FormData(onboardingForm);
+            // Populate Formspree reply-to helpers (harmless for backend PHP as well)
+            const primaryName = String(formData.get('primary_contact_name') || '').trim();
+            const primaryEmail = String(formData.get('primary_contact_email') || '').trim();
+            if (formspreeEmail && !formData.get('email') && primaryEmail) {
+                formspreeEmail.value = primaryEmail;
+                formData.set('email', primaryEmail);
+            }
+            if (formspreeName && !formData.get('name') && primaryName) {
+                formspreeName.value = primaryName;
+                formData.set('name', primaryName);
+            }
+
+            async function submitTo(url) {
+                return await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+            }
+
+            const response = await submitTo(formAction);
+
+            if (!response.ok) {
+                const payload = await parseResponseBody(response);
+                // Formspree can return { errors: [...] } or other formats.
+                let fieldErrors = null;
+                if (payload && payload.errors) {
+                    if (Array.isArray(payload.errors)) {
+                        // Convert array errors into a single summary message.
+                        const summary = payload.errors.map((e) => (e && e.message ? String(e.message) : '')).filter(Boolean).join(' ');
+                        throw new Error(summary || `Registration submission failed (${response.status}). Please try again.`);
+                    }
+                    if (typeof payload.errors === 'object') {
+                        fieldErrors = payload.errors;
+                    }
+                }
+                if (fieldErrors) {
+                    applyOnboardingFieldErrors(fieldErrors);
+                    const messages = Object.values(fieldErrors).filter(Boolean);
+                    const summary = messages.length ? messages.join(' ') : (payload && payload.error ? payload.error : 'Please fix the highlighted fields and try again.');
+                    showNotification(summary, 'error');
+
+                    const firstInvalid = onboardingForm.querySelector('[aria-invalid="true"]');
+                    if (firstInvalid && typeof firstInvalid.scrollIntoView === 'function') {
+                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        if (typeof firstInvalid.focus === 'function') {
+                            firstInvalid.focus({ preventScroll: true });
+                        }
+                    }
+                    return;
+                }
+
+                const message = (payload && payload.error) ? payload.error : `Registration submission failed (${response.status}). Please try again.`;
+                throw new Error(message);
+            }
+
+            const payload = await parseResponseBody(response);
+            if (payload && payload.success === false) {
+                const message = payload.error || 'Registration submission failed. Please try again.';
+                showNotification(message, 'error');
+                return;
+            }
+
+            const nextInput = onboardingForm.querySelector('input[name="_next"]');
+            const nextTemplate = nextInput ? String(nextInput.value || '').trim() : '';
+            const nextUrl = nextTemplate
+                ? nextTemplate.replace(/\{([^}]+)\}/g, (_, fieldName) => {
+                    const value = formData.get(String(fieldName || '').trim());
+                    return encodeURIComponent(value == null ? '' : String(value));
+                })
+                : '';
+            if (nextUrl) {
+                window.location.href = nextUrl;
+                return;
+            }
+
+            // Show on-site confirmation
+            if (confirmation) {
+                confirmation.hidden = false;
+                confirmation.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            showNotification('Registration received. We’ll follow up shortly.', 'success');
+            onboardingForm.reset();
+        } catch (error) {
+            console.error('Onboarding submission error:', error);
+            const message = (error && error.message) ? String(error.message) : 'Sorry—there was an error submitting your registration. Please try again.';
+            showNotification(message, 'error');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        }
+    });
+}
+
+// Cookie notice functionality
+function showCookieNotice() {
+    if (!cookieNotice) return;
+    if (!localStorage.getItem('cookiesAccepted')) {
+        cookieNotice.classList.add('show');
+        window.setTimeout(() => {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                hideCookieNotice();
+            }
+        }, 5000);
+    }
+}
+
+function hideCookieNotice() {
+    if (!cookieNotice) return;
+    cookieNotice.classList.remove('show');
+    localStorage.setItem('cookiesAccepted', 'true');
+}
+
+function ensureHiddenInput(form, name, value) {
+    let input = form.querySelector(`input[name="${name}"]`);
+    if (!input) {
+        input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        form.appendChild(input);
+    }
+    input.value = value;
+}
+
+function setupInquiryFormDeliverability() {
+    const inquiryForms = document.querySelectorAll('.contact__form, #sample-request-form, #bulk-quote-form, #offer-board-form');
+    inquiryForms.forEach((form) => {
+        if (!(form instanceof HTMLFormElement)) return;
+        if (!form.hasAttribute('data-direct-formspree')) {
+            form.action = '/api/form_capture';
+        }
+
+        ensureHiddenInput(form, 'auto_reply_message', inquiryAutoReplyMessage);
+        ensureHiddenInput(form, 'deliverability_note', 'Please reply with "Got it!" to keep Nellie’s BSFL follow-up emails out of spam.');
+
+        let phoneInput = form.querySelector('input[type="tel"], input[name="phone"], input[name="mobile"], input[name="primary_contact_phone"]');
+        if (phoneInput) {
+            phoneInput.required = true;
+            if (!phoneInput.placeholder || /optional/i.test(phoneInput.placeholder)) {
+                phoneInput.placeholder = 'Phone* - we may text you to confirm receipt of your inquiry';
+            }
+        }
+
+        if (!form.querySelector('.form__sms-note')) {
+            const note = document.createElement('p');
+            note.className = 'form__sms-note';
+            note.textContent = 'Prefer a text? Enter your mobile number and we will text you instead.';
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton && submitButton.parentNode) {
+                submitButton.parentNode.insertBefore(note, submitButton);
+            } else {
+                form.appendChild(note);
+            }
+        }
+    });
+}
+
+function setupConversionTracking() {
+    document.querySelectorAll('a[href*="myshopify.com"]').forEach(el => {
+        el.addEventListener('click', () => {
+            if (window.posthog && typeof window.posthog.capture === 'function') {
+                window.posthog.capture('shopify_click', {
+                    page: window.location.pathname,
+                    button_text: el.innerText
+                });
+            }
+        });
+    });
+
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', () => {
+            if (window.posthog && typeof window.posthog.capture === 'function') {
+                window.posthog.capture('form_submitted', {
+                    page: window.location.pathname,
+                    form_id: form.id || 'unknown'
+                });
+            }
+        });
+    });
+
+    window.addEventListener('message', function(e) {
+        if (e.data && e.data.event && e.data.event === 'calendly.event_scheduled') {
+            if (window.posthog && typeof window.posthog.capture === 'function') {
+                window.posthog.capture('calendly_booking', { page: window.location.pathname });
+            }
+        }
+    });
+}
+
+function setupValorizationCtas() {
+    if (!/\/valorization-process\.html$/.test(window.location.pathname)) return;
+
+    document.querySelectorAll('.page-section .page-section__container').forEach((container) => {
+        if (container.querySelector('.section-shop-cta') || container.closest('.page-section--no-auto-cta')) return;
+        const cta = document.createElement('div');
+        cta.className = 'section-shop-cta';
+        cta.innerHTML = `<a href="${buyBsflUrl}" class="btn btn--primary">Shop Products</a>`;
+        container.appendChild(cta);
+    });
+
+    if (!document.querySelector('.sticky-shop-bar')) {
+        const sticky = document.createElement('div');
+        sticky.className = 'sticky-shop-bar';
+        sticky.innerHTML = `<span>Ready to order?</span><a href="${buyBsflUrl}" class="btn btn--primary">Shop Now →</a>`;
+        document.body.appendChild(sticky);
+    }
+}
+
+// Smooth scrolling for any anchor links
+function setupSmoothScrolling() {
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(link.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// Add notification styles
+function addNotificationStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .notification__content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .notification__close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+        
+        .notification__close:hover {
+            opacity: 0.8;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Performance optimization: Throttle scroll events
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
+}
+
+// Image map coordinate helper (for finding the "future" word coordinates)
+function setupImageMapHelper() {
+    const heroImage = document.querySelector('.hero__compost-image');
+    
+    // Add click handler to help find coordinates (only in development)
+    // Remove this in production or when coordinates are finalized
+    if (heroImage && window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        heroImage.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = Math.round(((e.clientX - rect.left) / rect.width) * this.naturalWidth);
+            const y = Math.round(((e.clientY - rect.top) / rect.height) * this.naturalHeight);
+            console.log(`Clicked coordinates: ${x}, ${y}`);
+            console.log(`Image size: ${this.naturalWidth} x ${this.naturalHeight}`);
+            console.log(`To create an area around this point, use coords like: "${x-50},${y-20},${x+50},${y+20}"`);
+        });
+    }
+}
+
+function setupAskAgent() {
+    if (!askAgentForm || !askAgentInput || !askAgentResponse) {
+        return;
+    }
+
+    askAgentForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        processAskAgentQuestion(askAgentInput.value);
+    });
+
+    if (askAgentPromptButtons.length > 0) {
+        askAgentPromptButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const prompt = button.getAttribute('data-ask-prompt') || '';
+                askAgentInput.value = prompt;
+                askAgentInput.focus();
+                processAskAgentQuestion(prompt, false);
+            });
+        });
+    }
+
+    setupAskAgentVoice();
+}
+
+function processAskAgentQuestion(question, shouldSpeak = true) {
+    if (!askAgentResponse) {
+        return;
+    }
+
+    const cleanedQuestion = (question || '').trim();
+    if (!cleanedQuestion) {
+        renderAskAgentAnswer('', 'Ask about feed programs, pricing, or permitting to get started.');
+        return;
+    }
+
+    const answer = getAskAgentAnswer(cleanedQuestion);
+    renderAskAgentAnswer(cleanedQuestion, answer);
+
+    if (shouldSpeak) {
+        speakAskAgentAnswer(answer);
+    }
+}
+
+function getAskAgentAnswer(question) {
+    const normalized = question.toLowerCase();
+    let bestScore = 0;
+    let bestAnswer = askAgentFallbackAnswer;
+
+    askAgentKnowledgeBase.forEach((entry) => {
+        const score = entry.keywords.reduce((total, keyword) => {
+            return normalized.includes(keyword.toLowerCase()) ? total + 1 : total;
+        }, 0);
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestAnswer = entry.answer;
+        }
+    });
+
+    return bestAnswer;
+}
+
+function renderAskAgentAnswer(question, answer) {
+    if (!askAgentResponse) {
+        return;
+    }
+
+    askAgentResponse.innerHTML = '';
+
+    if (!question) {
+        const placeholder = document.createElement('p');
+        placeholder.className = 'ask-agent__placeholder';
+        placeholder.textContent = answer;
+        askAgentResponse.appendChild(placeholder);
+        return;
+    }
+
+    const questionEl = document.createElement('p');
+    questionEl.className = 'ask-agent__question';
+    questionEl.textContent = `You asked: ${question}`;
+
+    const answerEl = document.createElement('p');
+    answerEl.className = 'ask-agent__answer';
+    answerEl.textContent = answer;
+
+    askAgentResponse.append(questionEl, answerEl);
+}
+
+function speakAskAgentAnswer(answer) {
+    if (!('speechSynthesis' in window) || !answer) {
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(answer);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.98;
+    window.speechSynthesis.speak(utterance);
+}
+
+function setupAskAgentVoice() {
+    if (!askAgentVoiceButton || !askAgentInput) {
+        return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        askAgentVoiceButton.disabled = true;
+        askAgentVoiceButton.textContent = 'Voice not supported';
+        updateAskAgentVoiceStatus('Your browser does not support speech input. Type your question instead.');
+        return;
+    }
+
+    askAgentSpeechRecognition = new SpeechRecognition();
+    askAgentSpeechRecognition.lang = 'en-US';
+    askAgentSpeechRecognition.interimResults = false;
+    askAgentSpeechRecognition.maxAlternatives = 1;
+
+    askAgentSpeechRecognition.onstart = () => {
+        updateAskAgentVoiceState(true, 'Listening... speak naturally.');
+    };
+
+    askAgentSpeechRecognition.onend = () => {
+        updateAskAgentVoiceState(false, 'Voice capture stopped. Tap to ask another question.');
+    };
+
+    askAgentSpeechRecognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        askAgentInput.value = transcript;
+        processAskAgentQuestion(transcript);
+    };
+
+    askAgentSpeechRecognition.onerror = (event) => {
+        console.error('Voice error:', event.error);
+        updateAskAgentVoiceState(false, `Voice error: ${event.error}`);
+    };
+
+    askAgentVoiceButton.addEventListener('click', () => {
+        if (!askAgentSpeechRecognition) {
+            return;
+        }
+
+        try {
+            if (askAgentListening) {
+                askAgentSpeechRecognition.stop();
+            } else {
+                askAgentSpeechRecognition.start();
+            }
+        } catch (error) {
+            console.error('Speech recognition start error:', error);
+            updateAskAgentVoiceState(false, 'Unable to access microphone permission.');
+        }
+    });
+}
+
+function updateAskAgentVoiceState(listening, statusText = '') {
+    askAgentListening = listening;
+
+    if (!askAgentVoiceButton) {
+        return;
+    }
+
+    if (listening) {
+        askAgentVoiceButton.classList.add('ask-agent__voice-btn--listening');
+        askAgentVoiceButton.textContent = 'Listening... Tap to stop';
+    } else {
+        askAgentVoiceButton.classList.remove('ask-agent__voice-btn--listening');
+        askAgentVoiceButton.textContent = 'Tap to Speak';
+    }
+
+    if (statusText) {
+        updateAskAgentVoiceStatus(statusText);
+    }
+}
+
+function updateAskAgentVoiceStatus(text) {
+    if (askAgentVoiceStatus) {
+        askAgentVoiceStatus.textContent = text;
+    }
+}
+
+// Initialize all functionality
+function init() {
+    // Add notification styles
+    addNotificationStyles();
+
+    setupGlobalNavigation();
+    setupBuyBsflNavCta();
+    setupRequestSampleCtas();
+
+    // Shopify Buy Button for the homepage free sample CTA.
+    setupShopifyFreeSampleButton();
+    
+    // Event listeners
+    if (navToggle) {
+        navToggle.addEventListener('click', toggleMobileMenu);
+    }
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href') || '';
+            if (isHashLink(href)) {
+                e.preventDefault();
+                const target = href.startsWith('#') ? href : new URL(href, window.location.href).hash;
+                smoothScroll(target);
+                closeMobileMenu();
+            } else {
+                closeMobileMenu();
+            }
+        });
+    });
+    
+    if (contactForms.length > 0) {
+        contactForms.forEach(form => {
+            // Some pages (e.g. orders.html) implement a custom submit flow + modal.
+            if (form.hasAttribute('data-disable-global-handler')) {
+                return;
+            }
+            form.addEventListener('submit', handleFormSubmission);
+        });
+    }
+    
+    if (acceptCookiesBtn) {
+        acceptCookiesBtn.addEventListener('click', hideCookieNotice);
+    }
+    
+    // Scroll events (throttled for performance)
+    window.addEventListener('scroll', throttle(handleHeaderScroll, 10));
+    
+    // Setup smooth scrolling
+    setupSmoothScrolling();
+    
+    setupInquiryFormDeliverability();
+    setupConversionTracking();
+    setupValorizationCtas();
+
+    // Show cookie notice if not accepted
+    showCookieNotice();
+
+    // Setup customer registration onboarding form (stay on-site after submit)
+    setupOnboardingForm();
+
+    // Setup guide download forms (stay on-site after submit)
+    setupGuideDownloadForms();
+
+    setupGlobalFooter();
+
+    // Footer social links (Twitter/X, etc.)
+    setupFooterSocialLinks();
+
+    // Hidden admin link (requires server-side login)
+    setupHiddenAdminLink();
+    
+    // Setup image map helper for development
+    setupImageMapHelper();
+
+    // Initialize Ask Nellie's agent
+    setupAskAgent();
+    
+    // Add loading complete class to body
+    document.body.classList.add('loaded');
+}
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    // Close mobile menu on resize to desktop
+    if (window.innerWidth > 768) {
+        closeMobileMenu();
+    }
+});
+
+// Wait for DOM to be fully loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+// Add some utility functions for external use
+window.NelliesBSF = {
+    showNotification,
+    hideCookieNotice,
+    showCookieNotice,
+    toggleMobileMenu,
+    closeMobileMenu,
+    smoothScroll
+};
+
+// Console welcome message
+console.log('%c🐛 Nellie\'s Black Soldier Fly Larvae Website Loaded!', 'color: #2c5530; font-size: 16px; font-weight: bold;');
+console.log('%c🌱 Sustainable farming for a healthier future', 'color: #666666; font-size: 12px;');

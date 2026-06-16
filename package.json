@@ -1,0 +1,13 @@
+{
+  "name": "nelliesbsfl-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static site with Vercel serverless form capture",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "node scripts/build-static.js"
+  },
+  "dependencies": {
+    "busboy": "^1.6.0"
+  }
+}

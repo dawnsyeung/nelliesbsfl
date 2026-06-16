@@ -31,6 +31,15 @@ try {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Customer Registrations - Admin</title>
   <link rel="stylesheet" href="/style.css" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17813054995"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17813054995');
+</script>
 </head>
 <body class="page">
   <main>
@@ -40,6 +49,8 @@ try {
         <h1 class="page-hero__title">Customer registrations</h1>
         <p class="page-hero__subtitle">Showing the 250 most recent submissions.</p>
         <div class="page-hero__meta">
+          <a class="btn btn--secondary" href="/admin/offer-board.php">Offer board</a>
+          <a class="btn btn--secondary" href="/admin/form-submissions.php">Form submissions</a>
           <a class="btn btn--secondary" href="/admin/logout.php">Logout</a>
         </div>
       </div>

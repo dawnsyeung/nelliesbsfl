@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Request a free BSFL sample from Nellie's Black Soldier Fly Larvae.">
+    <title>Request a Free BSFL Sample | Nellie's BSFL</title>
+    <link rel="canonical" href="https://www.nelliesbsfl.com/request-sample.html">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="/posthog.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17813054995"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-17813054995');
+    </script>
+</head>
+<body class="page">
+    <header class="header">
+        <nav class="nav" aria-label="Primary">
+            <div class="nav__container">
+                <a class="nav__logo" href="/" aria-label="Nellie's Black Soldier Fly Larvae Home">
+                    <img src="nbsfllogo.PNG" alt="Nellie's Black Soldier Fly Larvae Logo" class="nav__logo-img">
+                </a>
+                <div class="nav__menu">
+                    <ul class="nav__menu-list">
+                        <li class="nav__item"><a href="/shop.html" class="nav__link">Products</a></li>
+                        <li class="nav__item"><a href="/valorization-process.html" class="nav__link">How It Works</a></li>
+                        <li class="nav__item"><a href="/frass-benefits.html" class="nav__link">Frass Benefits</a></li>
+                        <li class="nav__item"><a href="/resources.html" class="nav__link">Resources</a></li>
+                        <li class="nav__item"><a href="/#contact" class="nav__link">Contact</a></li>
+                    </ul>
+                    <div class="nav__actions">
+                        <a href="https://ismtus-61.myshopify.com/" class="nav__link nav__cta">Shop BSFL</a>
+                    </div>
+                </div>
+                <div class="nav__toggle" id="nav-toggle" aria-label="Open menu">
+                    <span class="nav__bar"></span>
+                    <span class="nav__bar"></span>
+                    <span class="nav__bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="conversion-hero" aria-labelledby="sample-title">
+            <div class="conversion-hero__container">
+                <div class="conversion-hero__content">
+                    <p class="conversion-eyebrow">Free sample</p>
+                    <h1 class="conversion-hero__title" id="sample-title">Request a free BSFL sample</h1>
+                    <p class="conversion-hero__subtitle">Use the short form below. We'll ship your sample within 3 business days and follow up by phone.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="conversion-section conversion-section--alt" aria-labelledby="sample-form-title">
+            <div class="conversion-section__container">
+                <div class="conversion-section__header">
+                    <p class="conversion-eyebrow">5 fields only</p>
+                    <h2 class="conversion-section__title" id="sample-form-title">Where should we send it?</h2>
+                    <p class="form__expectation">We'll ship your sample within 3 business days and follow up by phone.</p>
+                </div>
+                <form class="contact__form" id="sample-request-form" action="/api/form_capture" method="POST" data-requires-message="false">
+                    <input type="hidden" name="form_name" value="Free Sample Request">
+                    <input type="hidden" name="request_type" value="Free Sample Request">
+                    <input type="hidden" name="_subject" value="Free BSFL Sample Request">
+                    <input type="hidden" name="_next" value="https://www.nelliesbsfl.com/request-sample-thank-you.html">
+                    <input type="hidden" name="auto_reply_message" value="Hi [Name], we received your inquiry and will be in touch within 1 business day. To make sure you receive our reply, please reply to this email with 'Got it!' — this ensures our emails reach your inbox.">
+
+                    <div class="onboarding-grid">
+                        <div class="form__group">
+                            <label for="sample-name">Name*</label>
+                            <input id="sample-name" name="name" type="text" class="form__input" required autocomplete="name">
+                        </div>
+                        <div class="form__group">
+                            <label for="sample-email">Email*</label>
+                            <input id="sample-email" name="email" type="email" class="form__input" required autocomplete="email">
+                        </div>
+                        <div class="form__group">
+                            <label for="sample-phone">Phone*</label>
+                            <input id="sample-phone" name="phone" type="tel" class="form__input" placeholder="We may text you to confirm receipt of your inquiry" required autocomplete="tel">
+                        </div>
+                        <div class="form__group">
+                            <label for="sample-product">Product of Interest*</label>
+                            <select id="sample-product" name="product_interest" class="form__input" required>
+                                <option value="" selected disabled>Select a product</option>
+                                <option value="Whole BSFL">Whole BSFL</option>
+                                <option value="BSFL Protein">BSFL Protein</option>
+                                <option value="Frass Fertilizer">Frass Fertilizer</option>
+                                <option value="Not sure">Not sure - recommend one</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form__group">
+                        <label for="sample-address">Shipping Address*</label>
+                        <textarea id="sample-address" name="shipping_address" class="form__textarea" rows="4" placeholder="Street, city, state, ZIP" required autocomplete="shipping street-address"></textarea>
+                    </div>
+                    <p class="form__sms-note">Prefer a text? Enter your mobile number and we will text you instead.</p>
+                    <button type="submit" class="btn btn--primary">Request Free Sample</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__container"></div>
+    </footer>
+
+    <div class="cookie-notice" id="cookie-notice">
+        <div class="cookie-notice__content">
+            <h4 class="cookie-notice__title">Cookies</h4>
+            <p class="cookie-notice__text">We use cookies to measure site performance. This slim notice will auto-accept shortly and does not block shopping.</p>
+            <button class="cookie-notice__button" id="accept-cookies">Accept</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

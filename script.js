@@ -1,7 +1,7 @@
 // DOM Elements
 const navToggle = document.getElementById('nav-toggle');
 const navMenu = document.querySelector('.nav__menu');
-const navLinks = document.querySelectorAll('.nav__link');
+let navLinks = document.querySelectorAll('.nav__link');
 const contactForms = document.querySelectorAll('.contact__form');
 const cookieNotice = document.getElementById('cookie-notice');
 const acceptCookiesBtn = document.getElementById('accept-cookies');
@@ -13,32 +13,41 @@ const askAgentVoiceButton = document.getElementById('ask-agent-voice');
 const askAgentVoiceStatus = document.getElementById('ask-agent-voice-status');
 const askAgentPromptButtons = document.querySelectorAll('[data-ask-prompt]');
 const onboardingForm = document.querySelector('.onboarding-form');
+const submissionModal = document.getElementById('submission-modal');
+const buyBsflUrl = 'https://ismtus-61.myshopify.com/';
+const freeSampleTileUrl = 'https://whiteeaglenutrition.myshopify.com/products/free-bsfl-sample?variant=50446087487628';
+const calendlyUrl = 'https://calendly.com/nelliesbsfl/15min';
+const ownerPhone = '+1-503-555-0145';
+const ownerEmail = 'procurement@nelliesbsfl.com';
+const inquiryAutoReplyMessage = 'Hi [Name], we received your inquiry and will be in touch within 1 business day. To make sure you receive our reply, please reply to this email with "Got it!" — this ensures our emails reach your inbox.';
+const freeSampleProductComponentId = 'product-component-1780596602393';
+const shopifyBuyButtonScriptUrl = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
 
 const askAgentKnowledgeBase = [
     {
         id: 'inclusion-rate',
         keywords: ['inclusion', 'rate', 'starter', 'grower', 'finisher', 'diet', 'larvae oil', 'oil'],
-        answer: `Begin with a 10% inclusion in starter diets and ramp toward 20% in grower and finisher rations over two flocks. Pair those trials with a 5% larvae oil dose to keep energy balanced. We will share historic FCR curves by breed and help your nutritionist tweak amino targets as data rolls in.`
+        answer: `A sensible starting point is a small, controlled trial—often in the ~5–10% range—then adjust based on species, life stage, and how the ingredient was processed (meal vs. full-fat, defatted, etc.). I’d track palatability, growth, and basic health markers first, and then work with your nutritionist to keep amino acids and energy balanced as you step up.`
     },
     {
         id: 'pricing-lock',
         keywords: ['pricing', 'lock', 'hedging', 'contract', '12 months', 'quarterly', 'volume', 'tons'],
-        answer: `Yes—BSFL supply can be priced quarterly with hedges tied to feedstock indices. Commitments above roughly 2,500 tons per year unlock blended pricing plus off-take credits when you sell frass back through your grower network. We can co-write the contract language with your procurement lead.`
+        answer: `Sometimes, yes. Many ingredients can be contracted with quarterly or annual pricing windows, but the details depend on volume, specs, and freight. If you tell me your target monthly pounds, region, and packaging format, I can outline what a practical “price lock” usually includes (term, quality specs, delivery cadence, and what can change).`
     },
     {
         id: 'frass-credits',
         keywords: ['frass', 'credit', 'roi', 'revenue', 'soil', 'offtake', 'worksheet'],
-        answer: `Frass revenue typically shows up as a negative cost line inside the ROI workbook. Buyers who loop frass into their agronomy program earn $40–$90 per ton in soil and turf deployments, which covers 8–12% of your annual operating cost. We track every load for traceability so auditors can count it as an off-take credit.`
+        answer: `In an ROI model, frass is usually treated as a coproduct: either revenue (if you sell it) or avoided cost (if it replaces some purchased fertility). The “credit” can be meaningful, but it’s highly local—regulations, demand, nutrient analysis, and application logistics all matter. If you share your market and crop/turf use case, I can suggest the right way to model it conservatively.`
     },
     {
         id: 'regulator-kpi',
         keywords: ['regulator', 'kpi', 'compliance', 'report', 'permit', 'scope 3', 'esg'],
-        answer: `Regulators want to see waste diversion %, pathogen log reduction, and documented vector controls. Sustainability teams overlay Scope 3 carbon savings, feed conversion deltas, and soil biology scores. Our dashboards package those KPIs with QA certificates so it is easy to drop into ESG or permitting reports.`
+        answer: `For permitting and regulators, the basics tend to matter most: what you accept (and how you screen it), how you control vectors/odors, and what your process does to reduce risk (handling, storage, and hygiene controls). If you’re reporting sustainability outcomes, lifecycle boundaries matter—so I’d document assumptions (transport, energy, avoided disposal) and report ranges rather than a single “perfect” number.`
     },
     {
         id: 'lead-time',
         keywords: ['lead', 'timeline', 'deploy', 'unit', 'installation', 'weeks'],
-        answer: `Modular BSFL units ship on an 8–12 week timeline depending on electrical work. We stage feedstock qualification alongside permitting so the first larvae go live within 30 days of delivery. Payback trackers update automatically once weight tickets hit the CRM.`
+        answer: `Lead times vary a lot because permitting, utilities, and site prep can be the real constraint. Hardware can be weeks-to-months, but the fastest deployments are the ones that start feedstock qualification and permitting early. If you tell me your scale and region, I can list the usual gating items and a realistic timeline range.`
     }
 ];
 
@@ -48,6 +57,7 @@ let askAgentListening = false;
 
 // Mobile Navigation Toggle
 function toggleMobileMenu() {
+    if (!navMenu || !navToggle) return;
     navMenu.classList.toggle('active');
     navToggle.classList.toggle('active');
     
@@ -61,6 +71,7 @@ function toggleMobileMenu() {
 
 // Close mobile menu when clicking on a link
 function closeMobileMenu() {
+    if (!navMenu || !navToggle) return;
     navMenu.classList.remove('active');
     navToggle.classList.remove('active');
     document.body.style.overflow = 'auto';
@@ -70,7 +81,7 @@ function closeMobileMenu() {
 function smoothScroll(target) {
     const element = document.querySelector(target);
     if (element) {
-        const headerHeight = header.offsetHeight;
+        const headerHeight = header ? header.offsetHeight : 0;
         const elementPosition = element.offsetTop - headerHeight;
         
         window.scrollTo({
@@ -93,8 +104,175 @@ function isHashLink(href) {
     }
 }
 
+function setupBuyBsflNavCta() {
+    const navCtas = document.querySelectorAll('.nav__link.nav__cta');
+    if (!navCtas.length) {
+        return;
+    }
+
+    navCtas.forEach((cta) => {
+        cta.href = buyBsflUrl;
+        cta.textContent = 'Buy BSFL';
+        cta.setAttribute('aria-label', 'Buy BSFL from Nellie\'s Shopify store');
+    });
+}
+
+function setupGlobalNavigation() {
+    const headerEl = document.querySelector('.header');
+    const navMenuEl = document.querySelector('.nav__menu');
+    if (!headerEl || !navMenuEl || document.body.classList.contains('ads-landing')) {
+        navLinks = document.querySelectorAll('.nav__link');
+        return;
+    }
+
+    const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+    const links = [
+        { href: '/shop.html', label: 'Products', match: ['/shop.html', '/orders.html'] },
+        { href: '/valorization-process.html', label: 'How It Works', match: ['/valorization-process.html'] },
+        { href: '/frass-benefits.html', label: 'Frass Benefits', match: ['/frass-benefits.html'] },
+        { href: '/resources.html', label: 'Resources', match: ['/resources.html'] },
+        { href: '/#contact', label: 'Contact', match: ['/#contact'] }
+    ];
+
+    navMenuEl.innerHTML = `
+        <ul class="nav__menu-list">
+            ${links.map((item) => {
+                const active = item.match.includes(currentPath) ? ' nav__link--active' : '';
+                return `<li class="nav__item"><a href="${item.href}" class="nav__link${active}">${item.label}</a></li>`;
+            }).join('')}
+        </ul>
+        <div class="nav__actions">
+            <a href="${buyBsflUrl}" class="nav__link nav__cta" aria-label="Shop BSFL products on Shopify">Shop BSFL</a>
+        </div>
+    `;
+
+    const logo = document.querySelector('.nav__logo');
+    if (logo) {
+        logo.setAttribute('href', '/');
+    }
+
+    navLinks = document.querySelectorAll('.nav__link');
+}
+
+function setupRequestSampleCtas() {
+    const sampleCtas = document.querySelectorAll('a[href$="request-sample.html"]');
+    sampleCtas.forEach((cta) => {
+        cta.href = freeSampleTileUrl;
+    });
+}
+
+function setupShopifyFreeSampleButton() {
+    const node = document.getElementById(freeSampleProductComponentId);
+    if (!node || node.dataset.shopifyInitialized === 'true') {
+        return;
+    }
+
+    function initShopifyBuyButton() {
+        if (!window.ShopifyBuy || !window.ShopifyBuy.UI) {
+            return;
+        }
+
+        node.dataset.shopifyInitialized = 'true';
+
+        const client = window.ShopifyBuy.buildClient({
+            domain: 'ismtus-61.myshopify.com',
+            storefrontAccessToken: '3b590ca1668ed6e062cbd717247d8ce7',
+        });
+
+        window.ShopifyBuy.UI.onReady(client).then(function (ui) {
+            ui.createComponent('product', {
+                id: '9462552461452',
+                node,
+                moneyFormat: '%24%7B%7Bamount%7D%7D',
+                options: {
+                    product: {
+                        styles: {
+                            product: {
+                                '@media (min-width: 601px)': {
+                                    'max-width': 'calc(25% - 20px)',
+                                    'margin-left': '20px',
+                                    'margin-bottom': '50px'
+                                }
+                            }
+                        },
+                        contents: {
+                            button: false,
+                            buttonWithQuantity: true
+                        },
+                        text: {
+                            button: 'Add to cart'
+                        }
+                    },
+                    productSet: {
+                        styles: {
+                            products: {
+                                '@media (min-width: 601px)': {
+                                    'margin-left': '-20px'
+                                }
+                            }
+                        }
+                    },
+                    modalProduct: {
+                        contents: {
+                            img: false,
+                            imgWithCarousel: true,
+                            button: false,
+                            buttonWithQuantity: true
+                        },
+                        styles: {
+                            product: {
+                                '@media (min-width: 601px)': {
+                                    'max-width': '100%',
+                                    'margin-left': '0px',
+                                    'margin-bottom': '0px'
+                                }
+                            }
+                        },
+                        text: {
+                            button: 'Add to cart'
+                        }
+                    },
+                    option: {},
+                    cart: {
+                        text: {
+                            total: 'Subtotal',
+                            button: 'Checkout'
+                        }
+                    },
+                    toggle: {}
+                },
+            });
+        });
+    }
+
+    if (window.ShopifyBuy) {
+        if (window.ShopifyBuy.UI) {
+            initShopifyBuyButton();
+        } else {
+            loadShopifyBuyButtonScript(initShopifyBuyButton);
+        }
+    } else {
+        loadShopifyBuyButtonScript(initShopifyBuyButton);
+    }
+}
+
+function loadShopifyBuyButtonScript(onLoad) {
+    const existingScript = document.querySelector(`script[src="${shopifyBuyButtonScriptUrl}"]`);
+    if (existingScript) {
+        existingScript.addEventListener('load', onLoad, { once: true });
+        return;
+    }
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = shopifyBuyButtonScriptUrl;
+    script.onload = onLoad;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+}
+
 // Header scroll effect
 function handleHeaderScroll() {
+    if (!header) return;
     if (window.scrollY > 100) {
         header.style.backgroundColor = 'rgba(28, 19, 16, 0.94)';
     } else {
@@ -108,19 +286,15 @@ function handleFormSubmission(e) {
     
     const form = e.currentTarget;
     const formData = new FormData(form);
-    const name = formData.get('name').trim();
-    const email = formData.get('email').trim();
-    const message = formData.get('message').trim();
+    const name = String(formData.get('name') || '').trim();
+    const email = String(formData.get('email') || '').trim();
+    const message = String(formData.get('message') || '').trim();
     const newsletter = formData.get('newsletter');
+    const requiresMessage = form.getAttribute('data-requires-message') !== 'false';
     
     // Basic validation
-    if (!name || !email || !message) {
-        showNotification('Please fill in all required fields.', 'error');
-        return;
-    }
-    
     if (!isValidEmail(email)) {
-        showNotification('Please enter a valid email address.', 'error');
+        showNotification(email ? 'Please enter a valid email address.' : 'Please enter your email address.', 'error');
         return;
     }
     
@@ -129,32 +303,95 @@ function handleFormSubmission(e) {
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Sending...';
     submitBtn.disabled = true;
-    
-    // Submit to Formspree
-    fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'Accept': 'application/json'
+
+    function getNextUrl() {
+        const nextInput = form.querySelector('input[name="_next"]');
+        const next = nextInput ? String(nextInput.value || '').trim() : '';
+        return next;
+    }
+
+    function resolveNextUrl(nextUrlTemplate) {
+        const template = String(nextUrlTemplate || '').trim();
+        if (!template) return '';
+        // Allow simple template substitution: https://.../thanks.html?type={request_type}
+        return template.replace(/\{([^}]+)\}/g, (_, fieldName) => {
+            const value = formData.get(String(fieldName || '').trim());
+            return encodeURIComponent(value == null ? '' : String(value));
+        });
+    }
+
+    async function parseResponseBody(response) {
+        const contentType = (response.headers.get('content-type') || '').toLowerCase();
+        if (contentType.includes('application/json')) {
+            try {
+                return await response.json();
+            } catch (e) {
+                return null;
+            }
         }
-    })
-    .then(response => {
-        if (response.ok) {
-            showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
+
+        try {
+            const text = await response.text();
+            if (!text) return null;
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                return { error: text };
+            }
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function extractErrorMessage(payload, fallback) {
+        if (payload && typeof payload === 'object') {
+            if (typeof payload.error === 'string' && payload.error.trim()) return payload.error.trim();
+            const errors = payload.errors;
+            if (Array.isArray(errors) && errors.length) {
+                const message = errors
+                    .map((err) => (err && err.message ? String(err.message) : ''))
+                    .filter(Boolean)
+                    .join(' ');
+                if (message) return message;
+            }
+        }
+        return fallback;
+    }
+
+    (async () => {
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                const payload = await parseResponseBody(response);
+                const msg = extractErrorMessage(payload, `Form submission failed (${response.status}). Please try again.`);
+                throw new Error(msg);
+            }
+
+            const nextUrl = resolveNextUrl(getNextUrl());
+            if (nextUrl) {
+                window.location.href = nextUrl;
+                return;
+            }
+
+            showNotification('Thank you! We received your submission.', 'success');
             form.reset();
-        } else {
-            throw new Error('Form submission failed');
+        } catch (error) {
+            console.error('Error:', error);
+            const msg = (error && error.message) ? String(error.message) : 'Sorry, there was an error sending your message. Please try again.';
+            showNotification(msg || 'Sorry, there was an error sending your message. Please try again.', 'error');
+        } finally {
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showNotification('Sorry, there was an error sending your message. Please try again.', 'error');
-    })
-    .finally(() => {
-        // Reset button state
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-    });
+    })();
 }
 
 // Email validation
@@ -165,6 +402,15 @@ function isValidEmail(email) {
 
 // Notification system
 function showNotification(message, type = 'info') {
+    const safeMessage = (() => {
+        if (typeof message === 'string') return message;
+        if (message == null) return '';
+        try {
+            return JSON.stringify(message);
+        } catch (e) {
+            return String(message);
+        }
+    })();
     // Remove existing notifications
     const existingNotification = document.querySelector('.notification');
     if (existingNotification) {
@@ -176,7 +422,7 @@ function showNotification(message, type = 'info') {
     notification.className = `notification notification--${type}`;
     notification.innerHTML = `
         <div class="notification__content">
-            <span class="notification__message">${message}</span>
+            <span class="notification__message">${safeMessage}</span>
             <button class="notification__close">&times;</button>
         </div>
     `;
@@ -225,6 +471,306 @@ function removeNotification(notification) {
             notification.parentNode.removeChild(notification);
         }
     }, 300);
+}
+
+function setupGuideDownloadForms() {
+    // Guide forms may post to Formspree directly or to our capture endpoint.
+    const forms = document.querySelectorAll('form.guide-form');
+    if (!forms.length) {
+        return;
+    }
+
+    const modal = submissionModal;
+    const modalTitle = modal ? modal.querySelector('#submission-modal-title') : null;
+    const modalMessage = modal ? modal.querySelector('#submission-modal-message') : null;
+    const modalCloseButton = modal ? modal.querySelector('button[data-modal-close]') : null;
+
+    let lastFocusedEl = null;
+    let priorBodyOverflow = null;
+
+    function openModal(titleText, messageText) {
+        if (!modal) {
+            // Fallback if modal isn't present for any reason.
+            showNotification(messageText || 'Submission received.', 'success');
+            return;
+        }
+
+        lastFocusedEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        priorBodyOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+
+        if (modalTitle) {
+            modalTitle.textContent = titleText || 'Submission received';
+        }
+        if (modalMessage) {
+            modalMessage.textContent = messageText || 'Thanks — we received your request. Please check your inbox shortly.';
+        }
+
+        modal.hidden = false;
+
+        // Move focus into the dialog for accessibility.
+        if (modalCloseButton && typeof modalCloseButton.focus === 'function') {
+            modalCloseButton.focus({ preventScroll: true });
+        }
+    }
+
+    function closeModal() {
+        if (!modal || modal.hidden) {
+            return;
+        }
+
+        modal.hidden = true;
+        document.body.style.overflow = priorBodyOverflow ?? '';
+        priorBodyOverflow = null;
+
+        if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') {
+            lastFocusedEl.focus({ preventScroll: true });
+        }
+        lastFocusedEl = null;
+    }
+
+    if (modal) {
+        modal.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (target.closest('[data-modal-close]')) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !modal.hidden) {
+                closeModal();
+            }
+        });
+    }
+
+    forms.forEach((form) => {
+        form.addEventListener('submit', async (event) => {
+            // If the browser says the form is invalid, let native UI handle it.
+            if (typeof form.reportValidity === 'function' && !form.reportValidity()) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.textContent : '';
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+            }
+
+            try {
+                const formData = new FormData(form);
+                const guideName = String(formData.get('guide_name') || '').trim();
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    let payload = null;
+                    try {
+                        payload = await response.json();
+                    } catch (e) {
+                        payload = null;
+                    }
+                    const messageFromErrors =
+                        payload && Array.isArray(payload.errors) && payload.errors.length
+                            ? payload.errors.map((e) => (e && e.message ? String(e.message) : '')).filter(Boolean).join(' ')
+                            : '';
+                    const message = (payload && payload.error) ? String(payload.error) : (messageFromErrors || `Submission failed (${response.status}). Please try again.`);
+                    throw new Error(message);
+                }
+
+                const nextInput = form.querySelector('input[name="_next"]');
+                const nextTemplate = nextInput ? String(nextInput.value || '').trim() : '';
+                const nextUrl = nextTemplate
+                    ? nextTemplate.replace(/\{([^}]+)\}/g, (_, fieldName) => {
+                        const value = formData.get(String(fieldName || '').trim());
+                        return encodeURIComponent(value == null ? '' : String(value));
+                    })
+                    : '';
+
+                if (nextUrl) {
+                    window.location.href = nextUrl;
+                    return;
+                }
+
+                form.reset();
+
+                const title = 'Submission received';
+                const message = guideName
+                    ? `Thanks — we received your request for “${guideName}”. Please check your inbox shortly.`
+                    : 'Thanks — we received your request. Please check your inbox shortly.';
+
+                openModal(title, message);
+            } catch (error) {
+                console.error('Guide download submission error:', error);
+                const message = (error && error.message) ? String(error.message) : 'Sorry—there was an error submitting your request. Please try again.';
+                showNotification(message, 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
+    });
+}
+
+function setupFooterSocialLinks() {
+    const footerContainer = document.querySelector('.footer__container');
+    if (!footerContainer) return;
+
+    const hasTwitter = Boolean(document.getElementById('nellies-twitter-link'));
+    const hasLinkedIn = Boolean(document.getElementById('nellies-linkedin-link'));
+
+    if (hasTwitter && hasLinkedIn) {
+        return;
+    }
+
+    if (!hasTwitter) {
+        const twitterWrapper = document.createElement('p');
+        twitterWrapper.className = 'footer__links';
+        twitterWrapper.id = 'nellies-twitter-link';
+
+        const twitterLink = document.createElement('a');
+        twitterLink.className = 'footer__link';
+        twitterLink.href = 'https://twitter.com/nelliesbsfl';
+        twitterLink.target = '_blank';
+        twitterLink.rel = 'me noopener noreferrer';
+        twitterLink.textContent = 'Twitter (@nelliesbsfl)';
+
+        twitterWrapper.appendChild(document.createTextNode('Follow us on '));
+        twitterWrapper.appendChild(twitterLink);
+
+        footerContainer.appendChild(twitterWrapper);
+    }
+
+    if (!hasLinkedIn) {
+        const linkedInWrapper = document.createElement('p');
+        linkedInWrapper.className = 'footer__links';
+        linkedInWrapper.id = 'nellies-linkedin-link';
+
+        const linkedInLink = document.createElement('a');
+        linkedInLink.className = 'footer__link';
+        linkedInLink.href = 'https://www.linkedin.com/company/nellies-bsfl/';
+        linkedInLink.target = '_blank';
+        linkedInLink.rel = 'me noopener noreferrer';
+        linkedInLink.textContent = 'Connect with us on LinkedIn';
+
+        linkedInWrapper.appendChild(linkedInLink);
+
+        footerContainer.appendChild(linkedInWrapper);
+    }
+}
+
+function setupGlobalFooter() {
+    const footerContainer = document.querySelector('.footer__container');
+    if (!footerContainer) return;
+
+    footerContainer.innerHTML = `
+        <div class="footer__grid">
+            <div class="footer__brand-block">
+                <p class="footer__copyright">Copyright © 2026 Nellie's Black Soldier Fly Larvae - All Rights Reserved.</p>
+                <p class="footer__powered">Premium BSFL products for feed, soil, and circular agriculture programs.</p>
+            </div>
+            <div class="footer__contact-block" aria-label="Contact Nellie's BSFL">
+                <h3 class="footer__heading">Contact</h3>
+                <p class="footer__links"><a href="tel:${ownerPhone.replace(/[^+\d]/g, '')}" class="footer__link">${ownerPhone}</a></p>
+                <p class="footer__links"><a href="mailto:${ownerEmail}" class="footer__link">${ownerEmail}</a></p>
+                <p class="footer__links"><a href="${calendlyUrl}" class="footer__link" target="_blank" rel="noopener noreferrer">Schedule a 15-minute discovery call</a></p>
+            </div>
+            <div class="footer__quick-block" aria-label="Quick purchase links">
+                <h3 class="footer__heading">Order</h3>
+                <p class="footer__links"><a href="${buyBsflUrl}" class="footer__link">Shop (Shopify)</a></p>
+                <p class="footer__links"><a href="${freeSampleTileUrl}" class="footer__link">Free Sample</a></p>
+                <p class="footer__links"><a href="/shop.html#bulk-wholesale" class="footer__link">Bulk Quote</a></p>
+            </div>
+            <div class="footer__quick-block" aria-label="Company links">
+                <h3 class="footer__heading">Company</h3>
+                <p class="footer__links"><a href="/partnerships.html" class="footer__link">Partnerships</a></p>
+                <p class="footer__links"><a href="/customer-registration.html" class="footer__link">Customer Registration</a></p>
+                <p class="footer__links"><a href="/privacy-policy.html" class="footer__link">Privacy Policy</a></p>
+            </div>
+        </div>
+    `;
+}
+
+function setupHiddenAdminLink() {
+    // This does NOT bypass auth; it only reveals a link to the admin area.
+    const footerContainer = document.querySelector('.footer__container');
+    if (!footerContainer) return;
+
+    const adminHref = '/admin/exports.html';
+    const storageKey = 'nellies_show_admin_link_v1';
+
+    function ensureLink() {
+        let link = document.getElementById('nellies-admin-link');
+        if (link) return link;
+        link = document.createElement('a');
+        link.id = 'nellies-admin-link';
+        link.href = adminHref;
+        link.className = 'footer__link';
+        link.textContent = 'Admin';
+        link.style.display = 'none';
+        footerContainer.appendChild(link);
+        return link;
+    }
+
+    function setVisible(visible) {
+        const link = ensureLink();
+        link.style.display = visible ? 'inline' : 'none';
+    }
+
+    // Show if already unlocked.
+    if (localStorage.getItem(storageKey) === '1') {
+        setVisible(true);
+        return;
+    }
+
+    // Unlock using URL param once: ?admin=1
+    try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('admin') === '1') {
+            localStorage.setItem(storageKey, '1');
+            setVisible(true);
+            return;
+        }
+    } catch (e) {
+        // no-op
+    }
+
+    // Unlock by clicking the logo 7 times within 4 seconds.
+    const logo = document.querySelector('.nav__logo-img') || document.querySelector('.nav__logo');
+    if (!logo) return;
+    let clicks = 0;
+    let timer = null;
+
+    logo.addEventListener('click', () => {
+        clicks += 1;
+        if (timer) window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+            clicks = 0;
+            timer = null;
+        }, 4000);
+
+        if (clicks >= 7) {
+            localStorage.setItem(storageKey, '1');
+            setVisible(true);
+            clicks = 0;
+            if (timer) window.clearTimeout(timer);
+            timer = null;
+            showNotification('Admin link enabled (footer).', 'success');
+        }
+    });
 }
 
 function setupOnboardingForm() {
@@ -398,6 +944,19 @@ function setupOnboardingForm() {
                 return;
             }
 
+            const nextInput = onboardingForm.querySelector('input[name="_next"]');
+            const nextTemplate = nextInput ? String(nextInput.value || '').trim() : '';
+            const nextUrl = nextTemplate
+                ? nextTemplate.replace(/\{([^}]+)\}/g, (_, fieldName) => {
+                    const value = formData.get(String(fieldName || '').trim());
+                    return encodeURIComponent(value == null ? '' : String(value));
+                })
+                : '';
+            if (nextUrl) {
+                window.location.href = nextUrl;
+                return;
+            }
+
             // Show on-site confirmation
             if (confirmation) {
                 confirmation.hidden = false;
@@ -408,7 +967,7 @@ function setupOnboardingForm() {
             onboardingForm.reset();
         } catch (error) {
             console.error('Onboarding submission error:', error);
-            const message = (error && error.message) ? error.message : 'Sorry—there was an error submitting your registration. Please try again.';
+            const message = (error && error.message) ? String(error.message) : 'Sorry—there was an error submitting your registration. Please try again.';
             showNotification(message, 'error');
         } finally {
             if (submitBtn) {
@@ -421,14 +980,116 @@ function setupOnboardingForm() {
 
 // Cookie notice functionality
 function showCookieNotice() {
+    if (!cookieNotice) return;
     if (!localStorage.getItem('cookiesAccepted')) {
         cookieNotice.classList.add('show');
+        window.setTimeout(() => {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                hideCookieNotice();
+            }
+        }, 5000);
     }
 }
 
 function hideCookieNotice() {
+    if (!cookieNotice) return;
     cookieNotice.classList.remove('show');
     localStorage.setItem('cookiesAccepted', 'true');
+}
+
+function ensureHiddenInput(form, name, value) {
+    let input = form.querySelector(`input[name="${name}"]`);
+    if (!input) {
+        input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        form.appendChild(input);
+    }
+    input.value = value;
+}
+
+function setupInquiryFormDeliverability() {
+    const inquiryForms = document.querySelectorAll('.contact__form, #sample-request-form, #bulk-quote-form, #offer-board-form');
+    inquiryForms.forEach((form) => {
+        if (!(form instanceof HTMLFormElement)) return;
+        if (!form.hasAttribute('data-direct-formspree')) {
+            form.action = '/api/form_capture';
+        }
+
+        ensureHiddenInput(form, 'auto_reply_message', inquiryAutoReplyMessage);
+        ensureHiddenInput(form, 'deliverability_note', 'Please reply with "Got it!" to keep Nellie’s BSFL follow-up emails out of spam.');
+
+        let phoneInput = form.querySelector('input[type="tel"], input[name="phone"], input[name="mobile"], input[name="primary_contact_phone"]');
+        if (phoneInput) {
+            phoneInput.required = true;
+            if (!phoneInput.placeholder || /optional/i.test(phoneInput.placeholder)) {
+                phoneInput.placeholder = 'Phone* - we may text you to confirm receipt of your inquiry';
+            }
+        }
+
+        if (!form.querySelector('.form__sms-note')) {
+            const note = document.createElement('p');
+            note.className = 'form__sms-note';
+            note.textContent = 'Prefer a text? Enter your mobile number and we will text you instead.';
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton && submitButton.parentNode) {
+                submitButton.parentNode.insertBefore(note, submitButton);
+            } else {
+                form.appendChild(note);
+            }
+        }
+    });
+}
+
+function setupConversionTracking() {
+    document.querySelectorAll('a[href*="myshopify.com"]').forEach(el => {
+        el.addEventListener('click', () => {
+            if (window.posthog && typeof window.posthog.capture === 'function') {
+                window.posthog.capture('shopify_click', {
+                    page: window.location.pathname,
+                    button_text: el.innerText
+                });
+            }
+        });
+    });
+
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', () => {
+            if (window.posthog && typeof window.posthog.capture === 'function') {
+                window.posthog.capture('form_submitted', {
+                    page: window.location.pathname,
+                    form_id: form.id || 'unknown'
+                });
+            }
+        });
+    });
+
+    window.addEventListener('message', function(e) {
+        if (e.data && e.data.event && e.data.event === 'calendly.event_scheduled') {
+            if (window.posthog && typeof window.posthog.capture === 'function') {
+                window.posthog.capture('calendly_booking', { page: window.location.pathname });
+            }
+        }
+    });
+}
+
+function setupValorizationCtas() {
+    if (!/\/valorization-process\.html$/.test(window.location.pathname)) return;
+
+    document.querySelectorAll('.page-section .page-section__container').forEach((container) => {
+        if (container.querySelector('.section-shop-cta') || container.closest('.page-section--no-auto-cta')) return;
+        const cta = document.createElement('div');
+        cta.className = 'section-shop-cta';
+        cta.innerHTML = `<a href="${buyBsflUrl}" class="btn btn--primary">Shop Products</a>`;
+        container.appendChild(cta);
+    });
+
+    if (!document.querySelector('.sticky-shop-bar')) {
+        const sticky = document.createElement('div');
+        sticky.className = 'sticky-shop-bar';
+        sticky.innerHTML = `<span>Ready to order?</span><a href="${buyBsflUrl}" class="btn btn--primary">Shop Now →</a>`;
+        document.body.appendChild(sticky);
+    }
 }
 
 // Smooth scrolling for any anchor links
@@ -694,6 +1355,13 @@ function updateAskAgentVoiceStatus(text) {
 function init() {
     // Add notification styles
     addNotificationStyles();
+
+    setupGlobalNavigation();
+    setupBuyBsflNavCta();
+    setupRequestSampleCtas();
+
+    // Shopify Buy Button for the homepage free sample CTA.
+    setupShopifyFreeSampleButton();
     
     // Event listeners
     if (navToggle) {
@@ -716,6 +1384,10 @@ function init() {
     
     if (contactForms.length > 0) {
         contactForms.forEach(form => {
+            // Some pages (e.g. orders.html) implement a custom submit flow + modal.
+            if (form.hasAttribute('data-disable-global-handler')) {
+                return;
+            }
             form.addEventListener('submit', handleFormSubmission);
         });
     }
@@ -730,11 +1402,26 @@ function init() {
     // Setup smooth scrolling
     setupSmoothScrolling();
     
+    setupInquiryFormDeliverability();
+    setupConversionTracking();
+    setupValorizationCtas();
+
     // Show cookie notice if not accepted
     showCookieNotice();
 
     // Setup customer registration onboarding form (stay on-site after submit)
     setupOnboardingForm();
+
+    // Setup guide download forms (stay on-site after submit)
+    setupGuideDownloadForms();
+
+    setupGlobalFooter();
+
+    // Footer social links (Twitter/X, etc.)
+    setupFooterSocialLinks();
+
+    // Hidden admin link (requires server-side login)
+    setupHiddenAdminLink();
     
     // Setup image map helper for development
     setupImageMapHelper();
