@@ -15,7 +15,7 @@ const askAgentPromptButtons = document.querySelectorAll('[data-ask-prompt]');
 const onboardingForm = document.querySelector('.onboarding-form');
 const submissionModal = document.getElementById('submission-modal');
 const buyBsflUrl = 'https://ismtus-61.myshopify.com/';
-const freeSampleTileUrl = '/request-sample.html';
+const freeSampleTileUrl = 'https://whiteeaglenutrition.myshopify.com/products/free-bsfl-sample?variant=50446087487628';
 const calendlyUrl = 'https://calendly.com/nelliesbsfl/15min';
 const ownerPhone = '+1-503-555-0145';
 const ownerEmail = 'procurement@nelliesbsfl.com';
@@ -691,7 +691,7 @@ function setupGlobalFooter() {
             <div class="footer__quick-block" aria-label="Quick purchase links">
                 <h3 class="footer__heading">Order</h3>
                 <p class="footer__links"><a href="${buyBsflUrl}" class="footer__link">Shop (Shopify)</a></p>
-                <p class="footer__links"><a href="/request-sample.html" class="footer__link">Free Sample</a></p>
+                <p class="footer__links"><a href="${freeSampleTileUrl}" class="footer__link">Free Sample</a></p>
                 <p class="footer__links"><a href="/shop.html#bulk-wholesale" class="footer__link">Bulk Quote</a></p>
             </div>
             <div class="footer__quick-block" aria-label="Company links">
