@@ -8,4 +8,6 @@ for(const [folder,file,site] of [['bsfl', 'script.js', 'nelliesbsfl.com']]) {
  test(`${folder}: privacy and preview suppress`,()=>{for(const o of [{optOut:true},{nav:{globalPrivacyControl:true}},{nav:{doNotTrack:'1'}},{host:'preview.vercel.app'}]){const r=run(o);const s='https://whiteeaglenutrition.myshopify.com/products/a';assert.equal(r.click(s),s);assert.equal(r.events.length,0)}});
  test(`${folder}: invalid destinations and prevented events ignored`,()=>{const r=run();for(const s of ['https://evil.myshopify.com/a','javascript:alert(1)','https://whiteeaglenutrition.myshopify.com.evil.test/a','https://user:pass@whiteeaglenutrition.myshopify.com/a'])assert.equal(r.click(s),s);r.click('https://whiteeaglenutrition.myshopify.com/a',{defaultPrevented:true});assert.equal(r.events.length,0)});
  test(`${folder}: duplicate initialization is harmless`,()=>{const r=run();vm.runInNewContext(code,r.c);r.click('https://whiteeaglenutrition.myshopify.com/a');assert.equal(r.events.length,1)});
+ test('actual Shop BSFL alias receives one referral event',()=>{const r=run();const u=new URL(r.click('https://ismtus-61.myshopify.com/'));assert.equal(u.hostname,'ismtus-61.myshopify.com');assert.equal(u.searchParams.get('utm_source'),'nelliesbsfl.com');assert.equal(r.events.length,1);assert.equal(r.events[0][0],'shopify_click')});
+
 }

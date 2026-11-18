@@ -1465,7 +1465,7 @@ console.log('%c🌱 Sustainable farming for a healthier future', 'color: #666666
     if (!link || event.defaultPrevented || denied()) return;
     var target;
     try { target = new URL(link.href, location.href); } catch (_) { return; }
-    if (target.protocol !== 'https:' || target.hostname !== 'whiteeaglenutrition.myshopify.com' || target.username || target.password) return;
+    if (target.protocol !== 'https:' || !['whiteeaglenutrition.myshopify.com', 'ismtus-61.myshopify.com'].includes(target.hostname) || target.username || target.password) return;
     // Preserve the product, variant, quantity and existing campaign values.
     // No cookies, customer identifiers or incoming query values are copied.
     if (!target.searchParams.has('utm_source')) target.searchParams.set('utm_source', site);
@@ -1477,7 +1477,6 @@ console.log('%c🌱 Sustainable farming for a healthier future', 'color: #666666
         site: site,
         page: location.pathname,
         destination_host: target.hostname,
-        destination_path: target.pathname,
         conversion_stage: 'outbound_click'
       });
     }
