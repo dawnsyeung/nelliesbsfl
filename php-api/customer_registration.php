@@ -4,7 +4,7 @@ declare(strict_types=1);
 // Customer Registration submission endpoint:
 // - Accepts POSTed form data
 // - Stores submission in SQLite (JSON payload)
-// - Forwards submission to Formspree only when explicitly enabled (optional)
+// - Forwards submission to Formspree by default (can be disabled via env)
 // - Redirects to thank-you page on success
 
 header('X-Content-Type-Options: nosniff');
@@ -58,7 +58,8 @@ function errorResponse(int $status, string $message, array $fieldErrors = []): v
 
 function isLikelyBrowserFormPost(): bool {
     $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
-    return str_contains($accept, 'text/html') || str_contains($accept, 'application/xhtml+xml');
+    // PHP < 8 compatibility (no str_contains).
+    return strpos($accept, 'text/html') !== false || strpos($accept, 'application/xhtml+xml') !== false;
 }
 
 function redirect(string $location): void {
@@ -75,7 +76,7 @@ if ($gotcha !== '') {
     jsonResponse(200, ['success' => true, 'spam' => true]);
 }
 
-// Required fields
+// Key fields (only email is required)
 $legalBusinessName = trim((string)($_POST['legal_business_name'] ?? ''));
 $headOfficeStreet = trim((string)($_POST['head_office_street'] ?? ''));
 $headOfficeCity = trim((string)($_POST['head_office_city'] ?? ''));
@@ -90,46 +91,10 @@ $certifyAccuracy = (string)($_POST['certify_accuracy'] ?? '');
 
 // Field-level validation (so the UI can show the exact issue)
 $fieldErrors = [];
-if ($legalBusinessName === '') {
-    $fieldErrors['legal_business_name'] = 'Legal Business Name is required.';
-}
-if ($headOfficeStreet === '') {
-    $fieldErrors['head_office_street'] = 'Head Office Address (Street) is required.';
-}
-if ($headOfficeCity === '') {
-    $fieldErrors['head_office_city'] = 'Head Office City is required.';
-}
-if ($headOfficeState === '') {
-    $fieldErrors['head_office_state'] = 'Head Office State/Province is required.';
-}
-if ($headOfficeZip === '') {
-    $fieldErrors['head_office_zip'] = 'Head Office Zip/Postal is required.';
-}
-if ($headOfficeCountry === '') {
-    $fieldErrors['head_office_country'] = 'Head Office Country is required.';
-}
-if ($primaryContactName === '') {
-    $fieldErrors['primary_contact_name'] = 'Primary Contact Name is required.';
-}
 if ($primaryContactEmail === '') {
     $fieldErrors['primary_contact_email'] = 'Primary Contact Email is required.';
 } elseif (!filter_var($primaryContactEmail, FILTER_VALIDATE_EMAIL)) {
     $fieldErrors['primary_contact_email'] = 'Primary Contact Email must be a valid email address.';
-}
-if ($signatoryName === '') {
-    $fieldErrors['signatory_name'] = 'Authorized Signatory Name is required.';
-}
-if ($signatureDate === '') {
-    $fieldErrors['signature_date'] = 'Signature Date is required.';
-} else {
-    $dt = DateTimeImmutable::createFromFormat('Y-m-d', $signatureDate);
-    $errors = DateTimeImmutable::getLastErrors();
-    if ($dt === false || ($errors['warning_count'] ?? 0) > 0 || ($errors['error_count'] ?? 0) > 0) {
-        $fieldErrors['signature_date'] = 'Signature Date must be a valid date.';
-    }
-}
-if ($certifyAccuracy !== 'Yes') {
-    $fieldErrors['certify_accuracy'] = 'You must certify accuracy before submitting.';
 }
 
 if (!empty($fieldErrors)) {
@@ -290,43 +255,66 @@ try {
     errorResponse(500, 'Server error: unable to save your submission right now. Please try again later.');
 }
 
-// Forward to Formspree (optional, explicitly enabled)
-// To enable, set:
-// - FORMSPREE_FORWARDING_ENABLED=1
-// - FORMSPREE_ENDPOINT="https://formspree.io/f/xxxxxx"
-$forwardingEnabled = strtolower(getEnvOrDefault('FORMSPREE_FORWARDING_ENABLED', '')) === '1'
-    || strtolower(getEnvOrDefault('FORMSPREE_FORWARDING_ENABLED', '')) === 'true'
-    || strtolower(getEnvOrDefault('FORMSPREE_FORWARDING_ENABLED', '')) === 'yes';
+// Forward to Formspree (enabled by default to preserve existing workflow)
+// To disable, set FORMSPREE_FORWARDING_ENABLED=0
+// Optional override: FORMSPREE_ENDPOINT="https://formspree.io/f/xxxxxx"
+$forwardingDisabled = strtolower(getEnvOrDefault('FORMSPREE_FORWARDING_ENABLED', '1')) === '0'
+    || strtolower(getEnvOrDefault('FORMSPREE_FORWARDING_ENABLED', '1')) === 'false'
+    || strtolower(getEnvOrDefault('FORMSPREE_FORWARDING_ENABLED', '1')) === 'no';
 
-$formspreeEndpoint = getEnvOrDefault('FORMSPREE_ENDPOINT', '');
-if ($forwardingEnabled && $formspreeEndpoint !== '') {
-    $emailPayload = [
-        'form_name' => 'First-time Customer Registration',
-        'submission_id' => (string)$insertId,
-        'legal_business_name' => $legalBusinessName,
-        'primary_contact_name' => $primaryContactName,
-        'primary_contact_email' => $primaryContactEmail,
-        'submitted_at_utc' => $createdAt,
-        'data_json' => $dataJson,
-    ];
+$defaultFormspreeEndpoint = 'https://formspree.io/f/xjkeljzv';
+$formspreeEndpoint = getEnvOrDefault('FORMSPREE_ENDPOINT', $defaultFormspreeEndpoint);
+if (!$forwardingDisabled && $formspreeEndpoint !== '') {
+    // Preserve prior Formspree behavior: forward the full original form payload.
+    $forwardPayload = $_POST;
+    $forwardPayload['form_name'] = (string)($forwardPayload['form_name'] ?? 'First-time Customer Registration');
+    $forwardPayload['submission_id'] = (string)$insertId;
+    $forwardPayload['captured_at_utc'] = $createdAt;
+    $forwardPayload['captured_by'] = 'nelliesbsfl_customer_registration';
+    // Include full-fidelity JSON as well, so the email has a single canonical blob for archiving.
+    $forwardPayload['data_json'] = $dataJson;
 
     try {
-        $ch = curl_init($formspreeEndpoint);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($emailPayload));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Accept: application/json',
-            'Content-Type: application/x-www-form-urlencoded',
-        ]);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        $resp = curl_exec($ch);
-        $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        $body = http_build_query($forwardPayload);
+
+        if (function_exists('curl_init')) {
+            $ch = curl_init($formspreeEndpoint);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Accept: application/json',
+                'Content-Type: application/x-www-form-urlencoded',
+            ]);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            $resp = curl_exec($ch);
+            $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+        } else {
+            $context = stream_context_create([
+                'http' => [
+                    'method' => 'POST',
+                    'header' => "Accept: application/json\r\nContent-Type: application/x-www-form-urlencoded\r\n",
+                    'content' => $body,
+                    'timeout' => 10,
+                    'ignore_errors' => true,
+                ],
+            ]);
+            $resp = @file_get_contents($formspreeEndpoint, false, $context);
+            $httpCode = 0;
+            if (isset($http_response_header) && is_array($http_response_header)) {
+                foreach ($http_response_header as $h) {
+                    if (preg_match('#^HTTP/\S+\s+(\d{3})#', $h, $m)) {
+                        $httpCode = (int)$m[1];
+                        break;
+                    }
+                }
+            }
+        }
 
         // If Formspree fails, we still keep DB record (do not block onboarding)
-        if ($resp === false || $httpCode < 200 || $httpCode >= 300) {
+        if (($resp ?? false) === false || ($httpCode ?? 0) < 200 || ($httpCode ?? 0) >= 300) {
             // no-op
         }
     } catch (Throwable $e) {

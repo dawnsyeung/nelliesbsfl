@@ -3,7 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/_auth.php';
 
 if (isAuthed()) {
-    header('Location: /admin/submissions.php', true, 302);
+    header('Location: /admin/offer-board/', true, 302);
     exit();
 }
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         session_regenerate_id(true);
         $_SESSION['authed'] = true;
         $_SESSION['username'] = $username;
-        header('Location: /admin/submissions.php', true, 302);
+        header('Location: /admin/offer-board/', true, 302);
         exit();
     } else {
         $error = 'Invalid username or password.';
@@ -37,6 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Login - Nellie's BSFL</title>
   <link rel="stylesheet" href="/style.css" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17813054995"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17813054995');
+</script>
 </head>
 <body class="page">
   <main>
@@ -44,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="page-hero__container">
         <p class="page-hero__eyebrow">Admin</p>
         <h1 class="page-hero__title">Login</h1>
-        <p class="page-hero__subtitle">Sign in to view customer registration submissions.</p>
+        <p class="page-hero__subtitle">Sign in to manage Offer Board requests.</p>
       </div>
     </section>
 

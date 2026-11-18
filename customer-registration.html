@@ -9,24 +9,35 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="posthog.js"></script>
+  <script src="/posthog.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17813054995"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17813054995');
+</script>
 </head>
 <body class="page">
   <header class="header">
     <nav class="nav">
       <div class="nav__container">
-        <a class="nav__logo" href="index.html" aria-label="Nellie's Black Soldier Fly Larvae Home">
+        <a class="nav__logo" href="/" aria-label="Nellie's Black Soldier Fly Larvae Home">
           <img src="nbsfllogo.PNG" alt="Nellie's Black Soldier Fly Larvae Logo" class="nav__logo-img">
         </a>
         <div class="nav__menu">
           <ul class="nav__menu-list">
-            <li class="nav__item"><a href="index.html" class="nav__link">Home</a></li>
-            <li class="nav__item"><a href="resources.html" class="nav__link">Resources</a></li>
+            <li class="nav__item"><a href="shop.html" class="nav__link">Products</a></li>
+            <li class="nav__item"><a href="valorization-process.html" class="nav__link">Valorization and Products</a></li>
+            <li class="nav__item"><a href="nutrition.html" class="nav__link">Nutrition</a></li>
+            <li class="nav__item"><a href="frass-benefits.html" class="nav__link">Frass Benefits</a></li>
             <li class="nav__item"><a href="partnerships.html" class="nav__link">Partnerships</a></li>
+            <li class="nav__item"><a href="resources.html" class="nav__link">Resources</a></li>
           </ul>
           <div class="nav__actions">
-            <a href="shop.html" class="nav__link nav__link--shop">Shop</a>
-            <a href="index.html#contact" class="nav__link nav__cta">Contact</a>
+            <a href="/#contact" class="nav__link nav__cta">Contact</a>
           </div>
         </div>
         <div class="nav__toggle" id="nav-toggle">
@@ -52,12 +63,13 @@
     <section class="page-section page-section--alt" aria-label="Customer registration form">
       <div class="page-section__container">
         <form class="onboarding-form" action="https://formspree.io/f/xjkeljzv" method="POST" autocomplete="on">
+          <input type="hidden" name="form_name" value="Customer Registration" />
           <div id="onboarding-confirmation" class="onboarding-confirmation" role="status" aria-live="polite" hidden>
             <h2 class="onboarding-confirmation__title">Thanks — we received your registration.</h2>
             <p class="onboarding-confirmation__copy">Our team will review your submission and follow up shortly.</p>
             <div class="onboarding-confirmation__actions">
-              <a class="btn btn--secondary" href="shop.html">Visit Shop</a>
-              <a class="btn btn--primary" href="index.html">Back to Home</a>
+              <a class="btn btn--secondary" href="valorization-process.html#products">View Products & Ordering</a>
+              <a class="btn btn--primary" href="/">Back to Home</a>
             </div>
           </div>
 
@@ -75,8 +87,8 @@
 
             <div class="onboarding-grid">
               <div class="form__group">
-                <label for="legal_business_name">Legal Business Name*</label>
-                <input class="form__input" id="legal_business_name" name="legal_business_name" type="text" required />
+                <label for="legal_business_name">Legal Business Name</label>
+                <input class="form__input" id="legal_business_name" name="legal_business_name" type="text" />
               </div>
 
               <div class="form__group">
@@ -114,24 +126,24 @@
 
             <div class="onboarding-grid">
               <div class="form__group">
-                <label for="head_office_street">Head Office Address - Street*</label>
-                <input class="form__input" id="head_office_street" name="head_office_street" type="text" required />
+                <label for="head_office_street">Head Office Address - Street</label>
+                <input class="form__input" id="head_office_street" name="head_office_street" type="text" />
               </div>
               <div class="form__group">
-                <label for="head_office_city">City*</label>
-                <input class="form__input" id="head_office_city" name="head_office_city" type="text" required />
+                <label for="head_office_city">City</label>
+                <input class="form__input" id="head_office_city" name="head_office_city" type="text" />
               </div>
               <div class="form__group">
-                <label for="head_office_state">State/Province*</label>
-                <input class="form__input" id="head_office_state" name="head_office_state" type="text" required />
+                <label for="head_office_state">State/Province</label>
+                <input class="form__input" id="head_office_state" name="head_office_state" type="text" />
               </div>
               <div class="form__group">
-                <label for="head_office_zip">Zip/Postal*</label>
-                <input class="form__input" id="head_office_zip" name="head_office_zip" type="text" required />
+                <label for="head_office_zip">Zip/Postal</label>
+                <input class="form__input" id="head_office_zip" name="head_office_zip" type="text" />
               </div>
               <div class="form__group">
-                <label for="head_office_country">Country*</label>
-                <input class="form__input" id="head_office_country" name="head_office_country" type="text" required />
+                <label for="head_office_country">Country</label>
+                <input class="form__input" id="head_office_country" name="head_office_country" type="text" />
               </div>
             </div>
 
@@ -157,8 +169,8 @@
 
             <div class="onboarding-grid">
               <div class="form__group">
-                <label for="primary_contact_name">Name*</label>
-                <input class="form__input" id="primary_contact_name" name="primary_contact_name" type="text" required />
+                <label for="primary_contact_name">Name</label>
+                <input class="form__input" id="primary_contact_name" name="primary_contact_name" type="text" />
               </div>
               <div class="form__group">
                 <label for="primary_contact_title">Title/Role</label>
@@ -406,22 +418,22 @@
 
             <div class="onboarding-grid">
               <div class="form__group">
-                <label for="signatory_name">Name*</label>
-                <input class="form__input" id="signatory_name" name="signatory_name" type="text" required />
+                <label for="signatory_name">Name</label>
+                <input class="form__input" id="signatory_name" name="signatory_name" type="text" />
               </div>
               <div class="form__group">
                 <label for="signatory_title">Title</label>
                 <input class="form__input" id="signatory_title" name="signatory_title" type="text" />
               </div>
               <div class="form__group">
-                <label for="signature_date">Date*</label>
-                <input class="form__input" id="signature_date" name="signature_date" type="date" required />
+                <label for="signature_date">Date</label>
+                <input class="form__input" id="signature_date" name="signature_date" type="date" />
               </div>
             </div>
 
             <div class="form__group">
               <label class="form__checkbox">
-                <input type="checkbox" name="certify_accuracy" value="Yes" required>
+                <input type="checkbox" name="certify_accuracy" value="Yes">
                 By submitting, Customer certifies that all information provided is accurate and authorizes IHT to verify references for credit evaluation.
               </label>
             </div>
@@ -442,6 +454,7 @@
     <div class="footer__container">
       <p class="footer__copyright">Copyright © 2025 Nellie's Black Soldier Fly Larvae - All Rights Reserved.</p>
       <p class="footer__powered">Powered by <a href="#" class="footer__link">Nellie's BSFL</a></p>
+      <p class="footer__links"><a href="/customer-registration.html" class="footer__link">Customer Registration</a><span aria-hidden="true"> • </span><a href="/privacy-policy.html" class="footer__link">Privacy Policy</a></p>
     </div>
   </footer>
   <script src="script.js"></script>
