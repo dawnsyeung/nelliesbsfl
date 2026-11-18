@@ -1042,17 +1042,6 @@ function setupInquiryFormDeliverability() {
 }
 
 function setupConversionTracking() {
-    document.querySelectorAll('a[href*="myshopify.com"]').forEach(el => {
-        el.addEventListener('click', () => {
-            if (window.posthog && typeof window.posthog.capture === 'function') {
-                window.posthog.capture('shopify_click', {
-                    page: window.location.pathname,
-                    button_text: el.innerText
-                });
-            }
-        });
-    });
-
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', () => {
             if (window.posthog && typeof window.posthog.capture === 'function') {
@@ -1461,3 +1450,36 @@ window.NelliesBSF = {
 // Console welcome message
 console.log('%c🐛 Nellie\'s Black Soldier Fly Larvae Website Loaded!', 'color: #2c5530; font-size: 16px; font-weight: bold;');
 console.log('%c🌱 Sustainable farming for a healthier future', 'color: #666666; font-size: 12px;');
+/* Shopify referral attribution: an outbound click is NOT a purchase. */
+(function () {
+  'use strict';
+  var site = 'nelliesbsfl.com';
+  if (window.__shopifyReferralReady || ![site, 'www.' + site].includes(location.hostname)) return;
+  window.__shopifyReferralReady = true;
+  function denied() {
+    return navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' ||
+      (window.posthog && typeof window.posthog.has_opted_out_capturing === 'function' && window.posthog.has_opted_out_capturing() === true);
+  }
+  document.addEventListener('click', function (event) {
+    var link = event.target && event.target.closest && event.target.closest('a[href]');
+    if (!link || event.defaultPrevented || denied()) return;
+    var target;
+    try { target = new URL(link.href, location.href); } catch (_) { return; }
+    if (target.protocol !== 'https:' || target.hostname !== 'whiteeaglenutrition.myshopify.com' || target.username || target.password) return;
+    // Preserve the product, variant, quantity and existing campaign values.
+    // No cookies, customer identifiers or incoming query values are copied.
+    if (!target.searchParams.has('utm_source')) target.searchParams.set('utm_source', site);
+    if (!target.searchParams.has('utm_medium')) target.searchParams.set('utm_medium', 'referral');
+    link.href = target.href;
+    var client = window.posthog;
+    if (client && typeof client.capture === 'function') {
+      client.capture('shopify_click', {
+        site: site,
+        page: location.pathname,
+        destination_host: target.hostname,
+        destination_path: target.pathname,
+        conversion_stage: 'outbound_click'
+      });
+    }
+  }, true);
+})();
